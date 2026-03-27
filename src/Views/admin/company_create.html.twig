@@ -1,0 +1,13 @@
+<h3>Créer une entreprise</h3>
+
+<form method="post" action="{{ path('admin') }}">
+  <input type="hidden" name="action" value="create_company">
+
+  <label>Nom</label>
+  <input type="text" name="company_name" required>
+
+  <label>Localisation</label>
+  <input type="text" name="company_location">
+
+  <button type="submit">Créer</button>
+</form>

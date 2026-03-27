@@ -1,0 +1,95 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Profil entreprise{% endblock %}
+
+{% block content %}
+
+<main class="profile-page">
+  <div class="container">
+
+    <!-- ===== HEADER PROFIL ===== -->
+    <div class="profile-header">
+      <h1>{{ entreprise.nom }}</h1>
+      <p class="profile-meta">
+        {{ entreprise.email }} — {{ entreprise.ville }}
+      </p>
+
+      <div class="profile-actions">
+        <a class="btn btn-solid" href="{{ path('offre_create') }}">
+          + Nouvelle offre
+        </a>
+        <a class="btn btn-ghost" href="#">
+          Modifier profil
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== OFFRES ===== -->
+    <section>
+      <div class="section-header">
+        <h2>Mes offres</h2>
+        <span class="count-badge">{{ offres|length }}</span>
+      </div>
+
+      <div class="profile-offers">
+
+        {% for offre in offres %}
+          <article class="profile-offer-card">
+
+            <div class="profile-offer-body">
+              <h3>{{ offre.titre }}</h3>
+
+              <div class="profile-offer-meta">
+                <span>{{ offre.localisation }}</span>
+                <span>{{ offre.duree }}</span>
+                <span>{{ offre.date }}</span>
+              </div>
+            </div>
+
+            <div class="profile-offer-actions">
+              <a class="btn-icon" href="{{ path('app_offre_show', {id: offre.id}) }}">
+                Voir
+              </a>
+
+              <a class="btn-icon" href="{{ path('app_offre_edit', {id: offre.id}) }}">
+                Modifier
+              </a>
+
+              <form method="post" action="{{ path('app_offre_delete', {id: offre.id}) }}">
+                <button class="btn-icon btn-icon--danger" type="submit">
+                  Supprimer
+                </button>
+              </form>
+            </div>
+
+          </article>
+
+        {% else %}
+          <p>Aucune offre publiée.</p>
+        {% endfor %}
+
+      </div>
+    </section>
+
+    <!-- ===== INFOS ENTREPRISE ===== -->
+    <section>
+      <div class="section-header">
+        <h2>Informations</h2>
+      </div>
+
+      <div class="profile-info">
+
+        <p><strong>Nom :</strong> {{ entreprise.nom }}</p>
+        <p><strong>Email :</strong> {{ entreprise.email }}</p>
+        <p><strong>Ville :</strong> {{ entreprise.ville }}</p>
+        <p><strong>Secteur :</strong> {{ entreprise.secteur }}</p>
+        <p><strong>Description :</strong></p>
+        <p>{{ entreprise.description }}</p>
+
+      </div>
+    </section>
+
+  </div>
+</main>
+
+{% endblock %}

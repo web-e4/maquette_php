@@ -1,0 +1,85 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block content %}
+
+<main class="auth-page">
+  <div class="auth-card">
+
+    <header class="auth-card-header">
+      <h1>Créer un compte</h1>
+      <p>Rejoignez GigaStage et trouvez votre stage.</p>
+    </header>
+
+    {% if errors %}
+      <div class="alert error">
+        {% for error in errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form class="auth-form" method="post">
+
+      <div class="form-field">
+        <label class="form-label" for="fullname">Nom complet</label>
+        <input
+          class="form-input"
+          id="fullname"
+          name="fullname"
+          type="text"
+          placeholder="Votre nom"
+          required
+        >
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="email">Email</label>
+        <input
+          class="form-input"
+          id="email"
+          name="email"
+          type="email"
+          placeholder="vous@exemple.com"
+          required
+        >
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="password">Mot de passe</label>
+        <input
+          class="form-input"
+          id="password"
+          name="password"
+          type="password"
+          required
+        >
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="confirm_password">Confirmer le mot de passe</label>
+        <input
+          class="form-input"
+          id="confirm_password"
+          name="confirm_password"
+          type="password"
+          required
+        >
+      </div>
+
+      <button class="btn btn-solid btn-auth-submit" type="submit">
+        S'inscrire
+      </button>
+
+    </form>
+
+    <p class="auth-footer-text">
+      Déjà un compte ?
+      <a href="{{ path('connexion') }}">Se connecter</a>
+    </p>
+
+  </div>
+</main>
+
+{% endblock %}

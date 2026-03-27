@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GigaStage - {% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="site-header">
+    <div class="container header-inner">
+
+      <a class="brand" href="/">
+        <img class="brand-logo" src="/assets/logo.svg" alt="Logo GigaStage">
+        <span class="brand-name">GigaStage</span>
+      </a>
+
+      <nav class="nav" id="main-nav" aria-label="Navigation principale">
+        <a class="nav-link" href="/">Accueil</a>
+        <a class="nav-link" href="/offres">Annonces</a>
+        <a class="nav-link" href="/publier-offre">Publier une offre</a>
+
+        <div class="nav-auth-mobile">
+          <a class="btn btn-ghost" href="/connexion">Connexion</a>
+          <a class="btn btn-solid" href="/inscription">Inscription</a>
+        </div>
+      </nav>
+
+      <div class="header-auth">
+        <a class="btn btn-ghost" href="/connexion">Connexion</a>
+        <a class="btn btn-solid" href="/inscription">Inscription</a>
+      </div>
+
+      <button class="btn-burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav">
+        ☰
+      </button>
+
+    </div>
+  </header>
+
+  <!-- ========== CONTENU ========== -->
+  {% block content %}{% endblock %}
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a href="/contact">Contact</a>
+      <a href="/cgu">CGU</a>
+      <a href="/mentions-legales">Mentions légales</a>
+    </div>
+  </footer>
+
+  <script>
+    const burger = document.querySelector('.btn-burger');
+    const nav = document.querySelector('.nav');
+
+    burger.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('mobile-open');
+      burger.setAttribute('aria-expanded', isOpen);
+      burger.textContent = isOpen ? '✕' : '☰';
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!nav.contains(e.target) && !burger.contains(e.target)) {
+        nav.classList.remove('mobile-open');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.textContent = '☰';
+      }
+    });
+  </script>
+
+</body>
+
+</html>

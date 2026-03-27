@@ -1,0 +1,50 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Toutes les annonces{% endblock %}
+
+{% block content %}
+
+    <!-- BARRE DE RECHERCHE -->
+    <section class="search-section">
+        {% include 'components/_search.html.twig' %}
+    </section>
+
+    <!-- LISTE -->
+    <main class="main">
+        <div class="container">
+
+            <h1 class="section-title">Toutes les offres de stage</h1>
+
+            <div class="cards">
+                {% for offre in offres %}
+                    {% include "components/_stage-card.html.twig" %}
+                {% else %}
+                    <p>Aucune offre trouvée.</p>
+                {% endfor %}
+            </div>
+
+            <!-- PAGINATION -->
+            {% if pagination.totalPages > 1 %}
+                <nav class="pagination">
+
+                    {% if pagination.currentPage > 1 %}
+                        <a class="pagination-btn" href="/offres?page={{ pagination.currentPage - 1 }}{% if q %}&q={{ q|url_encode }}{% endif %}{% if ville %}&ville={{ ville|url_encode }}{% endif %}">‹</a>
+                    {% endif %}
+
+                    {% for page in 1..pagination.totalPages %}
+                        <a class="pagination-btn {% if page == pagination.currentPage %}active{% endif %}" href="/offres?page={{ page }}{% if q %}&q={{ q|url_encode }}{% endif %}{% if ville %}&ville={{ ville|url_encode }}{% endif %}">
+                            {{ page }}
+                        </a>
+                    {% endfor %}
+
+                    {% if pagination.currentPage < pagination.totalPages %}
+                        <a class="pagination-btn" href="/offres?page={{ pagination.currentPage + 1 }}{% if q %}&q={{ q|url_encode }}{% endif %}{% if ville %}&ville={{ ville|url_encode }}{% endif %}">›</a>
+                    {% endif %}
+
+                </nav>
+            {% endif %}
+
+        </div>
+    </main>
+
+{% endblock %}

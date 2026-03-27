@@ -1,0 +1,16 @@
+<h3>Évaluer une entreprise</h3>
+
+<form method="post" action="{{ path('admin') }}">
+  <input type="hidden" name="action" value="evaluate_company">
+
+  <label>ID entreprise</label>
+  <input type="number" name="company_id" required>
+
+  <label>Note</label>
+  <input type="number" name="rating" min="1" max="5">
+
+  <label>Commentaire</label>
+  <textarea name="comment"></textarea>
+
+  <button type="submit">Évaluer</button>
+</form>
