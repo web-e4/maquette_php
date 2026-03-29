@@ -1,0 +1,100 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block styles %}<link rel="stylesheet" href="/assets/css/auth.css">{% endblock %}
+
+{% block content %}
+
+<main class="auth-page">
+  <div class="auth-card">
+
+    <header class="auth-card-header">
+      <h1>Créer un compte</h1>
+      <p>Rejoignez GigaStage et trouvez votre stage.</p>
+    </header>
+
+    {% if flash %}
+      <div class="alert {{ flash.type }}">
+        {{ flash.message }}
+      </div>
+    {% endif %}
+
+    <form class="auth-form" action="/register/submit" method="post">
+
+      <div class="form-field">
+        <label class="form-label" for="firstName">Prénom</label>
+        <input
+          class="form-input"
+          id="firstName"
+          name="firstName"
+          type="text"
+          placeholder="Votre prénom"
+          required
+        >
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="surname">Nom</label>
+        <input
+          class="form-input"
+          id="surname"
+          name="surname"
+          type="text"
+          placeholder="Votre nom"
+          required
+        >
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="email">Email</label>
+        <input
+          class="form-input"
+          id="email"
+          name="email"
+          type="email"
+          placeholder="vous@exemple.com"
+          required
+        >
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="password">Mot de passe</label>
+        <div class="password-wrapper">
+          <input class="form-input" id="password" name="password" type="password" required>
+          <button type="button" class="btn-toggle-password" aria-label="Afficher le mot de passe" data-target="password">
+            <img src="/assets/icons/eye.svg" alt="">
+          </button>
+        </div>
+      </div>
+
+      <button class="btn btn-solid btn-auth-submit" type="submit">
+        S'inscrire
+      </button>
+
+    </form>
+
+    <p class="auth-footer-text">
+      Déjà un compte ?
+      <a href="/login">Se connecter</a>
+    </p>
+
+  </div>
+</main>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelectorAll('.btn-toggle-password').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var input = document.getElementById(this.dataset.target);
+      var img   = this.querySelector('img');
+      var show  = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      img.src    = show ? '/assets/icons/eye-off.svg' : '/assets/icons/eye.svg';
+      this.setAttribute('aria-label', show ? 'Masquer le mot de passe' : 'Afficher le mot de passe');
+    });
+  });
+</script>
+{% endblock %}

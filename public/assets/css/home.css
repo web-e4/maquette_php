@@ -1,0 +1,80 @@
+/* ============================================================
+   GIGASTAGE — Page d'accueil
+   Section Hero, Section Stats
+   ============================================================ */
+
+
+/* ============================================================
+   Section Hero
+   ============================================================ */
+.hero {
+  background-color: var(--color-primary);
+  padding: 50px 0;
+  color: #ffffff;
+}
+
+.hero-inner {
+  display: grid;
+  justify-items: center;
+  gap: 24px;
+}
+
+.hero-title {
+  margin: 0;
+  text-align: center;
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+.hero-title span {
+  display: block;
+}
+
+.hero-title .line-1 {
+  font-size: 44px;
+}
+
+.hero-title .line-2 {
+  font-size: 40px;
+  color: var(--color-secondary);
+}
+
+
+/* ============================================================
+   Section Stats
+   ============================================================ */
+.stats {
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.stats-inner {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  padding: 20px 0;
+}
+
+.stat {
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 650px) {
+  .hero-title .line-1 {
+    font-size: 32px;
+  }
+
+  .hero-title .line-2 {
+    font-size: 28px;
+  }
+
+  .stats-inner {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+}

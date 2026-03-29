@@ -1,0 +1,626 @@
+/* ============================================================
+   GIGASTAGE — Composants
+   Boutons, Recherche, Cartes, Pagination,
+   Champs de formulaire partagés, Upload, Messages flash
+   ============================================================ */
+
+
+/* ============================================================
+   Boutons
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+
+/* Variantes */
+.btn-ghost {
+  background-color: var(--color-bg);
+}
+
+.btn-solid {
+  background-color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  color: #ffffff;
+}
+
+.btn-outline-secondary {
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
+}
+
+.btn-fav {
+  margin-top: 12px;
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
+}
+
+.btn-fav.active {
+  background-color: var(--color-secondary);
+  color: #ffffff;
+}
+
+/* Icônes dans les boutons */
+.btn img {
+  width: 16px;
+  height: 16px;
+}
+
+/* Utilitaire : icône blanche dans un bouton coloré */
+.icon-white,
+.btn img.icon-white,
+.info-item img.icon-white {
+  filter: brightness(0) invert(1) !important;
+}
+
+/* Bouton icône carré */
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.btn-icon:hover {
+  border-color: var(--color-primary);
+  background-color: rgba(79, 134, 168, 0.06);
+}
+
+.btn-icon img {
+  width: 16px;
+  height: 16px;
+  filter: invert(40%) sepia(10%) saturate(400%) hue-rotate(175deg) brightness(90%);
+}
+
+.btn-icon--danger:hover {
+  border-color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.06);
+}
+
+.btn-icon--danger img {
+  filter: invert(35%) sepia(60%) saturate(600%) hue-rotate(330deg) brightness(90%);
+}
+
+
+/* ============================================================
+   Formulaire de recherche
+   ============================================================ */
+.search-section {
+  padding: 30px 0;
+  background-color: var(--color-bg-alt);
+}
+
+.search {
+  width: min(760px, 100%);
+  background-color: var(--color-bg);
+  border-radius: var(--radius-pill);
+  padding: 8px;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr auto;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-inline: auto;
+}
+
+.search-input {
+  border: 1px solid var(--color-border);
+  background-color: #fafafa;
+  border-radius: var(--radius-pill);
+  padding: 10px 16px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--color-primary);
+}
+
+/* Supprime la flèche native du navigateur pour les datalists */
+.search-input::-webkit-calendar-picker-indicator {
+  display: none !important;
+}
+
+/* Supprime la croix native du champ search */
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
+
+/* Groupe localisation : champ + bouton dropdown */
+.search-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Le champ ville laisse de la place pour le bouton à droite */
+.search-group .search-input {
+  padding-right: 40px;
+}
+
+/* Bouton chevron pour ouvrir les suggestions de villes */
+.search-dropdown-btn {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.search-dropdown-btn img {
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  filter: invert(45%) sepia(5%) saturate(600%) hue-rotate(175deg) brightness(90%);
+}
+
+.search-dropdown-btn:hover {
+  color: var(--color-primary-dark);
+}
+
+/* Liste déroulante des villes */
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  z-index: 200;
+}
+
+.search-dropdown-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--color-text);
+  transition: background-color 0.15s;
+}
+
+.search-dropdown-item:hover {
+  background-color: var(--color-bg-alt);
+  color: var(--color-primary-dark);
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 12px;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.search-clear-btn:not([hidden]) {
+  display: flex;
+}
+
+.search-clear-btn img {
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  filter: invert(45%) sepia(5%) saturate(600%) hue-rotate(175deg) brightness(90%);
+}
+
+.search-clear-btn:hover img {
+  filter: invert(20%) sepia(60%) saturate(500%) hue-rotate(330deg) brightness(90%);
+}
+
+.search-btn {
+  border: none;
+  background-color: var(--color-primary-dark);
+  color: #ffffff;
+  border-radius: var(--radius-pill);
+  padding: 10px 24px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.search-btn:hover {
+  background-color: var(--color-primary);
+}
+
+
+/* ============================================================
+   Grille de cartes d'offres
+   ============================================================ */
+.main {
+  padding: 40px 0 60px;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.card-top {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.card-logo {
+  width: 48px;
+  height: 48px;
+  background-color: #f1f2f6;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #e3e5ee;
+  flex-shrink: 0;
+}
+
+/* Icônes SVG dans le logo de carte : colorées en bleu */
+.card-logo img {
+  width: 22px;
+  height: 22px;
+  filter: invert(33%) sepia(60%) saturate(500%) hue-rotate(175deg) brightness(85%);
+}
+
+.card-title {
+  font-weight: 700;
+  font-size: 15px;
+  margin: 0;
+}
+
+.card-meta {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.card-meta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Icônes SVG dans les méta-infos */
+.card-meta img {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  filter: invert(47%) sepia(30%) saturate(600%) hue-rotate(175deg) brightness(90%);
+}
+
+.card-cta {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #b9c7d3;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  background-color: var(--color-bg);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.card-cta:hover {
+  border-color: var(--color-primary-dark);
+  color: var(--color-primary-dark);
+}
+
+/* Bouton wish-list dans la card */
+.btn-card-wishlist {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-card-wishlist:hover {
+  border-color: #e05252;
+  background-color: rgba(224, 82, 82, 0.06);
+}
+
+.btn-card-wishlist img {
+  width: 15px;
+  height: 15px;
+  filter: invert(47%) sepia(10%) saturate(400%) hue-rotate(175deg) brightness(90%);
+  transition: filter 0.2s;
+}
+
+.btn-card-wishlist:hover img {
+  filter: invert(35%) sepia(80%) saturate(600%) hue-rotate(330deg) brightness(85%);
+}
+
+.btn-card-wishlist--active {
+  border-color: #e05252;
+  background-color: rgba(224, 82, 82, 0.08);
+}
+
+.btn-card-wishlist--active img {
+  filter: invert(35%) sepia(80%) saturate(600%) hue-rotate(330deg) brightness(85%);
+}
+
+.btn-card-wishlist--active:hover {
+  background-color: rgba(224, 82, 82, 0.15);
+}
+
+
+/* ============================================================
+   Pagination
+   ============================================================ */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 40px;
+}
+
+.pagination-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 600;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+}
+
+.pagination-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+}
+
+.pagination-btn.active {
+  background-color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  color: #ffffff;
+}
+
+
+/* ============================================================
+   Champs de formulaire partagés
+   (utilisés dans auth, publish, apply, profile)
+   ============================================================ */
+.form-field {
+  display: grid;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.form-input {
+  width: 100%;
+  height: 46px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0 14px;
+  background-color: #fafafa;
+  font-size: 15px;
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+.form-input[readonly] {
+  background-color: var(--color-surface, #f3f4f6);
+  color: var(--color-text-muted, #6b7280);
+  cursor: not-allowed;
+}
+
+.form-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.form-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(79, 134, 168, 0.15);
+  background-color: var(--color-bg);
+}
+
+.form-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-link {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  transition: color 0.2s;
+}
+
+.form-link:hover {
+  color: var(--color-primary);
+}
+
+
+/* ============================================================
+   Upload de fichiers custom
+   ============================================================ */
+
+/* Cache l'input natif sans le retirer du DOM (sinon required ne fonctionne plus) */
+.file-input-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* Bouton custom qui simule un vrai bouton fichier */
+.file-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: #fafafa;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+  width: 100%;
+}
+
+.file-upload-btn:hover {
+  border-color: var(--color-primary);
+  background-color: rgba(79, 134, 168, 0.05);
+  color: var(--color-primary-dark);
+}
+
+.file-upload-btn img {
+  width: 16px;
+  height: 16px;
+  filter: invert(47%) sepia(30%) saturate(600%) hue-rotate(175deg) brightness(90%);
+}
+
+
+/* ============================================================
+   Messages flash
+   ============================================================ */
+.flash {
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.flash--success {
+  background-color: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #15803d;
+}
+
+.flash--error {
+  background-color: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #b91c1c;
+}
+
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 900px) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 650px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .search {
+    grid-template-columns: 1fr;
+    border-radius: 20px;
+  }
+}
+
+
+/* ============================================================
+   Avatar
+   ============================================================ */
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 3px solid var(--color-bg);
+  box-shadow: 0 0 0 2px var(--color-border);
+}
+
+.profile-avatar img {
+  width: 40px;
+  height: 40px;
+  filter: brightness(0) invert(1);
+}
+
+.profile-avatar--sm {
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  border-width: 2px;
+}
+
+.profile-avatar--sm img {
+  width: 18px;
+  height: 18px;
+}
+
+.profile-avatar--company {
+  background-color: var(--color-primary-dark);
+  border-radius: var(--radius-sm);
+}

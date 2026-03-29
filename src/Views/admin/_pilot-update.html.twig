@@ -1,0 +1,23 @@
+<div class="admin-form-card">
+  <h3>Modifier le compte pilote</h3>
+  <form method="post" action="/admin/pilot/update?id={{ pilot.idUser }}">
+    <div class="admin-form-grid">
+      <div class="form-field">
+        <label class="form-label" for="pu-firstname">Prénom <span class="required">*</span></label>
+        <input class="form-input" type="text" id="pu-firstname" name="firstName" value="{{ pilot.firstName ?? '' }}" required>
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="pu-surname">Nom <span class="required">*</span></label>
+        <input class="form-input" type="text" id="pu-surname" name="surname" value="{{ pilot.surname ?? '' }}" required>
+      </div>
+      <div class="form-field field-full">
+        <label class="form-label" for="pu-email">Email <span class="required">*</span></label>
+        <input class="form-input" type="email" id="pu-email" name="email" value="{{ pilot.email }}" required>
+      </div>
+    </div>
+    <div class="admin-form-actions">
+      <button class="btn btn-solid" type="submit">Enregistrer</button>
+      <a href="{{ dashboardBase }}?tab=pilots" class="btn btn-ghost">Annuler</a>
+    </div>
+  </form>
+</div>

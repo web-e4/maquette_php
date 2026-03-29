@@ -1,0 +1,54 @@
+/* ============================================================
+   GIGASTAGE — Page Candidature
+   ============================================================ */
+
+
+/* Ligne résumé candidature (valeur + bouton crayon) */
+.summary-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.summary-value {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  color: var(--color-text-muted);
+  cursor: default;
+}
+
+.btn-edit {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.btn-edit:hover {
+  border-color: var(--color-primary);
+  background-color: rgba(79, 134, 168, 0.06);
+}
+
+.btn-edit img {
+  width: 15px;
+  height: 15px;
+  filter: invert(40%) sepia(10%) saturate(400%) hue-rotate(175deg) brightness(90%);
+}
+
+.application-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 760px;
+}
+
+.application-summary .field-full {
+  grid-column: 1 / -1;
+}

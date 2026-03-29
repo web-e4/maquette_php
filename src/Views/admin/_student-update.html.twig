@@ -1,0 +1,36 @@
+<div class="admin-form-card">
+  <h3>Modifier le compte étudiant</h3>
+  <form method="post" action="/admin/student/update?id={{ student.idUser }}">
+    <div class="admin-form-grid">
+      <div class="form-field">
+        <label class="form-label" for="su-firstname">Prénom <span class="required">*</span></label>
+        <input class="form-input" type="text" id="su-firstname" name="firstName" value="{{ student.firstName ?? '' }}" required>
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="su-surname">Nom <span class="required">*</span></label>
+        <input class="form-input" type="text" id="su-surname" name="surname" value="{{ student.surname ?? '' }}" required>
+      </div>
+      <div class="form-field field-full">
+        <label class="form-label" for="su-email">Email <span class="required">*</span></label>
+        <input class="form-input" type="email" id="su-email" name="email" value="{{ student.email }}" required>
+      </div>
+      {% if pilots is defined and pilots|length > 0 %}
+      <div class="form-field field-full">
+        <label class="form-label" for="su-pilot">Pilote assigné</label>
+        <select class="form-input" id="su-pilot" name="idPilot">
+          <option value="">— Aucun pilote —</option>
+          {% for pilot in pilots %}
+            <option value="{{ pilot.idUser }}" {{ student.idPilot is defined and student.idPilot == pilot.idUser ? 'selected' : '' }}>
+              {{ pilot.firstName }} {{ pilot.surname }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+    </div>
+    <div class="admin-form-actions">
+      <button class="btn btn-solid" type="submit">Enregistrer</button>
+      <a href="{{ dashboardBase }}?tab=students" class="btn btn-ghost">Annuler</a>
+    </div>
+  </form>
+</div>

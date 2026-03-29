@@ -1,0 +1,177 @@
+/* ============================================================
+   GIGASTAGE — Layout
+   Header / Navigation, Footer
+   ============================================================ */
+
+
+/* ============================================================
+   Header / Navigation
+   ============================================================ */
+.site-header {
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: var(--header-height);
+}
+
+/* Logo + nom de la marque */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.brand-logo {
+  width: 28px;
+  height: 28px;
+}
+
+/* Navigation principale */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 10px;
+}
+
+.nav-link {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.nav-link:hover {
+  background-color: var(--color-bg-alt);
+}
+
+/* Zone authentification (droite du header) — desktop uniquement */
+.header-auth {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Boutons auth dans le menu mobile — cachés en desktop */
+.nav-auth-mobile {
+  display: none;
+}
+
+/* Bouton burger (mobile) */
+.btn-burger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: var(--color-primary);
+  cursor: pointer;
+  margin-left: auto;
+  z-index: 1100;
+  flex-shrink: 0;
+}
+
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.site-footer {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  margin-top: 60px;
+}
+
+/* Footer : 3 colonnes égales pour que CGU soit centré sur la page */
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.footer-inner a:first-child {
+  text-align: right;
+}
+
+.footer-inner a:nth-child(2) {
+  text-align: center;
+}
+
+.footer-inner a:last-child {
+  text-align: left;
+}
+
+.footer-inner a {
+  color: #ffffff;
+  transition: opacity 0.2s;
+}
+
+.footer-inner a:hover {
+  opacity: 0.75;
+}
+
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 900px) {
+  /* Cache nav et auth desktop */
+  .nav,
+  .header-auth {
+    display: none;
+  }
+
+  .btn-burger {
+    display: block;
+  }
+
+  /* Menu mobile (panneau latéral) */
+  .nav.mobile-open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 0 0 0 40%;
+    background-color: #ffffff;
+    padding: 80px 24px 24px;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+    z-index: 1050;
+  }
+
+  /* Boutons auth dans le menu mobile */
+  .nav.mobile-open .nav-auth-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  /* Footer mobile */
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .footer-inner a:first-child,
+  .footer-inner a:nth-child(2),
+  .footer-inner a:last-child {
+    text-align: center;
+  }
+}
+
+@media (max-width: 650px) {
+  .footer-inner {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+}

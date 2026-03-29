@@ -1,0 +1,23 @@
+<div class="admin-form-card">
+  <h3>Nouvelle entreprise</h3>
+  <form method="post" action="/admin/company/create">
+    <div class="admin-form-grid">
+      <div class="form-field">
+        <label class="form-label" for="cc-name">Nom <span class="required">*</span></label>
+        <input class="form-input" type="text" id="cc-name" name="name" placeholder="Ex : Acme Corp" required>
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="cc-email">Email <span class="required">*</span></label>
+        <input class="form-input" type="email" id="cc-email" name="email" placeholder="contact@entreprise.com" required>
+      </div>
+      <div class="form-field field-full">
+        <label class="form-label" for="cc-website">Site web</label>
+        <input class="form-input" type="text" id="cc-website" name="website" placeholder="https://...">
+      </div>
+    </div>
+    <div class="admin-form-actions">
+      <button class="btn btn-solid" type="submit">Créer l'entreprise</button>
+      <button class="btn btn-ghost" type="button" onclick="toggleForm('form-company-create')">Annuler</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,81 @@
+<form class="search" action="/offers" method="get">
+
+    <div class="search-group">
+        <input class="search-input" type="search" name="q" id="q-input" placeholder="Trouver un stage...">
+        <button class="search-clear-btn" type="button" id="q-clear-btn" aria-label="Vider la recherche" hidden>
+            <img src="/assets/icons/x.svg" alt="">
+        </button>
+    </div>
+
+    <div class="search-group">
+        <input class="search-input" type="text" name="city" id="city-input" placeholder="Taper une ville...">
+        <button class="search-dropdown-btn" type="button" id="city-dropdown-btn" aria-label="Villes suggérées">
+            <img src="/assets/icons/chevron-down.svg" alt="">
+        </button>
+        <ul class="search-dropdown" id="city-dropdown" hidden>
+            {% set cities = ['Rouen', 'Lille', 'Marseille', 'Paris', 'Lyon'] %}
+            {% for city in cities %}
+                <li class="search-dropdown-item">{{ city }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <button class="search-btn" type="submit">Rechercher</button>
+
+</form>
+
+<script>
+    // — Bouton effacer (champ "q") —
+    const qInput    = document.getElementById('q-input');
+    const qClearBtn = document.getElementById('q-clear-btn');
+
+    function updateClear() {
+        qClearBtn.hidden = qInput.value.trim() === '';
+    }
+
+    qInput.addEventListener('input', updateClear);
+    qInput.addEventListener('focus', updateClear);
+    qInput.addEventListener('blur', (e) => {
+        if (e.relatedTarget !== qClearBtn) {
+            qClearBtn.hidden = true;
+        }
+    });
+
+    qClearBtn.addEventListener('click', () => {
+        qInput.value = '';
+        qClearBtn.hidden = true;
+        qInput.focus();
+    });
+
+    const qGroup = qInput.closest('.search-group');
+
+    qGroup.addEventListener('mouseenter', () => {
+        if (qInput.value.trim() !== '') qClearBtn.hidden = false;
+    });
+
+    qGroup.addEventListener('mouseleave', () => {
+        if (document.activeElement !== qInput) qClearBtn.hidden = true;
+    });
+
+    // — Dropdown villes —
+    const cityBtn      = document.getElementById('city-dropdown-btn');
+    const cityDropdown = document.getElementById('city-dropdown');
+    const cityInput    = document.getElementById('city-input');
+
+    cityBtn.addEventListener('click', () => {
+        cityDropdown.hidden = !cityDropdown.hidden;
+    });
+
+    cityDropdown.addEventListener('click', (e) => {
+        const item = e.target.closest('.search-dropdown-item');
+        if (!item) return;
+        cityInput.value = item.textContent;
+        cityDropdown.hidden = true;
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!cityBtn.contains(e.target) && !cityDropdown.contains(e.target)) {
+            cityDropdown.hidden = true;
+        }
+    });
+</script>

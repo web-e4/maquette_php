@@ -1,1 +1,7 @@
 vendor/
+.cursor/
+.phpunit.result.cache
+.env
+storage/twig-cache/
+storage/applications/
+.claude/

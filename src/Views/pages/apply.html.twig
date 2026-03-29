@@ -1,0 +1,154 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Postuler — {{ offer.title }}{% endblock %}
+
+{% block styles %}<link rel="stylesheet" href="/assets/css/apply.css">{% endblock %}
+
+{% block content %}
+
+<main class="publish-page">
+  <div class="container">
+
+    <!-- EN-TÊTE -->
+    <div class="publish-header">
+      <h1>Postuler à l'offre</h1>
+      <p>
+        <strong>{{ offer.title }}</strong> chez {{ offer.companyName }} — {{ offer.location }}
+      </p>
+    </div>
+
+    <!-- MESSAGE FLASH -->
+    {% if flash %}
+      <div class="flash flash--{{ flash.type }}">
+        {{ flash.message }}
+      </div>
+    {% endif %}
+
+    {% if alreadyApplied %}
+
+      <!-- MODE LECTURE : candidature déjà envoyée -->
+      <div class="application-summary">
+
+        <div class="form-field">
+          <span class="form-label">Nom</span>
+          <div class="summary-row">
+            <span class="form-input summary-value">{{ application.surname }}</span>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <span class="form-label">Prénom</span>
+          <div class="summary-row">
+            <span class="form-input summary-value">{{ application.firstName }}</span>
+          </div>
+        </div>
+
+        <div class="form-field field-full">
+          <span class="form-label">Adresse email</span>
+          <div class="summary-row">
+            <span class="form-input summary-value">{{ application.email }}</span>
+          </div>
+        </div>
+
+        <div class="form-field field-full">
+          <span class="form-label">CV déposé</span>
+          <div class="summary-row">
+            <span class="form-input summary-value">{{ application.resume }}</span>
+            <button class="btn-edit" type="button" data-field="cv" title="Modifier">
+              <img src="/assets/icons/pencil.svg" alt="Modifier">
+            </button>
+          </div>
+        </div>
+
+        <div class="form-field field-full">
+          <span class="form-label">Lettre de motivation déposée</span>
+          <div class="summary-row">
+            <span class="form-input summary-value">{{ application.motivationLetter ?? 'Non fournie' }}</span>
+            <button class="btn-edit" type="button" data-field="letter" title="Modifier">
+              <img src="/assets/icons/pencil.svg" alt="Modifier">
+            </button>
+          </div>
+        </div>
+
+        <div class="publish-actions field-full">
+          <a class="btn btn-ghost" href="/">Retour à l'accueil</a>
+        </div>
+
+      </div>
+
+    {% else %}
+
+      <!-- MODE FORMULAIRE : pas encore postulé -->
+      <form class="publish-form" action="/apply/submit?id={{ offer.idOffer }}" method="post" enctype="multipart/form-data">
+
+        <div class="form-field">
+          <label class="form-label" for="surname">Nom</label>
+          <input class="form-input" type="text" id="surname" name="surname"
+            value="{{ profile.surname }}" readonly tabindex="-1">
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="firstName">Prénom</label>
+          <input class="form-input" type="text" id="firstName" name="firstName"
+            value="{{ profile.firstName }}" readonly tabindex="-1">
+        </div>
+
+        <div class="form-field field-full">
+          <label class="form-label" for="email">Adresse email</label>
+          <input class="form-input" type="email" id="email" name="email"
+            value="{{ profile.email }}" readonly tabindex="-1">
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="cv">Curriculum Vitae (PDF) <span class="required">*</span></label>
+          <label class="file-upload-btn" for="cv">
+            <img src="/assets/icons/upload.svg" alt="">
+            <span class="file-upload-label" id="cv-label">Choisir un fichier PDF</span>
+          </label>
+          <input class="file-input-hidden" type="file" id="cv" name="cv" accept=".pdf" required>
+          <span class="field-hint">Fichier PDF uniquement, 5 Mo maximum.</span>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="letter">Lettre de motivation (PDF)</label>
+          <label class="file-upload-btn" for="letter">
+            <img src="/assets/icons/upload.svg" alt="">
+            <span class="file-upload-label" id="letter-label">Choisir un fichier PDF</span>
+          </label>
+          <input class="file-input-hidden" type="file" id="letter" name="letter" accept=".pdf">
+          <span class="field-hint">Fichier PDF uniquement, 5 Mo maximum.</span>
+        </div>
+
+        <div class="publish-actions">
+          <button class="btn btn-solid" type="submit">
+            <img src="/assets/icons/send.svg" alt="" class="icon-white">
+            Envoyer ma candidature
+          </button>
+          <a class="btn btn-ghost" href="/">Annuler</a>
+        </div>
+
+      </form>
+
+      <script>
+        ['cv', 'letter'].forEach(function(id) {
+          var input = document.getElementById(id);
+          if (input) {
+            input.addEventListener('change', function() {
+              var label = document.getElementById(id + '-label');
+              label.textContent = this.files[0] ? this.files[0].name : 'Choisir un fichier PDF';
+            });
+          }
+        });
+      </script>
+
+    {% endif %}
+  </div>
+</main>
+
+{% endblock %}
+
+{% block scripts %}
+  {% if alreadyApplied %}
+    <script src="/assets/js/application-edit.js"></script>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,23 @@
+<div class="admin-form-card">
+  <h3>Modifier l'entreprise</h3>
+  <form method="post" action="/admin/company/update?id={{ company.idCompany }}">
+    <div class="admin-form-grid">
+      <div class="form-field">
+        <label class="form-label" for="cu-name">Nom <span class="required">*</span></label>
+        <input class="form-input" type="text" id="cu-name" name="name" value="{{ company.name }}" required>
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="cu-email">Email <span class="required">*</span></label>
+        <input class="form-input" type="email" id="cu-email" name="email" value="{{ company.email }}" required>
+      </div>
+      <div class="form-field field-full">
+        <label class="form-label" for="cu-website">Site web</label>
+        <input class="form-input" type="text" id="cu-website" name="website" value="{{ company.website ?? '' }}" placeholder="https://...">
+      </div>
+    </div>
+    <div class="admin-form-actions">
+      <button class="btn btn-solid" type="submit">Enregistrer</button>
+      <a href="{{ dashboardBase }}?tab=companies" class="btn btn-ghost">Annuler</a>
+    </div>
+  </form>
+</div>

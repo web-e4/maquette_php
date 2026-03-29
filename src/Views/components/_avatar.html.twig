@@ -1,0 +1,8 @@
+{#
+  Composant avatar circulaire.
+  Variables attendues :
+    - size  (string, optionnel) : 'sm' — défaut : taille normale (80px)
+#}
+<div class="profile-avatar {{ size is defined and size == 'sm' ? 'profile-avatar--sm' : '' }}">
+  <img src="/assets/icons/user.svg" alt="Avatar">
+</div>

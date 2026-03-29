@@ -1,0 +1,399 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ pageTitle }}{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/assets/css/profile.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="profile-page">
+
+  <!-- HERO HEADER -->
+  <div class="profile-hero">
+    <div class="container">
+      <div class="profile-hero-inner">
+        {% include "components/_avatar.html.twig" %}
+        <div class="profile-info">
+          <h1>{{ app_user.firstName }} {{ app_user.surname }}</h1>
+          <span class="profile-role">{{ app_user.role }}</span>
+          <p class="profile-meta">{{ app_user.email }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    {% if flash %}
+      <div class="flash flash--{{ flash.type == 'success' ? 'success' : 'error' }}" style="margin-bottom:24px">
+        {{ flash.message }}
+      </div>
+    {% endif %}
+
+    <!-- TABS -->
+    <div class="profile-tabs" id="admin-tabs">
+      <button class="profile-tab {{ activeTab == 'companies' ? 'active' : '' }}" data-tab="companies">Entreprises</button>
+      <button class="profile-tab {{ activeTab == 'offers'    ? 'active' : '' }}" data-tab="offers">Offres</button>
+      <button class="profile-tab {{ activeTab == 'students'  ? 'active' : '' }}" data-tab="students">Étudiants</button>
+      {% if app_user.role == 'Admin' %}
+        <button class="profile-tab {{ activeTab == 'pilots' ? 'active' : '' }}" data-tab="pilots">Pilotes</button>
+      {% endif %}
+      <button class="profile-tab {{ activeTab == 'applications' ? 'active' : '' }}" data-tab="applications">Candidatures</button>
+    </div>
+
+    <!-- ============================================================
+         ONGLET ENTREPRISES
+         ============================================================ -->
+    <div class="tab-panel {{ activeTab == 'companies' ? 'active' : '' }}" id="tab-companies">
+
+      <div class="section-header">
+        <h2>Entreprises</h2>
+        <span class="count-badge">{{ companies|length }}</span>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <button class="btn btn-solid" type="button" onclick="toggleForm('form-company-create')">
+            <img src="/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
+          </button>
+        </div>
+      </div>
+
+      <!-- Formulaire CRÉER -->
+      <div id="form-company-create" style="display:{{ (editType == 'company' and editId is null) ? 'block' : 'none' }}">
+        {% include "admin/_company-create.html.twig" %}
+      </div>
+
+      <!-- Formulaire MODIFIER -->
+      {% if editType == 'company' and editData %}
+        {% include "admin/_company-update.html.twig" with { company: editData } %}
+      {% endif %}
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Email</th>
+              <th>Site web</th>
+              <th>Note moy.</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for company in companies %}
+              <tr>
+                <td>
+                  <a href="/company?id={{ company.idCompany }}" style="font-weight:600;color:var(--color-primary-dark)">
+                    {{ company.name }}
+                  </a>
+                </td>
+                <td style="color:var(--color-text-muted)">{{ company.email }}</td>
+                <td style="color:var(--color-text-muted)">
+                  {% if company.website %}
+                    <a href="{{ company.website }}" target="_blank" style="color:var(--color-primary)">{{ company.website }}</a>
+                  {% else %}
+                    —
+                  {% endif %}
+                </td>
+                <td>
+                  {% if company.avgRating %}
+                    <span style="color:var(--color-secondary)">★</span> {{ company.avgRating }}/5
+                  {% else %}
+                    <span style="color:var(--color-text-muted)">—</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div style="display:flex;gap:6px;justify-content:flex-end">
+                    <a href="{{ dashboardBase }}?tab=companies&editType=company&edit={{ company.idCompany }}" class="btn-icon" title="Modifier">
+                      <img src="/assets/icons/pencil.svg" alt="Modifier">
+                    </a>
+                    <form method="post" action="/admin/company/delete?id={{ company.idCompany }}" onsubmit="return confirm('Supprimer {{ company.name }} ?')">
+                      <button type="submit" class="btn-icon btn-icon--danger" title="Supprimer">
+                        <img src="/assets/icons/trash.svg" alt="Supprimer">
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% else %}
+              <tr><td colspan="5" style="text-align:center;padding:40px;color:var(--color-text-muted)">Aucune entreprise.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         ONGLET OFFRES
+         ============================================================ -->
+    <div class="tab-panel {{ activeTab == 'offers' ? 'active' : '' }}" id="tab-offers">
+
+      <div class="section-header">
+        <h2>Offres de stage</h2>
+        <span class="count-badge">{{ offers|length }}</span>
+        <div style="margin-left:auto">
+          <a href="/offer/create?from={{ dashboardBase|replace({'/': ''}) }}" class="btn btn-solid">
+            <img src="/assets/icons/pencil.svg" alt="" class="icon-white"> Créer une offre
+          </a>
+        </div>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Intitulé</th>
+              <th>Entreprise</th>
+              <th>Localisation</th>
+              <th>Durée</th>
+              <th>Début</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for offer in offers %}
+              <tr>
+                <td>
+                  <a href="/offer?id={{ offer.idOffer }}" style="font-weight:600;color:var(--color-primary-dark)">
+                    {{ offer.title }}
+                  </a>
+                </td>
+                <td style="color:var(--color-text-muted)">{{ offer.companyName }}</td>
+                <td style="color:var(--color-text-muted)">{{ offer.location }}</td>
+                <td style="color:var(--color-text-muted)">{{ offer.durationInWeeks }} sem.</td>
+                <td style="color:var(--color-text-muted)">{{ offer.startDate }}</td>
+                <td>
+                  <div style="display:flex;gap:6px;justify-content:flex-end">
+                    <a href="/offer/edit?id={{ offer.idOffer }}&from={{ dashboardBase|replace({'/': ''}) }}" class="btn-icon" title="Modifier">
+                      <img src="/assets/icons/pencil.svg" alt="Modifier">
+                    </a>
+                    <form method="post" action="/offer/delete?id={{ offer.idOffer }}" onsubmit="return confirm('Supprimer cette offre ?')">
+                      <button type="submit" class="btn-icon btn-icon--danger" title="Supprimer">
+                        <img src="/assets/icons/trash.svg" alt="Supprimer">
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% else %}
+              <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--color-text-muted)">Aucune offre.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         ONGLET ÉTUDIANTS
+         ============================================================ -->
+    <div class="tab-panel {{ activeTab == 'students' ? 'active' : '' }}" id="tab-students">
+
+      <div class="section-header">
+        <h2>Étudiants</h2>
+        <span class="count-badge">{{ students|length }}</span>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <button class="btn btn-solid" type="button" onclick="toggleForm('form-student-create')">
+            <img src="/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
+          </button>
+        </div>
+      </div>
+
+      <!-- Formulaire CRÉER -->
+      <div id="form-student-create" style="display:none">
+        {% include "admin/_student-create.html.twig" %}
+      </div>
+
+      <!-- Formulaire MODIFIER -->
+      {% if editType == 'student' and editData %}
+        {% include "admin/_student-update.html.twig" with { student: editData, pilots: pilots } %}
+      {% endif %}
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Prénom</th>
+              <th>Nom</th>
+              <th>Email</th>
+              <th>Pilote</th>
+              <th>Statut</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for student in students %}
+              <tr>
+                <td>{{ student.firstName ?? '—' }}</td>
+                <td style="font-weight:600">{{ student.surname ?? '—' }}</td>
+                <td style="color:var(--color-text-muted)">{{ student.email }}</td>
+                <td style="color:var(--color-text-muted)">{{ student.pilotName ?? '—' }}</td>
+                <td>
+                  {% if student.statusUser %}
+                    <span class="offer-status offer-status--active">Actif</span>
+                  {% else %}
+                    <span class="offer-status offer-status--closed">Désactivé</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div style="display:flex;gap:6px;justify-content:flex-end">
+                    <a href="{{ dashboardBase }}?tab=students&editType=student&edit={{ student.idUser }}" class="btn-icon" title="Modifier">
+                      <img src="/assets/icons/pencil.svg" alt="Modifier">
+                    </a>
+                    <form method="post" action="/admin/student/delete?id={{ student.idUser }}" onsubmit="return confirm('Désactiver cet étudiant ?')">
+                      <button type="submit" class="btn-icon btn-icon--danger" title="Désactiver">
+                        <img src="/assets/icons/trash.svg" alt="Désactiver">
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% else %}
+              <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--color-text-muted)">Aucun étudiant trouvé.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         ONGLET PILOTES (Admin uniquement)
+         ============================================================ -->
+    {% if app_user.role == 'Admin' %}
+    <div class="tab-panel {{ activeTab == 'pilots' ? 'active' : '' }}" id="tab-pilots">
+
+      <div class="section-header">
+        <h2>Pilotes</h2>
+        <span class="count-badge">{{ pilots|length }}</span>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <button class="btn btn-solid" type="button" onclick="toggleForm('form-pilot-create')">
+            <img src="/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
+          </button>
+        </div>
+      </div>
+
+      <!-- Formulaire CRÉER -->
+      <div id="form-pilot-create" style="display:none">
+        {% include "admin/_pilot-create.html.twig" %}
+      </div>
+
+      <!-- Formulaire MODIFIER -->
+      {% if editType == 'pilot' and editData %}
+        {% include "admin/_pilot-update.html.twig" with { pilot: editData } %}
+      {% endif %}
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Prénom</th>
+              <th>Nom</th>
+              <th>Email</th>
+              <th>Statut</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pilot in pilots %}
+              <tr>
+                <td>{{ pilot.firstName ?? '—' }}</td>
+                <td style="font-weight:600">{{ pilot.surname ?? '—' }}</td>
+                <td style="color:var(--color-text-muted)">{{ pilot.email }}</td>
+                <td>
+                  {% if pilot.statusUser %}
+                    <span class="offer-status offer-status--active">Actif</span>
+                  {% else %}
+                    <span class="offer-status offer-status--closed">Désactivé</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div style="display:flex;gap:6px;justify-content:flex-end">
+                    <a href="{{ dashboardBase }}?tab=pilots&editType=pilot&edit={{ pilot.idUser }}" class="btn-icon" title="Modifier">
+                      <img src="/assets/icons/pencil.svg" alt="Modifier">
+                    </a>
+                    <form method="post" action="/admin/pilot/delete?id={{ pilot.idUser }}" onsubmit="return confirm('Désactiver ce pilote ?')">
+                      <button type="submit" class="btn-icon btn-icon--danger" title="Désactiver">
+                        <img src="/assets/icons/trash.svg" alt="Désactiver">
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% else %}
+              <tr><td colspan="5" style="text-align:center;padding:40px;color:var(--color-text-muted)">Aucun pilote trouvé.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- ============================================================
+         ONGLET CANDIDATURES
+         ============================================================ -->
+    <div class="tab-panel {{ activeTab == 'applications' ? 'active' : '' }}" id="tab-applications">
+
+      <div class="section-header">
+        <h2>Candidatures</h2>
+        <span class="count-badge">{{ applications|length }}</span>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Étudiant</th>
+              <th>Email</th>
+              <th>Offre</th>
+              <th>Entreprise</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for application in applications %}
+              <tr>
+                <td style="font-weight:600">{{ application.firstName }} {{ application.surname }}</td>
+                <td style="color:var(--color-text-muted)">{{ application.email }}</td>
+                <td>
+                  <a href="/offer?id={{ application.idOffer }}" style="color:var(--color-primary-dark)">
+                    {{ application.title }}
+                  </a>
+                </td>
+                <td style="color:var(--color-text-muted)">{{ application.companyName }}</td>
+                <td style="color:var(--color-text-muted)">{{ application.applicationDate }}</td>
+              </tr>
+            {% else %}
+              <tr><td colspan="5" style="text-align:center;padding:40px;color:var(--color-text-muted)">Aucune candidature.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% block scripts %}
+<script>
+  // Tab switching
+  const tabs  = document.querySelectorAll('.profile-tab[data-tab]');
+  const panels = document.querySelectorAll('.tab-panel');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      const panel = document.getElementById('tab-' + tab.dataset.tab);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  // Toggle create forms
+  function toggleForm(id) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+</script>
+{% endblock %}
+
+{% endblock %}

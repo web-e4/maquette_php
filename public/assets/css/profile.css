@@ -1,0 +1,371 @@
+/* ============================================================
+   GIGASTAGE — Pages Profil (stagiaire & entreprise)
+   ============================================================ */
+
+
+.profile-page {
+  padding-bottom: 60px;
+}
+
+/* Bloc identité en haut */
+.profile-hero {
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  padding: 36px 0;
+  margin-bottom: 40px;
+}
+
+.profile-hero-inner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Avatar — styles déplacés dans components.css */
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-info h1 {
+  margin: 0 0 4px;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.profile-info .profile-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  background-color: rgba(79, 134, 168, 0.1);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.profile-info .profile-meta {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+/* Onglets de navigation dans le profil */
+.profile-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--color-border);
+  margin-bottom: 32px;
+}
+
+.profile-tab {
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.profile-tab:hover {
+  color: var(--color-primary);
+}
+
+.profile-tab.active {
+  color: var(--color-primary-dark);
+  border-bottom-color: var(--color-primary-dark);
+  background-color: rgba(79, 134, 168, 0.06);
+}
+
+/* Sections d'onglets */
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+/* En-tête de section avec compteur */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.count-badge {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+}
+
+/* Liste d'offres dans le profil (favoris / offres postées) */
+.profile-offers {
+  display: grid;
+  gap: 12px;
+}
+
+.profile-offer-card {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.profile-offer-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.profile-offer-logo {
+  width: 44px;
+  height: 44px;
+  background-color: #f1f2f6;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #e3e5ee;
+  flex-shrink: 0;
+}
+
+.profile-offer-logo img {
+  width: 20px;
+  height: 20px;
+  filter: invert(33%) sepia(60%) saturate(500%) hue-rotate(175deg) brightness(85%);
+}
+
+.profile-offer-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-offer-title {
+  font-weight: 700;
+  font-size: 15px;
+  margin: 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-offer-meta {
+  display: flex;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.profile-offer-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.profile-offer-meta img {
+  width: 13px;
+  height: 13px;
+  filter: invert(47%) sepia(10%) saturate(400%) hue-rotate(175deg) brightness(90%);
+}
+
+/* Statut d'une offre publiée (entreprise) */
+.offer-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+}
+
+.offer-status--active {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #15803d;
+}
+
+.offer-status--pending {
+  background-color: rgba(241, 154, 58, 0.12);
+  color: #b45309;
+}
+
+.offer-status--closed {
+  background-color: rgba(107, 114, 128, 0.1);
+  color: var(--color-text-muted);
+}
+
+/* Actions sur une offre (entreprise) */
+.profile-offer-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* État vide (aucune offre) */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--color-text-muted);
+}
+
+.empty-state img {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+.empty-state p {
+  margin: 0 0 20px;
+  font-size: 15px;
+}
+
+/* Infos du profil (onglet "Mes informations") */
+.profile-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 600px;
+}
+
+.profile-info-grid .field-full {
+  grid-column: 1 / -1;
+}
+
+
+/* ============================================================
+   Tables admin
+   ============================================================ */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.admin-table th {
+  background-color: var(--color-bg-alt);
+  border-bottom: 2px solid var(--color-border);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.admin-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table tr:hover td {
+  background-color: rgba(79, 134, 168, 0.03);
+}
+
+/* Wrapper de la table avec scroll horizontal sur mobile */
+.admin-table-wrap {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+/* Card pour formulaires create/edit inline */
+.admin-form-card {
+  background-color: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.admin-form-card h3 {
+  margin: 0 0 20px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.admin-form-grid .field-full {
+  grid-column: 1 / -1;
+}
+
+.admin-form-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+/* select stylisé comme form-input */
+select.form-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+  cursor: pointer;
+  height: 46px;
+}
+
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 650px) {
+  .profile-hero-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .profile-offer-card {
+    flex-wrap: wrap;
+  }
+
+  .profile-offer-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .profile-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-info-grid .field-full {
+    grid-column: 1;
+  }
+}

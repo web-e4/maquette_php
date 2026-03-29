@@ -1,0 +1,49 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block styles %}<link rel="stylesheet" href="/assets/css/home.css">{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-inner">
+
+    <h1 class="hero-title">
+      <span class="line-1">Trouvez le stage</span>
+      <span class="line-2">qui lance votre carrière</span>
+    </h1>
+
+    {% include 'components/_search.html.twig' %}
+
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="container stats-inner">
+    <p class="stat">{{ stats.offers }} offres</p>
+    <p class="stat">{{ stats.companies }} entreprises</p>
+    <p class="stat">{{ stats.students }} étudiants</p>
+  </div>
+</section>
+
+<!-- DERNIERES OFFRES -->
+<main class="main">
+  <div class="container">
+    <h2 class="section-title">Dernières offres publiées</h2>
+
+    <div class="cards">
+
+      {% for offer in offers %}
+        {% include 'components/_offer-card.html.twig' %}
+      {% else %}
+        <p>Aucune offre disponible pour le moment.</p>
+      {% endfor %}
+
+    </div>
+  </div>
+</main>
+
+{% endblock %}

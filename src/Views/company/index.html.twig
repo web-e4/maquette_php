@@ -1,0 +1,75 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Entreprises partenaires{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/assets/css/profile.css">
+{% endblock %}
+
+{% block content %}
+
+<div style="padding-bottom:64px">
+
+  <!-- PAGE HEADER -->
+  <div style="background:var(--color-bg);border-bottom:1px solid var(--color-border);padding:36px 0;margin-bottom:40px">
+    <div class="container">
+      <h1 style="margin:0 0 6px;font-size:28px">Entreprises partenaires</h1>
+      <p style="margin:0;color:var(--color-text-muted);font-size:15px">
+        {{ companies|length }} entreprise{{ companies|length > 1 ? 's' : '' }} référencée{{ companies|length > 1 ? 's' : '' }}
+      </p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    {% if companies is empty %}
+      <div class="empty-state">
+        <img src="/assets/icons/building-2.svg" alt="">
+        <p>Aucune entreprise enregistrée pour le moment.</p>
+      </div>
+    {% else %}
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">
+        {% for company in companies %}
+          <a href="/company?id={{ company.idCompany }}" style="text-decoration:none;color:inherit">
+            <article class="profile-offer-card" style="flex-direction:column;align-items:flex-start;gap:12px;height:100%;box-sizing:border-box">
+
+              <div style="display:flex;align-items:center;gap:12px;width:100%">
+                <div class="profile-avatar profile-avatar--company" style="width:44px;height:44px;font-size:16px;font-weight:700;border-radius:10px;flex-shrink:0">
+                  {{ company.name|slice(0,1)|upper }}
+                </div>
+                <div style="min-width:0">
+                  <h2 style="margin:0;font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+                    {{ company.name }}
+                  </h2>
+                  <p style="margin:0;font-size:13px;color:var(--color-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+                    {{ company.email }}
+                  </p>
+                </div>
+              </div>
+
+              <div style="display:flex;gap:16px;font-size:13px;color:var(--color-text-muted);width:100%">
+                <span style="display:flex;align-items:center;gap:4px">
+                  <img src="/assets/icons/panels-top-left.svg" alt="" style="width:13px;height:13px;filter:invert(47%) sepia(10%) saturate(400%) hue-rotate(175deg) brightness(90%)">
+                  {{ company.offerCount }} offre{{ company.offerCount > 1 ? 's' : '' }}
+                </span>
+                {% if company.avgRating %}
+                  <span style="display:flex;align-items:center;gap:4px">
+                    <span style="color:var(--color-secondary);font-size:14px">★</span>
+                    {{ company.avgRating }}/5
+                    <span style="color:var(--color-text-muted)">({{ company.ratingCount }})</span>
+                  </span>
+                {% else %}
+                  <span>Pas encore évalué</span>
+                {% endif %}
+              </div>
+
+            </article>
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% endblock %}

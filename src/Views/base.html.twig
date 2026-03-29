@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GigaStage - {% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  {% block styles %}{% endblock %}
+</head>
+
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="site-header">
+    <div class="container header-inner">
+
+      <a class="brand" href="/">
+        <img class="brand-logo" src="/assets/logo.svg" alt="Logo GigaStage">
+        <span class="brand-name">GigaStage</span>
+      </a>
+
+      <nav class="nav" id="main-nav" aria-label="Navigation principale">
+        <a class="nav-link" href="/">Accueil</a>
+        <a class="nav-link" href="/offers">Annonces</a>
+        <a class="nav-link" href="/companies">Entreprises</a>
+        {% if app_user is not null and app_user.role == 'Admin' %}
+          <a class="nav-link" href="/admin">Espace Admin</a>
+        {% elseif app_user is not null and app_user.role == 'Pilote' %}
+          <a class="nav-link" href="/pilot">Espace Pilote</a>
+        {% endif %}
+
+        <div class="nav-auth-mobile">
+          {% if app_user is not null %}
+            <a class="btn btn-ghost" href="/profile">Mon profil</a>
+            <a class="btn btn-solid" href="/logout">Déconnexion</a>
+          {% else %}
+            <a class="btn btn-ghost" href="/login">Connexion</a>
+            <a class="btn btn-solid" href="/register">Inscription</a>
+          {% endif %}
+        </div>
+      </nav>
+
+      <div class="header-auth">
+        {% if app_user is not null %}
+          <a href="/profile" title="{{ app_user.email }}" style="text-decoration:none">
+            {% include "components/_avatar.html.twig" with { firstName: app_user.firstName, surname: app_user.surname, size: 'sm' } %}
+          </a>
+        {% else %}
+          <a class="btn btn-ghost" href="/login">Connexion</a>
+          <a class="btn btn-solid" href="/register">Inscription</a>
+        {% endif %}
+      </div>
+
+      <button class="btn-burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav">
+        ☰
+      </button>
+
+    </div>
+  </header>
+
+  <!-- ========== CONTENU ========== -->
+  {% block content %}{% endblock %}
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a href="/contact">Contact</a>
+      <a href="/terms">CGU</a>
+      <a href="/legal">Mentions légales</a>
+    </div>
+  </footer>
+
+  <script>
+    const burger = document.querySelector('.btn-burger');
+    const nav = document.querySelector('.nav');
+
+    burger.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('mobile-open');
+      burger.setAttribute('aria-expanded', isOpen);
+      burger.textContent = isOpen ? '✕' : '☰';
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!nav.contains(e.target) && !burger.contains(e.target)) {
+        nav.classList.remove('mobile-open');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.textContent = '☰';
+      }
+    });
+  </script>
+
+</body>
+
+{% block scripts %}{% endblock %}
+</html>

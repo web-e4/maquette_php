@@ -1,0 +1,180 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block styles %}<link rel="stylesheet" href="/assets/css/profile.css">{% endblock %}
+
+{% block content %}
+
+<div class="profile-page">
+
+  {% if flash %}
+    <div class="container">
+      <div class="alert {{ flash.type }}">{{ flash.message }}</div>
+    </div>
+  {% endif %}
+
+  <!-- HERO -->
+  <div class="profile-hero">
+    <div class="container">
+      <div class="profile-hero-inner">
+
+        {% include "components/_avatar.html.twig" with { firstName: student.firstName, surname: student.surname } %}
+
+        <div class="profile-info">
+          <h1>{{ student.firstName }} {{ student.surname }}</h1>
+          <span class="profile-role">{{ app_user.role }}</span>
+          <p class="profile-meta">{{ student.email }}</p>
+        </div>
+
+        <a class="btn btn-ghost" href="/logout">Déconnexion</a>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ONGLETS -->
+  <div class="container">
+
+    <div class="profile-tabs">
+      <button class="profile-tab active" data-tab="favorites">
+        Offres favorites
+        <span class="count-badge" style="margin-left:6px">{{ favorites|length }}</span>
+      </button>
+      <button class="profile-tab" data-tab="applications">
+        Mes candidatures
+        <span class="count-badge" style="margin-left:6px">{{ applications|length }}</span>
+      </button>
+      <button class="profile-tab" data-tab="info">
+        Mes informations
+      </button>
+    </div>
+
+    <!-- Onglet Favoris (SFx23) -->
+    <div class="tab-panel active" id="tab-favorites">
+      {% if favorites is empty %}
+        <div class="empty-state">
+          <img src="/assets/icons/heart.svg" alt="">
+          <p>Aucune offre dans votre wish-list.</p>
+          <a class="btn btn-solid" href="/offers">Explorer les offres</a>
+        </div>
+      {% else %}
+        <div class="profile-offers">
+          {% for offer in favorites %}
+            <article class="profile-offer-card">
+              <div class="profile-offer-logo">
+                <img src="/assets/icons/building-2.svg" alt="">
+              </div>
+              <div class="profile-offer-body">
+                <h3 class="profile-offer-title">{{ offer.title }}</h3>
+                <div class="profile-offer-meta">
+                  <span>
+                    <img src="/assets/icons/building-2.svg" alt="">
+                    {{ offer.companyName }}
+                  </span>
+                  <span>
+                    <img src="/assets/icons/map-pin.svg" alt="">
+                    {{ offer.location }}
+                  </span>
+                  <span>
+                    <img src="/assets/icons/clock.svg" alt="">
+                    {{ offer.durationInWeeks }} semaines
+                  </span>
+                </div>
+              </div>
+              <div class="profile-offer-actions">
+                <a class="btn btn-solid" href="/offer?id={{ offer.idOffer }}">Voir</a>
+                <!-- SFx25 — Retirer de la wish-list -->
+                <form method="post" action="/wishlist/remove?id={{ offer.idOffer }}">
+                  <button class="btn btn-ghost" type="submit">Retirer</button>
+                </form>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Onglet Candidatures (SFx21) -->
+    <div class="tab-panel" id="tab-applications">
+      {% if applications is empty %}
+        <div class="empty-state">
+          <img src="/assets/icons/send.svg" alt="">
+          <p>Aucune candidature pour le moment.</p>
+          <a class="btn btn-solid" href="/offers">Trouver un stage</a>
+        </div>
+      {% else %}
+        <div class="profile-offers">
+          {% for application in applications %}
+            <article class="profile-offer-card">
+              <div class="profile-offer-logo">
+                <img src="/assets/icons/panels-top-left.svg" alt="">
+              </div>
+              <div class="profile-offer-body">
+                <h3 class="profile-offer-title">{{ application.title }}</h3>
+                <div class="profile-offer-meta">
+                  <span>
+                    <img src="/assets/icons/building-2.svg" alt="">
+                    {{ application.companyName }}
+                  </span>
+                  <span>
+                    <img src="/assets/icons/map-pin.svg" alt="">
+                    {{ application.location }}
+                  </span>
+                  <span>
+                    <img src="/assets/icons/calendar.svg" alt="">
+                    Postulé le {{ application.applicationDate }}
+                  </span>
+                </div>
+              </div>
+              <div class="profile-offer-actions">
+                <a class="btn btn-solid" href="/apply?id={{ application.idOffer }}">Voir ma candidature</a>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Onglet Informations -->
+    <div class="tab-panel" id="tab-info">
+      <div class="profile-info-grid">
+        <div>
+          <p style="font-size:12px;color:var(--color-text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Prénom</p>
+          <p style="font-weight:600">{{ student.firstName }}</p>
+        </div>
+        <div>
+          <p style="font-size:12px;color:var(--color-text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Nom</p>
+          <p style="font-weight:600">{{ student.surname }}</p>
+        </div>
+        <div class="field-full">
+          <p style="font-size:12px;color:var(--color-text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Email</p>
+          <p style="font-weight:600">{{ student.email }}</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelectorAll('.profile-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var target = this.dataset.tab;
+
+      document.querySelectorAll('.profile-tab').forEach(function(t) {
+        t.classList.remove('active');
+      });
+      document.querySelectorAll('.tab-panel').forEach(function(p) {
+        p.classList.remove('active');
+      });
+
+      this.classList.add('active');
+      document.getElementById('tab-' + target).classList.add('active');
+    });
+  });
+</script>
+{% endblock %}
