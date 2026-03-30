@@ -5,17 +5,20 @@ namespace Equipe4\Gigastage\Controllers;
 
 use Equipe4\Gigastage\Core\Role;
 use Equipe4\Gigastage\Models\OfferModel;
+use Equipe4\Gigastage\Models\UserModel;
 use Equipe4\Gigastage\Models\WishlistModel;
 
 class HomeController extends AbstractController
 {
     private OfferModel $offerModel;
+    private UserModel $userModel;
     private WishlistModel $wishlistModel;
 
     public function __construct($twig)
     {
         parent::__construct($twig);
         $this->offerModel    = new OfferModel();
+        $this->userModel     = new UserModel();
         $this->wishlistModel = new WishlistModel();
     }
 
@@ -27,7 +30,7 @@ class HomeController extends AbstractController
         $stats = [
             'offers'    => $this->offerModel->countRows('Offer'),
             'companies' => $this->offerModel->countRows('Company'),
-            'students'  => $this->offerModel->countRows('User_'),
+            'students'  => $this->userModel->countByRole(Role::STUDENT),
         ];
 
         $wishlistIds = [];

@@ -9,9 +9,10 @@ class OfferModel extends AbstractModel
     public function findXLast(int $x): array
     {
         $stmt = $this->getConnection()->prepare("
-            SELECT idOffer, title, location, durationInWeeks
+            SELECT idOffer, title, location, durationInWeeks, createdAt
             FROM Offer
-            ORDER BY idOffer DESC
+            WHERE statusOffer = 1
+            ORDER BY createdAt DESC, idOffer DESC
             LIMIT :limit
         ");
         $stmt->bindValue(':limit', $x, \PDO::PARAM_INT);

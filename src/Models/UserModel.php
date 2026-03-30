@@ -7,6 +7,18 @@ use Equipe4\Gigastage\Core\Role;
 
 class UserModel extends AbstractModel
 {
+    // Compte les utilisateurs d'un rôle donné
+    public function countByRole(string $role): int
+    {
+        $stmt = $this->getConnection()->prepare("
+            SELECT COUNT(*) FROM User_ u
+            JOIN Role r ON u.idRole = r.idRole
+            WHERE r.role = :role
+        ");
+        $stmt->execute(['role' => $role]);
+        return (int) $stmt->fetchColumn();
+    }
+
     // Récupère tous les utilisateurs d'un rôle donné
     public function findByRole(string $role): array
     {

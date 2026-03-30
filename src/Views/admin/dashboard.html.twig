@@ -131,11 +131,16 @@
       <div class="section-header">
         <h2>Offres de stage</h2>
         <span class="count-badge">{{ offers|length }}</span>
-        <div style="margin-left:auto">
-          <a href="/offer/create?from={{ dashboardBase|replace({'/': ''}) }}" class="btn btn-solid">
-            <img src="/assets/icons/pencil.svg" alt="" class="icon-white"> Créer une offre
-          </a>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <button class="btn btn-solid" type="button" onclick="toggleForm('form-offer-create')">
+            <img src="/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
+          </button>
         </div>
+      </div>
+
+      <!-- Formulaire CRÉER -->
+      <div id="form-offer-create" style="display:none">
+        {% include "admin/_offer-create.html.twig" %}
       </div>
 
       <div class="admin-table-wrap">

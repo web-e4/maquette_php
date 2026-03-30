@@ -1,0 +1,13 @@
+{#
+  Variables :
+    pageHeaderTitle    — titre principal (obligatoire)
+    pageHeaderSubtitle — sous-titre ou description (optionnel)
+#}
+<div class="page-header">
+    <div class="container">
+        <h1 class="page-header__title">{{ pageHeaderTitle }}</h1>
+        {% if pageHeaderSubtitle is defined and pageHeaderSubtitle %}
+            <p class="page-header__subtitle">{{ pageHeaderSubtitle }}</p>
+        {% endif %}
+    </div>
+</div>

@@ -10,15 +10,19 @@
 
 <div style="padding-bottom:64px">
 
-  <!-- PAGE HEADER -->
-  <div style="background:var(--color-bg);border-bottom:1px solid var(--color-border);padding:36px 0;margin-bottom:40px">
-    <div class="container">
-      <h1 style="margin:0 0 6px;font-size:28px">Entreprises partenaires</h1>
-      <p style="margin:0;color:var(--color-text-muted);font-size:15px">
-        {{ companies|length }} entreprise{{ companies|length > 1 ? 's' : '' }} référencée{{ companies|length > 1 ? 's' : '' }}
-      </p>
-    </div>
-  </div>
+  {% include 'components/_page-header.html.twig' with {
+      pageHeaderTitle:    'Entreprises partenaires',
+      pageHeaderSubtitle: companies|length ~ ' entreprise' ~ (companies|length > 1 ? 's' : '') ~ ' référencée' ~ (companies|length > 1 ? 's' : '')
+  } %}
+
+  <!-- BARRE DE RECHERCHE -->
+  <section class="search-section" style="margin-bottom:40px">
+    {% include 'components/_search.html.twig' with {
+        searchAction:      '/companies',
+        searchPlaceholder: 'Trouver une entreprise...',
+        searchShowCity:    false
+    } %}
+  </section>
 
   <div class="container">
 

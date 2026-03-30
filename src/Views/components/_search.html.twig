@@ -1,14 +1,25 @@
-<form class="search" action="/offers" method="get">
+{#
+  Variables optionnelles :
+    searchAction      — action du formulaire       (défaut : /offers)
+    searchPlaceholder — placeholder du champ texte (défaut : Trouver un stage...)
+    searchShowCity    — afficher le champ ville     (défaut : true)
+#}
+{% set searchAction      = searchAction      ?? '/offers' %}
+{% set searchPlaceholder = searchPlaceholder ?? 'Trouver un stage...' %}
+{% set searchShowCity    = searchShowCity    is defined ? searchShowCity : true %}
+
+<form class="search{% if not searchShowCity %} search--no-city{% endif %}" action="{{ searchAction }}" method="get">
 
     <div class="search-group">
-        <input class="search-input" type="search" name="q" id="q-input" placeholder="Trouver un stage...">
+        <input class="search-input" type="search" name="q" id="q-input" placeholder="{{ searchPlaceholder }}" value="{{ q ?? '' }}">
         <button class="search-clear-btn" type="button" id="q-clear-btn" aria-label="Vider la recherche" hidden>
             <img src="/assets/icons/x.svg" alt="">
         </button>
     </div>
 
+    {% if searchShowCity %}
     <div class="search-group">
-        <input class="search-input" type="text" name="city" id="city-input" placeholder="Taper une ville...">
+        <input class="search-input" type="text" name="city" id="city-input" placeholder="Taper une ville..." value="{{ city ?? '' }}">
         <button class="search-dropdown-btn" type="button" id="city-dropdown-btn" aria-label="Villes suggérées">
             <img src="/assets/icons/chevron-down.svg" alt="">
         </button>
@@ -19,6 +30,7 @@
             {% endfor %}
         </ul>
     </div>
+    {% endif %}
 
     <button class="search-btn" type="submit">Rechercher</button>
 
@@ -57,6 +69,9 @@
         if (document.activeElement !== qInput) qClearBtn.hidden = true;
     });
 
+    updateClear();
+
+    {% if searchShowCity %}
     // — Dropdown villes —
     const cityBtn      = document.getElementById('city-dropdown-btn');
     const cityDropdown = document.getElementById('city-dropdown');
@@ -78,4 +93,5 @@
             cityDropdown.hidden = true;
         }
     });
+    {% endif %}
 </script>
