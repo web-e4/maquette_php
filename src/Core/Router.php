@@ -67,7 +67,8 @@ class Router
         if (array_key_exists($uri, $this->routes)) {
             [$controllerClass, $method] = $this->routes[$uri];
             $controller = new $controllerClass($this->twig);
-
+			// si méthode nécessite para=id, envoie avec id, sinon sans
+			// privilégie GET à POST avec ternaire imbriqué
             $id = isset($_GET['id']) ? (int) $_GET['id'] : (isset($_POST['id']) ? (int) $_POST['id'] : null);
 
             if ($id !== null) {
