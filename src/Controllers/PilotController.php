@@ -87,10 +87,13 @@ class PilotController extends AbstractDashboardController
             $this->redirectToDashboard('pilots');
         }
 
+        $statusUser = isset($_POST['statusUser']) ? (int) $_POST['statusUser'] : 1;
+
         $this->userModel->update($id, [
-            'email'     => $email,
-            'firstName' => $firstName,
-            'surname'   => $surname,
+            'email'      => $email,
+            'firstName'  => $firstName,
+            'surname'    => $surname,
+            'statusUser' => $statusUser,
         ]);
 
         $_SESSION['flash'] = ['type' => 'success', 'message' => 'Compte pilote mis à jour.'];

@@ -74,7 +74,7 @@ class UserModel extends AbstractModel
     public function findById(int $id): ?array
     {
         $stmt = $this->getConnection()->prepare("
-            SELECT u.idUser, u.email, u.statusUser, r.role, p.firstName, p.surname
+            SELECT u.idUser, u.email, u.statusUser, u.idPilot, r.role, p.firstName, p.surname
             FROM User_ u
             JOIN Role r ON u.idRole = r.idRole
             LEFT JOIN Profile p ON u.idUser = p.idUser
@@ -137,9 +137,9 @@ class UserModel extends AbstractModel
 
         try {
             $stmtUser = $pdo->prepare("
-                UPDATE User_ SET email = :email WHERE idUser = :id
+                UPDATE User_ SET email = :email, statusUser = :statusUser WHERE idUser = :id
             ");
-            $stmtUser->execute(['email' => $data['email'], 'id' => $id]);
+            $stmtUser->execute(['email' => $data['email'], 'statusUser' => $data['statusUser'] ?? 1, 'id' => $id]);
 
             $stmtProfile = $pdo->prepare("
                 UPDATE Profile SET firstName = :firstName, surname = :surname

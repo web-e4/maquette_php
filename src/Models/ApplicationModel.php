@@ -137,7 +137,7 @@ class ApplicationModel extends AbstractModel
     }
 
     // Met à jour le CV ou la lettre de motivation
-    public function updateApplication(int $idUser, int $idOffer, string $column, string $value): void
+    public function updateApplication(int $idUser, int $idOffer, string $column, ?string $value): void
     {
         $allowed = ['resume', 'motivationLetter'];
         if (!in_array($column, $allowed)) return;

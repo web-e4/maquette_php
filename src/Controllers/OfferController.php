@@ -140,71 +140,45 @@ class OfferController extends AbstractController
         $this->redirect($redirectTo);
     }
 
-    // GET /offer/edit?id=x  — affiche le formulaire pré-rempli
-    // POST /offer/edit       — traite la mise à jour
-    public function edit(int $id): void
+    // POST /offer/edit — traite la mise à jour (soumission depuis le dashboard)
+    public function edit(?int $id = null): void
     {
         $this->requirePermission(Permission::OFFER_EDIT);
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $title       = trim($_POST['title']       ?? '');
-            $location    = trim($_POST['location']    ?? '');
-            $duration    = trim($_POST['duration']    ?? '');
-            $startDate   = trim($_POST['startDate']   ?? '');
-            $description = trim($_POST['description'] ?? '');
-            $missions    = trim($_POST['missions']    ?? '');
+        $role = $_SESSION['user']['role'] ?? '';
+        $base = $role === \Equipe4\Gigastage\Core\Role::ADMIN ? '/admin' : '/pilot';
 
-            $errors = [];
-            if (empty($title))       $errors[] = 'L\'intitulé est obligatoire.';
-            if (empty($location))    $errors[] = 'La localisation est obligatoire.';
-            if (empty($duration))    $errors[] = 'La durée est obligatoire.';
-            if (empty($startDate))   $errors[] = 'La date de début est obligatoire.';
-            if (empty($description)) $errors[] = 'La description est obligatoire.';
-            if (empty($missions))    $errors[] = 'Les missions sont obligatoires.';
+        if ($id === null || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect($base . '?tab=offers');
+        }
 
-            if (!empty($errors)) {
-                $this->render('pages/offer-create.html.twig', [
-                    'errors'   => $errors,
-                    'formData' => $_POST,
-                    'editId'   => $id,
-                ]);
-                return;
-            }
+        $title       = trim($_POST['title']       ?? '');
+        $location    = trim($_POST['location']    ?? '');
+        $duration    = trim($_POST['duration']    ?? '');
+        $startDate   = trim($_POST['startDate']   ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $missions    = trim($_POST['missions']    ?? '');
+        $statusOffer = isset($_POST['statusOffer']) ? (int) $_POST['statusOffer'] : 1;
 
-            $this->offerModel->updateOffer($id, [
-                'title'           => $title,
-                'location'        => $location,
-                'durationInWeeks' => (int) $duration,
-                'startDate'       => $startDate,
-                'description'     => $description,
-                'missions'        => $missions,
-            ]);
-
-            $redirectTo = trim($_POST['redirectTo'] ?? '/offer?id=' . $id);
-            $_SESSION['flash'] = ['type' => 'success', 'message' => 'Offre mise à jour avec succès.'];
+        if (empty($title) || empty($location) || empty($duration) || empty($startDate) || empty($description) || empty($missions)) {
+            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Tous les champs obligatoires doivent être remplis.'];
+            $redirectTo = trim($_POST['redirectTo'] ?? '/admin?tab=offers');
             $this->redirect($redirectTo);
         }
 
-        $offer = $this->offerModel->findById($id);
-
-        if (!$offer) {
-            http_response_code(404);
-            echo '404 - Offer not found';
-            return;
-        }
-
-        $companies  = $this->companyModel->findAll();
-        $from       = $_GET['from'] ?? '';
-        $role       = $_SESSION['user']['role'] ?? '';
-        $base       = $role === \Equipe4\Gigastage\Core\Role::ADMIN ? '/admin' : '/pilot';
-        $redirectTo = in_array($from, ['admin', 'pilot']) ? $base . '?tab=offers' : '/offer?id=' . $id;
-
-        $this->render('pages/offer-create.html.twig', [
-            'formData'   => $offer,
-            'editId'     => $id,
-            'companies'  => $companies,
-            'redirectTo' => $redirectTo,
+        $this->offerModel->updateOffer($id, [
+            'title'           => $title,
+            'location'        => $location,
+            'durationInWeeks' => (int) $duration,
+            'startDate'       => $startDate,
+            'description'     => $description,
+            'missions'        => $missions,
+            'statusOffer'     => $statusOffer,
         ]);
+
+        $redirectTo = trim($_POST['redirectTo'] ?? '/admin?tab=offers');
+        $_SESSION['flash'] = ['type' => 'success', 'message' => 'Offre mise à jour avec succès.'];
+        $this->redirect($redirectTo);
     }
 
     // POST /offer/delete?id=x

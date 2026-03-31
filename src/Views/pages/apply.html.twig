@@ -53,20 +53,38 @@
         <div class="form-field field-full">
           <span class="form-label">CV déposé</span>
           <div class="summary-row">
-            <span class="form-input summary-value">{{ application.resume }}</span>
-            <button class="btn-edit" type="button" data-field="cv" title="Modifier">
-              <img src="/assets/icons/pencil.svg" alt="Modifier">
+            {% if resumeExists %}
+              <span class="form-input summary-value">{{ application.resume|split('/')|last }}</span>
+            {% else %}
+              <span class="form-input summary-value" style="color:var(--color-error,#b91c1c)">Fichier manquant</span>
+            {% endif %}
+            <button class="btn-edit" type="button" data-field="cv" title="Remplacer">
+              <img src="/assets/icons/pencil.svg" alt="Remplacer">
             </button>
           </div>
         </div>
 
         <div class="form-field field-full">
-          <span class="form-label">Lettre de motivation déposée</span>
-          <div class="summary-row">
-            <span class="form-input summary-value">{{ application.motivationLetter ?? 'Non fournie' }}</span>
-            <button class="btn-edit" type="button" data-field="letter" title="Modifier">
-              <img src="/assets/icons/pencil.svg" alt="Modifier">
-            </button>
+          <span class="form-label">Lettre de motivation</span>
+          <div class="summary-row" data-section="letter">
+            {% if application.motivationLetter %}
+              {% if letterExists %}
+                <span class="form-input summary-value">{{ application.motivationLetter|split('/')|last }}</span>
+              {% else %}
+                <span class="form-input summary-value" style="color:var(--color-error,#b91c1c)">Fichier manquant</span>
+              {% endif %}
+              <button class="btn-edit" type="button" data-field="letter" title="Remplacer">
+                <img src="/assets/icons/pencil.svg" alt="Remplacer">
+              </button>
+              <button class="btn-icon btn-icon--danger btn-delete-letter" type="button" title="Supprimer">
+                <img src="/assets/icons/trash.svg" alt="Supprimer">
+              </button>
+            {% else %}
+              <span class="form-input summary-value" style="color:var(--color-text-muted)">Non fournie</span>
+              <button class="btn-edit" type="button" data-field="letter" title="Ajouter">
+                <img src="/assets/icons/pencil.svg" alt="Ajouter">
+              </button>
+            {% endif %}
           </div>
         </div>
 

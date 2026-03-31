@@ -95,10 +95,13 @@ class CompanyController extends AbstractController
             $this->redirectToDashboard('companies');
         }
 
+        $statusCompany = isset($_POST['statusCompany']) ? (int) $_POST['statusCompany'] : 1;
+
         $this->companyModel->update($id, [
-            'name'    => $name,
-            'email'   => $email,
-            'website' => $website,
+            'name'          => $name,
+            'email'         => $email,
+            'website'       => $website,
+            'statusCompany' => $statusCompany,
         ]);
 
         $_SESSION['flash'] = ['type' => 'success', 'message' => 'Entreprise mise à jour.'];

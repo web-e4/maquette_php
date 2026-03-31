@@ -40,12 +40,20 @@ class ApplicationController extends AbstractController
         $application    = $alreadyApplied ? $this->applicationModel->findApplication($idUser, $id) : null;
         $profile        = $this->profileModel->findById($idUser);
 
+        $storageBase  = __DIR__ . '/../../';
+        $resumeExists = $application && $application['resume']
+            && file_exists($storageBase . $application['resume']);
+        $letterExists = $application && $application['motivationLetter']
+            && file_exists($storageBase . $application['motivationLetter']);
+
         $this->render('pages/apply.html.twig', [
             'offer'          => $offer,
             'flash'          => $flash,
             'alreadyApplied' => $alreadyApplied,
             'application'    => $application,
             'profile'        => $profile,
+            'resumeExists'   => $resumeExists,
+            'letterExists'   => $letterExists,
         ]);
     }
 
@@ -104,26 +112,52 @@ class ApplicationController extends AbstractController
 
         header('Content-Type: application/json');
 
-        $idUser  = $_SESSION['user']['id'];
-        $field   = $_POST['_field'] ?? '';
+        $idUser      = $_SESSION['user']['id'];
+        $field       = $_POST['_field'] ?? '';
+        $storageBase = __DIR__ . '/../../';
+
+        // Suppression de la lettre de motivation
+        if ($field === 'delete_letter') {
+            $app = $this->applicationModel->findApplication($idUser, $id);
+            if ($app && $app['motivationLetter']) {
+                $full = $storageBase . $app['motivationLetter'];
+                if (file_exists($full)) unlink($full);
+            }
+            $this->applicationModel->updateApplication($idUser, $id, 'motivationLetter', null);
+            echo json_encode(['success' => true]);
+            return;
+        }
+
         $allowed = ['cv', 'letter'];
-
         if (!in_array($field, $allowed)) {
-            echo json_encode(['success' => false, 'message' => 'Invalid field.']);
+            echo json_encode(['success' => false, 'message' => 'Champ invalide.']);
             return;
         }
 
-        $uploadDir = __DIR__ . '/../../storage/applications/';
+        if (empty($_FILES[$field]['name'])) {
+            echo json_encode(['success' => false, 'message' => 'Aucun fichier reçu.']);
+            return;
+        }
+
+        $uploadDir = $storageBase . 'storage/applications/';
+        $column    = $field === 'cv' ? 'resume' : 'motivationLetter';
+
+        // Sauvegarde du nouveau fichier en premier
         $path = $this->uploadFile($_FILES[$field], $uploadDir);
-
         if (!$path) {
-            echo json_encode(['success' => false, 'message' => 'Invalid file (PDF, 5MB max).']);
+            echo json_encode(['success' => false, 'message' => 'Fichier invalide (PDF, 5 Mo max).']);
             return;
         }
 
-        $column = $field === 'cv' ? 'resume' : 'motivationLetter';
-        $this->applicationModel->updateApplication($idUser, $id, $column, $path);
+        // Suppression de l'ancien fichier seulement après succès
+        $app = $this->applicationModel->findApplication($idUser, $id);
+        $old = $app[$column] ?? null;
+        if ($old) {
+            $full = $storageBase . $old;
+            if (file_exists($full)) unlink($full);
+        }
 
+        $this->applicationModel->updateApplication($idUser, $id, $column, $path);
         echo json_encode(['success' => true, 'newValue' => basename($path)]);
     }
 
@@ -142,7 +176,7 @@ class ApplicationController extends AbstractController
         if ($mime !== 'application/pdf') return null;
 
         $filename = uniqid('doc_', true) . '.pdf';
-        move_uploaded_file($file['tmp_name'], $dir . $filename);
+        if (!move_uploaded_file($file['tmp_name'], $dir . $filename)) return null;
 
         return 'storage/applications/' . $filename;
     }

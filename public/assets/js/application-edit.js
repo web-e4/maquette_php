@@ -1,166 +1,177 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-  document.querySelectorAll('.btn-edit').forEach(function (btn) {
-    attachEditListener(btn);
-  });
+  const offerId = new URLSearchParams(window.location.search).get('id') || '';
 
-  // ── Logique d'édition inline ────────────────────────────────
+  document.querySelectorAll('.btn-edit').forEach(attachEditListener);
 
-  function handleEditClick(btn) {
-    const field      = btn.dataset.field;
-    const summaryRow = btn.closest('.summary-row');
-    const valueSpan  = summaryRow.querySelector('.summary-value');
+  const deleteBtn = document.querySelector('.btn-delete-letter');
+  if (deleteBtn) attachDeleteListener(deleteBtn);
 
-    if (summaryRow.querySelector('.inline-edit-input')) return;
+  // ── Remplacement de fichier ─────────────────────────────────
 
-    const currentValue = valueSpan.textContent.trim();
+  function attachEditListener(btn) {
+    btn.addEventListener('click', function () {
+      const field      = btn.dataset.field; // 'cv' ou 'letter'
+      const summaryRow = btn.closest('.summary-row');
 
-    let inputEl;
-    if (field === 'cv' || field === 'lettre') {
-      inputEl        = document.createElement('input');
-      inputEl.type   = 'file';
-      inputEl.accept = '.pdf';
-      inputEl.classList.add('file-input-hidden', 'inline-edit-input');
-    } else {
-      inputEl        = document.createElement('input');
-      inputEl.type   = field === 'email' ? 'email' : 'text';
-      inputEl.value  = currentValue;
-      inputEl.classList.add('form-input', 'inline-edit-input');
-    }
+      if (summaryRow.querySelector('.inline-edit-input')) return;
 
-    const validateBtn     = document.createElement('button');
-    validateBtn.type      = 'button';
-    validateBtn.className = 'btn-edit-confirm';
-    validateBtn.title     = 'Valider';
-    validateBtn.innerHTML = '<img src="/assets/icons/check.svg" alt="Valider">';
+      const valueSpan = summaryRow.querySelector('.summary-value');
 
-    const cancelBtn     = document.createElement('button');
-    cancelBtn.type      = 'button';
-    cancelBtn.className = 'btn-edit-cancel';
-    cancelBtn.title     = 'Annuler';
-    cancelBtn.innerHTML = '<img src="/assets/icons/x.svg" alt="Annuler">';
+      // Masque les boutons existants dans la ligne
+      summaryRow.querySelectorAll('.btn-edit, .btn-delete-letter').forEach(function (b) {
+        b.style.display = 'none';
+      });
 
-    valueSpan.replaceWith(inputEl);
-    btn.replaceWith(validateBtn, cancelBtn);
+      // Crée le wrapper inline
+      const wrapper = document.createElement('div');
+      wrapper.className = 'inline-file-replace';
+      wrapper.style.cssText = 'display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap';
 
-    if (field !== 'cv' && field !== 'lettre') {
-      inputEl.focus();
-      inputEl.select();
-    }
+      const fileLabel = document.createElement('label');
+      fileLabel.className = 'file-upload-btn';
+      fileLabel.style.cssText = 'margin:0;flex:1;min-width:0';
 
-    cancelBtn.addEventListener('click', function () {
-      inputEl.replaceWith(valueSpan);
-      validateBtn.remove();
-      cancelBtn.replaceWith(btn);
-    });
+      const fileInput = document.createElement('input');
+      fileInput.type  = 'file';
+      fileInput.accept = '.pdf';
+      fileInput.classList.add('file-input-hidden', 'inline-edit-input');
+      fileInput.id = 'inline-file-' + field;
+      fileLabel.htmlFor = fileInput.id;
 
-    validateBtn.addEventListener('click', function () {
-      const offerId  = getOfferIdFromUrl();
-      const formData = new FormData();
+      const labelText = document.createElement('span');
+      labelText.textContent = 'Choisir un PDF…';
+      labelText.style.cssText = 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
 
-      if (field === 'cv' || field === 'lettre') {
-        if (!inputEl.files || inputEl.files.length === 0) {
-          showInlineError(inputEl, 'Veuillez choisir un fichier PDF.');
+      fileLabel.append(fileInput, labelText);
+
+      const confirmBtn = document.createElement('button');
+      confirmBtn.type      = 'button';
+      confirmBtn.className = 'btn btn-solid';
+      confirmBtn.style.cssText = 'padding:6px 14px;font-size:0.85rem';
+      confirmBtn.textContent = 'Valider';
+
+      const cancelBtn = document.createElement('button');
+      cancelBtn.type      = 'button';
+      cancelBtn.className = 'btn btn-ghost';
+      cancelBtn.style.cssText = 'padding:6px 14px;font-size:0.85rem';
+      cancelBtn.textContent = 'Annuler';
+
+      wrapper.append(fileLabel, confirmBtn, cancelBtn);
+      valueSpan.replaceWith(wrapper);
+
+      // Met à jour le label quand un fichier est sélectionné
+      fileInput.addEventListener('change', function () {
+        labelText.textContent = fileInput.files[0] ? fileInput.files[0].name : 'Choisir un PDF…';
+      });
+
+      cancelBtn.addEventListener('click', function () {
+        wrapper.replaceWith(valueSpan);
+        summaryRow.querySelectorAll('.btn-edit, .btn-delete-letter').forEach(function (b) {
+          b.style.display = '';
+        });
+      });
+
+      confirmBtn.addEventListener('click', function () {
+        if (!fileInput.files || fileInput.files.length === 0) {
+          showInlineError(labelText, 'Veuillez choisir un fichier PDF.');
           return;
         }
-        const file = inputEl.files[0];
-        if (!file.name.endsWith('.pdf')) {
-          showInlineError(inputEl, 'Le fichier doit être un PDF.');
+        const file = fileInput.files[0];
+        if (!file.name.toLowerCase().endsWith('.pdf')) {
+          showInlineError(labelText, 'Le fichier doit être un PDF.');
           return;
         }
         if (file.size > 5 * 1024 * 1024) {
-          showInlineError(inputEl, 'Le fichier dépasse 5 Mo.');
+          showInlineError(labelText, 'Le fichier dépasse 5 Mo.');
           return;
         }
+
+        confirmBtn.disabled     = true;
+        confirmBtn.textContent  = 'Envoi…';
+
+        const formData = new FormData();
         formData.append(field, file);
-      } else {
-        if (!inputEl.value.trim()) {
-          showInlineError(inputEl, 'Ce champ ne peut pas être vide.');
-          return;
-        }
-        formData.append(field, inputEl.value.trim());
-      }
+        formData.append('_field', field);
 
-      formData.append('_field', field);
+        fetch('/apply/update?id=' + offerId, { method: 'POST', body: formData })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (data.success) {
+              valueSpan.textContent = data.newValue;
+              valueSpan.style.color = '';
+              wrapper.replaceWith(valueSpan);
+              summaryRow.querySelectorAll('.btn-edit, .btn-delete-letter').forEach(function (b) {
+                b.style.display = '';
+              });
+              showFlash('success', 'Fichier remplacé avec succès.');
+            } else {
+              showFlash('error', data.message || 'Une erreur est survenue.');
+              confirmBtn.disabled    = false;
+              confirmBtn.textContent = 'Valider';
+            }
+          })
+          .catch(function () {
+            showFlash('error', 'Impossible de contacter le serveur.');
+            confirmBtn.disabled    = false;
+            confirmBtn.textContent = 'Valider';
+          });
+      });
+    });
+  }
 
-      validateBtn.disabled  = true;
-      validateBtn.innerHTML = '<img src="/assets/icons/loader.svg" alt="Chargement" class="spin">';
+  // ── Suppression de la lettre ────────────────────────────────
 
-      fetch('/apply/update?id=' + offerId, {
-        method: 'POST',
-        body:   formData,
-      })
-        .then(function (res) { return res.json(); })
+  function attachDeleteListener(btn) {
+    btn.addEventListener('click', function () {
+      if (!confirm('Supprimer la lettre de motivation ?')) return;
+
+      const summaryRow = btn.closest('.summary-row');
+      const formData   = new FormData();
+      formData.append('_field', 'delete_letter');
+
+      fetch('/apply/update?id=' + offerId, { method: 'POST', body: formData })
+        .then(function (r) { return r.json(); })
         .then(function (data) {
           if (data.success) {
-            const newValue = (field === 'cv' || field === 'lettre')
-              ? data.newValue
-              : formData.get(field);
-
-            valueSpan.textContent = newValue;
-            inputEl.replaceWith(valueSpan);
-            validateBtn.remove();
-            cancelBtn.remove();
-
-            // Recrée le bouton crayon avec le bon listener
-            const newBtn = btn.cloneNode(true);
-            summaryRow.appendChild(newBtn);
-            attachEditListener(newBtn); // ← appel direct, pas de dispatchEvent
-
-            showFlash('success', data.message || 'Modification enregistrée.');
+            // Réinitialise la ligne : "Non fournie" + bouton crayon (ajouter)
+            summaryRow.innerHTML =
+              '<span class="form-input summary-value" style="color:var(--color-text-muted)">Non fournie</span>' +
+              '<button class="btn-edit" type="button" data-field="letter" title="Ajouter">' +
+              '<img src="/assets/icons/pencil.svg" alt="Ajouter"></button>';
+            attachEditListener(summaryRow.querySelector('.btn-edit'));
+            showFlash('success', 'Lettre de motivation supprimée.');
           } else {
             showFlash('error', data.message || 'Une erreur est survenue.');
-            validateBtn.disabled  = false;
-            validateBtn.innerHTML = '<img src="/assets/icons/check.svg" alt="Valider">';
           }
         })
         .catch(function () {
           showFlash('error', 'Impossible de contacter le serveur.');
-          validateBtn.disabled  = false;
-          validateBtn.innerHTML = '<img src="/assets/icons/check.svg" alt="Valider">';
         });
     });
   }
 
-  // ── Helpers ────────────────────────────────────────────────
-
-  function attachEditListener(btn) {
-    // Branche handleEditClick sur le bouton — pas de dispatchEvent
-    btn.addEventListener('click', function () {
-      handleEditClick(btn);
-    });
-  }
-
-  function getOfferIdFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('id') || '';
-  }
+  // ── Helpers ─────────────────────────────────────────────────
 
   function showInlineError(inputEl, message) {
     const existing = inputEl.parentElement.querySelector('.inline-error');
     if (existing) existing.remove();
-
-    const err         = document.createElement('span');
-    err.className     = 'inline-error field-hint';
-    err.textContent   = message;
-    err.style.color   = 'var(--color-error, #b91c1c)';
+    const err       = document.createElement('span');
+    err.className   = 'inline-error field-hint';
+    err.textContent = message;
+    err.style.color = 'var(--color-error, #b91c1c)';
     inputEl.insertAdjacentElement('afterend', err);
-
-    inputEl.addEventListener('input',  function () { err.remove(); }, { once: true });
     inputEl.addEventListener('change', function () { err.remove(); }, { once: true });
   }
 
   function showFlash(type, message) {
     const existing = document.querySelector('.flash');
     if (existing) existing.remove();
-
-    const flash         = document.createElement('div');
-    flash.className     = 'flash flash--' + type;
-    flash.textContent   = message;
-
-    const container = document.querySelector('.publish-header');
-    if (container) container.insertAdjacentElement('afterend', flash);
-
+    const flash       = document.createElement('div');
+    flash.className   = 'flash flash--' + type;
+    flash.textContent = message;
+    const anchor = document.querySelector('.publish-header');
+    if (anchor) anchor.insertAdjacentElement('afterend', flash);
     setTimeout(function () {
       flash.style.transition = 'opacity 0.4s';
       flash.style.opacity    = '0';

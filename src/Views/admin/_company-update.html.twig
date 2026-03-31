@@ -10,9 +10,16 @@
         <label class="form-label" for="cu-email">Email <span class="required">*</span></label>
         <input class="form-input" type="email" id="cu-email" name="email" value="{{ company.email }}" required>
       </div>
-      <div class="form-field field-full">
+      <div class="form-field">
         <label class="form-label" for="cu-website">Site web</label>
         <input class="form-input" type="text" id="cu-website" name="website" value="{{ company.website ?? '' }}" placeholder="https://...">
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="cu-status">État</label>
+        <select class="form-input" id="cu-status" name="statusCompany">
+          <option value="1" {{ company.statusCompany ? 'selected' : '' }}>Activé</option>
+          <option value="0" {{ not company.statusCompany ? 'selected' : '' }}>Désactivé</option>
+        </select>
       </div>
     </div>
     <div class="admin-form-actions">

@@ -25,6 +25,22 @@ class CompanyModel extends AbstractModel
         return $stmt->fetchAll();
     }
 
+    // Récupère toutes les entreprises (actives et inactives) pour l'admin
+    public function findAllForAdmin(): array
+    {
+        $stmt = $this->getConnection()->prepare("
+            SELECT
+                c.idCompany, c.name, c.email, c.website, c.statusCompany,
+                ROUND(AVG(r.rate), 1) AS avgRating
+            FROM Company c
+            LEFT JOIN Rating r ON c.idCompany = r.idCompany
+            GROUP BY c.idCompany
+            ORDER BY c.name ASC
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     // Récupère une entreprise par son id
     public function findById(int $id): ?array
     {
@@ -57,14 +73,15 @@ class CompanyModel extends AbstractModel
     {
         $stmt = $this->getConnection()->prepare("
             UPDATE Company
-            SET name = :name, email = :email, website = :website
+            SET name = :name, email = :email, website = :website, statusCompany = :statusCompany
             WHERE idCompany = :id
         ");
         $stmt->execute([
-            'name'    => $data['name'],
-            'email'   => $data['email'],
-            'website' => $data['website'] ?: null,
-            'id'      => $id,
+            'name'          => $data['name'],
+            'email'         => $data['email'],
+            'website'       => $data['website'] ?: null,
+            'statusCompany' => $data['statusCompany'] ?? 1,
+            'id'            => $id,
         ]);
     }
 

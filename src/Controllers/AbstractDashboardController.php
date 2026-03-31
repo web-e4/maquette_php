@@ -52,7 +52,7 @@ abstract class AbstractDashboardController extends AbstractController
         $idUser   = $_SESSION['user']['id'];
 
         // Données communes
-        $companies = $this->companyModel->findAll();
+        $companies = $this->companyModel->findAllForAdmin();
         $offers    = $this->offerModel->findAll();
         $students  = $this->userModel->findByRoleWithPilot(Role::STUDENT);
 
@@ -81,9 +81,9 @@ abstract class AbstractDashboardController extends AbstractController
                     $activeTab = 'companies';
                     break;
                 case 'offer':
-                    // Redirige vers la page dédiée avec le bon retour
-                    $this->redirect('/offer/edit?id=' . $editId . '&from=' . ltrim($this->getDashboardBase(), '/'));
-                    return;
+                    $editData  = $this->offerModel->findByIdAdmin($editId);
+                    $activeTab = 'offers';
+                    break;
                 case 'student':
                     $editData  = $this->userModel->findById($editId);
                     $activeTab = 'students';

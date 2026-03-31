@@ -66,10 +66,13 @@ class StudentController extends AbstractController
             $this->redirectToDashboard('students');
         }
 
+        $statusUser = isset($_POST['statusUser']) ? (int) $_POST['statusUser'] : 1;
+
         $this->userModel->update($id, [
-            'email'     => $email,
-            'firstName' => $firstName,
-            'surname'   => $surname,
+            'email'      => $email,
+            'firstName'  => $firstName,
+            'surname'    => $surname,
+            'statusUser' => $statusUser,
         ]);
 
         // Assign pilot if the field was submitted

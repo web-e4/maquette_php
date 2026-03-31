@@ -20,7 +20,7 @@ class OfferModel extends AbstractModel
         return $stmt->fetchAll();
     }
 
-    // Récupère une offre par son id
+    // Récupère une offre par son id (offres actives uniquement)
     public function findById(int $id): ?array
     {
         $stmt = $this->getConnection()->prepare("
@@ -34,13 +34,27 @@ class OfferModel extends AbstractModel
         return $result ?: null;
     }
 
+    // Récupère une offre par son id sans filtre de statut (pour l'admin)
+    public function findByIdAdmin(int $id): ?array
+    {
+        $stmt = $this->getConnection()->prepare("
+            SELECT o.*, c.name AS companyName
+            FROM Offer o
+            JOIN Company c ON o.idCompany = c.idCompany
+            WHERE o.idOffer = :id
+        ");
+        $stmt->execute(['id' => $id]);
+        $result = $stmt->fetch();
+        return $result ?: null;
+    }
+
     // Récupère les offres paginées avec recherche par titre et ville
     public function findPaginated(int $page, int $perPage, string $q = '', string $city = ''): array
     {
         $pdo    = $this->getConnection();
         $offset = ($page - 1) * $perPage;
 
-        $where  = 'WHERE 1=1';
+        $where  = 'WHERE statusOffer = 1';
         $params = [];
 
         if ($q !== '') {
@@ -124,7 +138,8 @@ class OfferModel extends AbstractModel
                 missions = :missions,
                 location = :location,
                 durationInWeeks = :durationInWeeks,
-                startDate = :startDate
+                startDate = :startDate,
+                statusOffer = :statusOffer
             WHERE idOffer = :id
         ");
         $stmt->execute([
@@ -134,6 +149,7 @@ class OfferModel extends AbstractModel
             'location'        => $data['location'],
             'durationInWeeks' => $data['durationInWeeks'],
             'startDate'       => $data['startDate'],
+            'statusOffer'     => $data['statusOffer'] ?? 1,
             'id'              => $id,
         ]);
     }

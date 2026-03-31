@@ -10,9 +10,16 @@
         <label class="form-label" for="pu-surname">Nom <span class="required">*</span></label>
         <input class="form-input" type="text" id="pu-surname" name="surname" value="{{ pilot.surname ?? '' }}" required>
       </div>
-      <div class="form-field field-full">
+      <div class="form-field">
         <label class="form-label" for="pu-email">Email <span class="required">*</span></label>
         <input class="form-input" type="email" id="pu-email" name="email" value="{{ pilot.email }}" required>
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="pu-status">État du compte</label>
+        <select class="form-input" id="pu-status" name="statusUser">
+          <option value="1" {{ pilot.statusUser ? 'selected' : '' }}>Activé</option>
+          <option value="0" {{ not pilot.statusUser ? 'selected' : '' }}>Désactivé</option>
+        </select>
       </div>
     </div>
     <div class="admin-form-actions">

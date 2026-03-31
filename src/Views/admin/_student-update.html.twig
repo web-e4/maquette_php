@@ -15,18 +15,25 @@
         <input class="form-input" type="email" id="su-email" name="email" value="{{ student.email }}" required>
       </div>
       {% if pilots is defined and pilots|length > 0 %}
-      <div class="form-field field-full">
+      <div class="form-field">
         <label class="form-label" for="su-pilot">Pilote assigné</label>
         <select class="form-input" id="su-pilot" name="idPilot">
           <option value="">— Aucun pilote —</option>
           {% for pilot in pilots %}
-            <option value="{{ pilot.idUser }}" {{ student.idPilot is defined and student.idPilot == pilot.idUser ? 'selected' : '' }}>
+            <option value="{{ pilot.idUser }}" {{ student.idPilot is not null and student.idPilot == pilot.idUser ? 'selected' : '' }}>
               {{ pilot.firstName }} {{ pilot.surname }}
             </option>
           {% endfor %}
         </select>
       </div>
       {% endif %}
+      <div class="form-field">
+        <label class="form-label" for="su-status">État du compte</label>
+        <select class="form-input" id="su-status" name="statusUser">
+          <option value="1" {{ student.statusUser ? 'selected' : '' }}>Activé</option>
+          <option value="0" {{ not student.statusUser ? 'selected' : '' }}>Désactivé</option>
+        </select>
+      </div>
     </div>
     <div class="admin-form-actions">
       <button class="btn btn-solid" type="submit">Enregistrer</button>
