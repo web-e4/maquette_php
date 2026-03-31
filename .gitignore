@@ -1,4 +1,4 @@
-
+vendor/
 .cursor/
 .phpunit.result.cache
 .env
