@@ -13,7 +13,7 @@
     <div class="search-group">
         <input class="search-input" type="search" name="q" id="q-input" placeholder="{{ searchPlaceholder }}" value="{{ q ?? '' }}">
         <button class="search-clear-btn" type="button" id="q-clear-btn" aria-label="Vider la recherche" hidden>
-            <img src="/assets/icons/x.svg" alt="">
+            <img src="{{ static_url }}/assets/icons/x.svg" alt="">
         </button>
     </div>
 
@@ -21,7 +21,7 @@
     <div class="search-group">
         <input class="search-input" type="text" name="city" id="city-input" placeholder="Taper une ville..." value="{{ city ?? '' }}">
         <button class="search-dropdown-btn" type="button" id="city-dropdown-btn" aria-label="Villes suggérées">
-            <img src="/assets/icons/chevron-down.svg" alt="">
+            <img src="{{ static_url }}/assets/icons/chevron-down.svg" alt="">
         </button>
         <ul class="search-dropdown" id="city-dropdown" hidden>
             {% set cities = ['Rouen', 'Lille', 'Marseille', 'Paris', 'Lyon'] %}

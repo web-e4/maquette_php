@@ -66,11 +66,13 @@ class ApplicationController extends AbstractController
             $this->redirect('/');
         }
 
+        $this->validateCsrfToken();
+
         $idUser = $_SESSION['user']['id'];
 
         if ($this->applicationModel->hasAlreadyApplied($idUser, $id)) {
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'You have already applied for this offer.'];
-            $this->redirect('/apply?id=' . $id);
+            $this->redirect('/apply/' . $id);
         }
 
         $uploadDir = __DIR__ . '/../../storage/applications/';
@@ -81,7 +83,7 @@ class ApplicationController extends AbstractController
         $cvPath = $this->uploadFile($_FILES['cv'], $uploadDir);
         if (!$cvPath) {
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Invalid CV or too large (5MB max, PDF only).'];
-            $this->redirect('/apply?id=' . $id);
+            $this->redirect('/apply/' . $id);
         }
 
         $letterPath = null;
@@ -89,7 +91,7 @@ class ApplicationController extends AbstractController
             $letterPath = $this->uploadFile($_FILES['letter'], $uploadDir);
             if (!$letterPath) {
                 $_SESSION['flash'] = ['type' => 'error', 'message' => 'Invalid cover letter or too large (5MB max, PDF only).'];
-                $this->redirect('/apply?id=' . $id);
+                $this->redirect('/apply/' . $id);
             }
         }
 
@@ -102,13 +104,15 @@ class ApplicationController extends AbstractController
         ]);
 
         $_SESSION['flash'] = ['type' => 'success', 'message' => 'Your application has been sent successfully!'];
-        $this->redirect('/apply?id=' . $id);
+        $this->redirect('/apply/' . $id);
     }
 
     // POST /apply/update
     public function update(int $id): void
     {
         $this->requirePermission(Permission::APPLICATION_APPLY);
+
+        $this->validateCsrfToken();
 
         header('Content-Type: application/json');
 

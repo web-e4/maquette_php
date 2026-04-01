@@ -25,11 +25,13 @@ class WishlistController extends AbstractController
             $this->redirect('/offers');
         }
 
+        $this->validateCsrfToken();
+
         $idUser   = $_SESSION['user']['id'];
         $redirect = trim($_POST['redirect'] ?? '');
         $this->wishlistModel->add($idUser, $idOffer);
 
-        $this->redirect($redirect ?: '/offer?id=' . $idOffer);
+        $this->redirect($redirect ?: '/offer/' . $idOffer);
     }
 
     // POST /wishlist/remove?id=x - SFx25
@@ -40,6 +42,8 @@ class WishlistController extends AbstractController
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('/profile');
         }
+
+        $this->validateCsrfToken();
 
         $idUser   = $_SESSION['user']['id'];
         $redirect = trim($_POST['redirect'] ?? '');

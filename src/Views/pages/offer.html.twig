@@ -2,7 +2,10 @@
 
 {% block title %}{{ offer.title }}{% endblock %}
 
-{% block styles %}<link rel="stylesheet" href="/assets/css/offer.css">{% endblock %}
+{% block meta_description %}Offre de stage : {{ offer.title }} chez {{ offer.companyName }} à {{ offer.location }}. Durée : {{ offer.durationInWeeks }} semaines. Postulez sur GigaStage.{% endblock %}
+{% block meta_keywords %}stage {{ offer.title }}, stage {{ offer.location }}, {{ offer.companyName }}, offre stage{% endblock %}
+
+{% block styles %}<link rel="stylesheet" href="{{ static_url }}/assets/css/offer.css">{% endblock %}
 
 {% block content %}
 
@@ -15,17 +18,18 @@
                 <div class="job-title-group">
                     <h1>{{ offer.title }}</h1>
 
-                    <a class="company-name" href="/company?id={{ offer.idCompany }}">
-                        <img src="/assets/icons/building-2.svg" alt="">
+                    <a class="company-name" href="/company/{{ offer.idCompany }}">
+                        <img src="{{ static_url }}/assets/icons/building-2.svg" alt="">
                         {{ offer.companyName }}
                     </a>
                 </div>
 
                 {% if app_user is not null and app_user.role == 'Etudiant' %}
                   <form method="post" action="{{ inWishlist ? '/wishlist/remove' : '/wishlist/add' }}?id={{ offer.idOffer }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <input type="hidden" name="redirect" value="{{ current_url }}">
                     <button class="btn {{ inWishlist ? 'btn-solid' : 'btn-ghost' }}" type="submit">
-                      <img src="/assets/icons/heart.svg" alt="" style="width:16px;height:16px;filter:{{ inWishlist ? 'brightness(0) invert(1)' : 'invert(33%) sepia(60%) saturate(500%) hue-rotate(175deg) brightness(85%)' }};margin-right:6px">
+                      <img src="{{ static_url }}/assets/icons/heart.svg" alt="" style="width:16px;height:16px;filter:{{ inWishlist ? 'brightness(0) invert(1)' : 'invert(33%) sepia(60%) saturate(500%) hue-rotate(175deg) brightness(85%)' }};margin-right:6px">
                       {{ inWishlist ? 'Dans ma wish-list' : 'Wish-list' }}
                     </button>
                   </form>
@@ -61,7 +65,7 @@
                     <div class="sidebar-card">
 
                         <div class="info-item">
-                            <img src="/assets/icons/map-pin.svg" alt="">
+                            <img src="{{ static_url }}/assets/icons/map-pin.svg" alt="">
                             <span>
                                 <strong>Lieu :</strong>
                                 {{ offer.location }}
@@ -69,7 +73,7 @@
                         </div>
 
                         <div class="info-item">
-                            <img src="/assets/icons/clock.svg" alt="">
+                            <img src="{{ static_url }}/assets/icons/clock.svg" alt="">
                             <span>
                                 <strong>Durée :</strong>
                                 {{ offer.durationInWeeks }} semaines
@@ -77,7 +81,7 @@
                         </div>
 
                         <div class="info-item">
-                            <img src="/assets/icons/calendar.svg" alt="">
+                            <img src="{{ static_url }}/assets/icons/calendar.svg" alt="">
                             <span>
                                 <strong>Début :</strong>
                                 {{ offer.startDate }}
@@ -85,7 +89,7 @@
                         </div>
 
                         <div class="info-item">
-                            <img src="/assets/icons/pencil.svg" alt="">
+                            <img src="{{ static_url }}/assets/icons/pencil.svg" alt="">
                             <span>
                                 <strong>Publiée le :</strong>
                                 {{ offer.createdAt }}
@@ -93,7 +97,7 @@
                         </div>
 
                         <div class="info-item">
-                            <img src="/assets/icons/send.svg" alt="">
+                            <img src="{{ static_url }}/assets/icons/send.svg" alt="">
                             <span>
                                 <strong>Candidatures :</strong>
                                 {{ applicationCount }}
@@ -103,13 +107,13 @@
                         <hr class="separator">
 
                         {% if app_user is not null and app_user.role == 'Etudiant' %}
-                          <a href="/apply?id={{ offer.idOffer }}" class="btn btn-solid w-full">
-                            <img src="/assets/icons/send.svg" alt="" class="icon-white">
+                          <a href="/apply/{{ offer.idOffer }}" class="btn btn-solid w-full">
+                            <img src="{{ static_url }}/assets/icons/send.svg" alt="" class="icon-white">
                             Postuler maintenant
                           </a>
                         {% else %}
                           <button class="btn btn-solid w-full" disabled style="opacity:0.5;cursor:not-allowed">
-                            <img src="/assets/icons/lock.svg" alt="" style="width:15px;height:15px;filter:brightness(0) invert(1);margin-right:6px">
+                            <img src="{{ static_url }}/assets/icons/lock.svg" alt="" style="width:15px;height:15px;filter:brightness(0) invert(1);margin-right:6px">
                             Postuler maintenant
                           </button>
                         {% endif %}

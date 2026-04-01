@@ -2,7 +2,7 @@
 
 {% block title %}Publier une offre{% endblock %}
 
-{% block styles %}<link rel="stylesheet" href="/assets/css/publish.css">{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ static_url }}/assets/css/publish.css">{% endblock %}
 
 {% block content %}
 
@@ -28,6 +28,7 @@
 
     <!-- FORMULAIRE -->
     <form class="publish-form" method="post" action="{{ editId is defined ? '/offer/edit?id=' ~ editId : '/offer/create/submit' }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
       <!-- Intitulé -->
       <div class="form-field">
@@ -142,7 +143,7 @@
       <!-- Actions -->
       <div class="publish-actions">
         <button class="btn btn-solid" type="submit">
-          <img src="/assets/icons/send.svg" alt="" class="icon-white">
+          <img src="{{ static_url }}/assets/icons/send.svg" alt="" class="icon-white">
           {{ editId is defined ? 'Enregistrer' : 'Publier l\'offre' }}
         </button>
         <a class="btn btn-ghost" href="{{ redirectTo|default('/offers') }}">Annuler</a>

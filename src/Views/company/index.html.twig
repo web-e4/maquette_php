@@ -2,8 +2,11 @@
 
 {% block title %}Entreprises partenaires{% endblock %}
 
+{% block meta_description %}Découvrez toutes les entreprises partenaires de GigaStage qui proposent des offres de stage pour les étudiants.{% endblock %}
+{% block meta_keywords %}entreprises partenaires, recruteurs stage, entreprises stages, GigaStage{% endblock %}
+
 {% block styles %}
-  <link rel="stylesheet" href="/assets/css/profile.css">
+  <link rel="stylesheet" href="{{ static_url }}/assets/css/profile.css">
 {% endblock %}
 
 {% block content %}
@@ -28,13 +31,13 @@
 
     {% if companies is empty %}
       <div class="empty-state">
-        <img src="/assets/icons/building-2.svg" alt="">
+        <img src="{{ static_url }}/assets/icons/building-2.svg" alt="">
         <p>Aucune entreprise enregistrée pour le moment.</p>
       </div>
     {% else %}
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">
         {% for company in companies %}
-          <a href="/company?id={{ company.idCompany }}" style="text-decoration:none;color:inherit">
+          <a href="/company/{{ company.idCompany }}" style="text-decoration:none;color:inherit">
             <article class="profile-offer-card" style="flex-direction:column;align-items:flex-start;gap:12px;height:100%;box-sizing:border-box">
 
               <div style="display:flex;align-items:center;gap:12px;width:100%">
@@ -53,7 +56,7 @@
 
               <div style="display:flex;gap:16px;font-size:13px;color:var(--color-text-muted);width:100%">
                 <span style="display:flex;align-items:center;gap:4px">
-                  <img src="/assets/icons/panels-top-left.svg" alt="" style="width:13px;height:13px;filter:invert(47%) sepia(10%) saturate(400%) hue-rotate(175deg) brightness(90%)">
+                  <img src="{{ static_url }}/assets/icons/panels-top-left.svg" alt="" style="width:13px;height:13px;filter:invert(47%) sepia(10%) saturate(400%) hue-rotate(175deg) brightness(90%)">
                   {{ company.offerCount }} offre{{ company.offerCount > 1 ? 's' : '' }}
                 </span>
                 {% if company.avgRating %}

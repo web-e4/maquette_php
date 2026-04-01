@@ -1,6 +1,7 @@
 <div class="admin-form-card">
   <h3>Modifier l'offre</h3>
   <form method="post" action="/offer/edit?id={{ offer.idOffer }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <input type="hidden" name="redirectTo" value="{{ dashboardBase }}?tab=offers">
     <div class="admin-form-grid">
       <div class="form-field field-full">

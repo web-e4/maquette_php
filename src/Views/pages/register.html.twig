@@ -2,7 +2,10 @@
 
 {% block title %}Inscription{% endblock %}
 
-{% block styles %}<link rel="stylesheet" href="/assets/css/auth.css">{% endblock %}
+{% block meta_description %}Créez votre compte GigaStage gratuitement pour postuler à des offres de stage et suivre vos candidatures.{% endblock %}
+{% block meta_keywords %}inscription GigaStage, créer un compte, s'inscrire, compte étudiant{% endblock %}
+
+{% block styles %}<link rel="stylesheet" href="{{ static_url }}/assets/css/auth.css">{% endblock %}
 
 {% block content %}
 
@@ -21,6 +24,7 @@
     {% endif %}
 
     <form class="auth-form" action="/register/submit" method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
       <div class="form-field">
         <label class="form-label" for="firstName">Prénom</label>
@@ -63,7 +67,7 @@
         <div class="password-wrapper">
           <input class="form-input" id="password" name="password" type="password" required>
           <button type="button" class="btn-toggle-password" aria-label="Afficher le mot de passe" data-target="password">
-            <img src="/assets/icons/eye.svg" alt="">
+            <img src="{{ static_url }}/assets/icons/eye.svg" alt="">
           </button>
         </div>
       </div>

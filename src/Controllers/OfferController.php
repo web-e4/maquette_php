@@ -100,6 +100,8 @@ class OfferController extends AbstractController
             $this->redirect('/offer/create');
         }
 
+        $this->validateCsrfToken();
+
         $title       = trim($_POST['title']       ?? '');
         $location    = trim($_POST['location']    ?? '');
         $duration    = trim($_POST['duration']    ?? '');
@@ -152,6 +154,8 @@ class OfferController extends AbstractController
             $this->redirect($base . '?tab=offers');
         }
 
+        $this->validateCsrfToken();
+
         $title       = trim($_POST['title']       ?? '');
         $location    = trim($_POST['location']    ?? '');
         $duration    = trim($_POST['duration']    ?? '');
@@ -189,6 +193,8 @@ class OfferController extends AbstractController
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('/offers');
         }
+
+        $this->validateCsrfToken();
 
         $this->offerModel->deleteOffer($id);
 

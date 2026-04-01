@@ -2,7 +2,7 @@
 
 {% block title %}Postuler - {{ offer.title }}{% endblock %}
 
-{% block styles %}<link rel="stylesheet" href="/assets/css/apply.css">{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ static_url }}/assets/css/apply.css">{% endblock %}
 
 {% block content %}
 
@@ -59,7 +59,7 @@
               <span class="form-input summary-value" style="color:var(--color-error,#b91c1c)">Fichier manquant</span>
             {% endif %}
             <button class="btn-edit" type="button" data-field="cv" title="Remplacer">
-              <img src="/assets/icons/pencil.svg" alt="Remplacer">
+              <img src="{{ static_url }}/assets/icons/pencil.svg" alt="Remplacer">
             </button>
           </div>
         </div>
@@ -74,15 +74,15 @@
                 <span class="form-input summary-value" style="color:var(--color-error,#b91c1c)">Fichier manquant</span>
               {% endif %}
               <button class="btn-edit" type="button" data-field="letter" title="Remplacer">
-                <img src="/assets/icons/pencil.svg" alt="Remplacer">
+                <img src="{{ static_url }}/assets/icons/pencil.svg" alt="Remplacer">
               </button>
               <button class="btn-icon btn-icon--danger btn-delete-letter" type="button" title="Supprimer">
-                <img src="/assets/icons/trash.svg" alt="Supprimer">
+                <img src="{{ static_url }}/assets/icons/trash.svg" alt="Supprimer">
               </button>
             {% else %}
               <span class="form-input summary-value" style="color:var(--color-text-muted)">Non fournie</span>
               <button class="btn-edit" type="button" data-field="letter" title="Ajouter">
-                <img src="/assets/icons/pencil.svg" alt="Ajouter">
+                <img src="{{ static_url }}/assets/icons/pencil.svg" alt="Ajouter">
               </button>
             {% endif %}
           </div>
@@ -98,6 +98,7 @@
 
       <!-- MODE FORMULAIRE : pas encore postulé -->
       <form class="publish-form" action="/apply/submit?id={{ offer.idOffer }}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
         <div class="form-field">
           <label class="form-label" for="surname">Nom</label>
@@ -120,7 +121,7 @@
         <div class="form-field">
           <label class="form-label" for="cv">Curriculum Vitae (PDF) <span class="required">*</span></label>
           <label class="file-upload-btn" for="cv">
-            <img src="/assets/icons/upload.svg" alt="">
+            <img src="{{ static_url }}/assets/icons/upload.svg" alt="">
             <span class="file-upload-label" id="cv-label">Choisir un fichier PDF</span>
           </label>
           <input class="file-input-hidden" type="file" id="cv" name="cv" accept=".pdf" required>
@@ -130,7 +131,7 @@
         <div class="form-field">
           <label class="form-label" for="letter">Lettre de motivation (PDF)</label>
           <label class="file-upload-btn" for="letter">
-            <img src="/assets/icons/upload.svg" alt="">
+            <img src="{{ static_url }}/assets/icons/upload.svg" alt="">
             <span class="file-upload-label" id="letter-label">Choisir un fichier PDF</span>
           </label>
           <input class="file-input-hidden" type="file" id="letter" name="letter" accept=".pdf">
@@ -139,7 +140,7 @@
 
         <div class="publish-actions">
           <button class="btn btn-solid" type="submit">
-            <img src="/assets/icons/send.svg" alt="" class="icon-white">
+            <img src="{{ static_url }}/assets/icons/send.svg" alt="" class="icon-white">
             Envoyer ma candidature
           </button>
           <a class="btn btn-ghost" href="/">Annuler</a>
@@ -167,6 +168,6 @@
 
 {% block scripts %}
   {% if alreadyApplied %}
-    <script src="/assets/js/application-edit.js"></script>
+    <script src="{{ static_url }}/assets/js/application-edit.js"></script>
   {% endif %}
 {% endblock %}

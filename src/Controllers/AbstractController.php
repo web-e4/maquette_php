@@ -4,6 +4,7 @@
 namespace Equipe4\Gigastage\Controllers;
 
 use Equipe4\Gigastage\Core\AccessControl;
+use Equipe4\Gigastage\Core\RedirectException;
 use Equipe4\Gigastage\Core\Role;
 
 abstract class AbstractController
@@ -20,13 +21,32 @@ abstract class AbstractController
         // Injecte l'utilisateur connecté dans tous les templates
         $data['app_user']    = $_SESSION['user'] ?? null;
         $data['current_url'] = $_SERVER['REQUEST_URI'] ?? '/';
+        $data['csrf_token']  = $this->getCsrfToken();
         echo $this->twig->render($template, $data);
     }
 
-    protected function redirect(string $url): void
+    protected function getCsrfToken(): string
+    {
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+        return $_SESSION['csrf_token'];
+    }
+
+    protected function validateCsrfToken(): void
+    {
+        $token = $_POST['csrf_token'] ?? '';
+        if (!hash_equals($_SESSION['csrf_token'] ?? '', $token)) {
+            http_response_code(403);
+            echo '403 - Token CSRF invalide.';
+            exit;
+        }
+    }
+
+    protected function redirect(string $url): never
     {
         header('Location: ' . $url);
-        exit;
+        throw new RedirectException($url);
     }
 
     protected function isLoggedIn(): bool

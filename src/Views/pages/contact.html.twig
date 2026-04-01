@@ -2,7 +2,10 @@
 
 {% block title %}Contact{% endblock %}
 
-{% block styles %}<link rel="stylesheet" href="/assets/css/pages.css">{% endblock %}
+{% block meta_description %}Contactez l'équipe GigaStage pour toute question ou demande d'assistance. Nous sommes à votre écoute.{% endblock %}
+{% block meta_keywords %}contact GigaStage, assistance, support, question, aide{% endblock %}
+
+{% block styles %}<link rel="stylesheet" href="{{ static_url }}/assets/css/pages.css">{% endblock %}
 
 {% block content %}
 
@@ -21,6 +24,7 @@
     {% endif %}
 
     <form class="contact-form" action="/contact" method="post" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
       <div>
         <label for="name">Votre nom</label>

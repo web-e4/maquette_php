@@ -1,6 +1,7 @@
 <div class="admin-form-card">
   <h3>Nouveau compte pilote</h3>
   <form method="post" action="/admin/pilot/create">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <div class="admin-form-grid">
       <div class="form-field">
         <label class="form-label" for="pc-firstname">Prénom <span class="required">*</span></label>

@@ -1,6 +1,7 @@
 <div class="admin-form-card">
   <h3>Modifier le compte étudiant</h3>
   <form method="post" action="/admin/student/update?id={{ student.idUser }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <div class="admin-form-grid">
       <div class="form-field">
         <label class="form-label" for="su-firstname">Prénom <span class="required">*</span></label>

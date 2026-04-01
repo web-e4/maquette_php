@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Pages applicatives non indexables
+Disallow: /login
+Disallow: /register
+Disallow: /logout
+Disallow: /profile
+Disallow: /apply
+Disallow: /admin
+Disallow: /pilot
+Disallow: /wishlist
+Disallow: /offer/create
+Disallow: /offer/edit
+
+Sitemap: https://gigastage.local/sitemap.xml

@@ -9,6 +9,8 @@ class PageController extends AbstractController
     public function contact(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrfToken();
+
             $name    = trim($_POST['name']    ?? '');
             $email   = trim($_POST['email']   ?? '');
             $message = trim($_POST['message'] ?? '');

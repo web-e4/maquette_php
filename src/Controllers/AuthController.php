@@ -13,12 +13,12 @@ class AuthController extends AbstractController
     private ApplicationModel $applicationModel;
     private WishlistModel $wishlistModel;
 
-    public function __construct($twig)
+    public function __construct($twig, ?ProfileModel $profileModel = null, ?ApplicationModel $applicationModel = null, ?WishlistModel $wishlistModel = null)
     {
         parent::__construct($twig);
-        $this->profileModel     = new ProfileModel();
-        $this->applicationModel = new ApplicationModel();
-        $this->wishlistModel    = new WishlistModel();
+        $this->profileModel     = $profileModel     ?? new ProfileModel();
+        $this->applicationModel = $applicationModel ?? new ApplicationModel();
+        $this->wishlistModel    = $wishlistModel    ?? new WishlistModel();
     }
 
     // GET /login
@@ -42,6 +42,8 @@ class AuthController extends AbstractController
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('/login');
         }
+
+        $this->validateCsrfToken();
 
         $email    = trim($_POST['email']    ?? '');
         $password = trim($_POST['password'] ?? '');
@@ -90,6 +92,8 @@ class AuthController extends AbstractController
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('/register');
         }
+
+        $this->validateCsrfToken();
 
         $email     = trim($_POST['email']     ?? '');
         $password  = trim($_POST['password']  ?? '');

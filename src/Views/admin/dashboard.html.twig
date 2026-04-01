@@ -3,7 +3,7 @@
 {% block title %}{{ pageTitle }}{% endblock %}
 
 {% block styles %}
-  <link rel="stylesheet" href="/assets/css/profile.css">
+  <link rel="stylesheet" href="{{ static_url }}/assets/css/profile.css">
 {% endblock %}
 
 {% block content %}
@@ -53,7 +53,7 @@
         <span class="count-badge">{{ companies|length }}</span>
         <div style="margin-left:auto;display:flex;gap:8px">
           <button class="btn btn-solid" type="button" onclick="toggleForm('form-company-create')">
-            <img src="/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
+            <img src="{{ static_url }}/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
           </button>
         </div>
       </div>
@@ -84,7 +84,7 @@
             {% for company in companies %}
               <tr>
                 <td>
-                  <a href="/company?id={{ company.idCompany }}" style="font-weight:600;color:var(--color-primary-dark)">
+                  <a href="/company/{{ company.idCompany }}" style="font-weight:600;color:var(--color-primary-dark)">
                     {{ company.name }}
                   </a>
                 </td>
@@ -113,11 +113,12 @@
                 <td>
                   <div style="display:flex;gap:6px;justify-content:flex-end">
                     <a href="{{ dashboardBase }}?tab=companies&editType=company&edit={{ company.idCompany }}" class="btn-icon" title="Modifier">
-                      <img src="/assets/icons/pencil.svg" alt="Modifier">
+                      <img src="{{ static_url }}/assets/icons/pencil.svg" alt="Modifier">
                     </a>
                     <form method="post" action="/admin/company/delete?id={{ company.idCompany }}" onsubmit="return confirm('Supprimer {{ company.name }} ?')">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                       <button type="submit" class="btn-icon btn-icon--danger" title="Supprimer">
-                        <img src="/assets/icons/trash.svg" alt="Supprimer">
+                        <img src="{{ static_url }}/assets/icons/trash.svg" alt="Supprimer">
                       </button>
                     </form>
                   </div>
@@ -141,7 +142,7 @@
         <span class="count-badge">{{ offers|length }}</span>
         <div style="margin-left:auto;display:flex;gap:8px">
           <button class="btn btn-solid" type="button" onclick="toggleForm('form-offer-create')">
-            <img src="/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
+            <img src="{{ static_url }}/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
           </button>
         </div>
       </div>
@@ -173,7 +174,7 @@
             {% for offer in offers %}
               <tr>
                 <td>
-                  <a href="/offer?id={{ offer.idOffer }}" style="font-weight:600;color:var(--color-primary-dark)">
+                  <a href="/offer/{{ offer.idOffer }}" style="font-weight:600;color:var(--color-primary-dark)">
                     {{ offer.title }}
                   </a>
                 </td>
@@ -191,11 +192,12 @@
                 <td>
                   <div style="display:flex;gap:6px;justify-content:flex-end">
                     <a href="{{ dashboardBase }}?tab=offers&editType=offer&edit={{ offer.idOffer }}" class="btn-icon" title="Modifier">
-                      <img src="/assets/icons/pencil.svg" alt="Modifier">
+                      <img src="{{ static_url }}/assets/icons/pencil.svg" alt="Modifier">
                     </a>
                     <form method="post" action="/offer/delete?id={{ offer.idOffer }}" onsubmit="return confirm('Supprimer cette offre ?')">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                       <button type="submit" class="btn-icon btn-icon--danger" title="Supprimer">
-                        <img src="/assets/icons/trash.svg" alt="Supprimer">
+                        <img src="{{ static_url }}/assets/icons/trash.svg" alt="Supprimer">
                       </button>
                     </form>
                   </div>
@@ -219,7 +221,7 @@
         <span class="count-badge">{{ students|length }}</span>
         <div style="margin-left:auto;display:flex;gap:8px">
           <button class="btn btn-solid" type="button" onclick="toggleForm('form-student-create')">
-            <img src="/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
+            <img src="{{ static_url }}/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
           </button>
         </div>
       </div>
@@ -263,11 +265,12 @@
                 <td>
                   <div style="display:flex;gap:6px;justify-content:flex-end">
                     <a href="{{ dashboardBase }}?tab=students&editType=student&edit={{ student.idUser }}" class="btn-icon" title="Modifier">
-                      <img src="/assets/icons/pencil.svg" alt="Modifier">
+                      <img src="{{ static_url }}/assets/icons/pencil.svg" alt="Modifier">
                     </a>
                     <form method="post" action="/admin/student/delete?id={{ student.idUser }}" onsubmit="return confirm('Désactiver cet étudiant ?')">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                       <button type="submit" class="btn-icon btn-icon--danger" title="Désactiver">
-                        <img src="/assets/icons/trash.svg" alt="Désactiver">
+                        <img src="{{ static_url }}/assets/icons/trash.svg" alt="Désactiver">
                       </button>
                     </form>
                   </div>
@@ -292,7 +295,7 @@
         <span class="count-badge">{{ pilots|length }}</span>
         <div style="margin-left:auto;display:flex;gap:8px">
           <button class="btn btn-solid" type="button" onclick="toggleForm('form-pilot-create')">
-            <img src="/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
+            <img src="{{ static_url }}/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
           </button>
         </div>
       </div>
@@ -334,11 +337,12 @@
                 <td>
                   <div style="display:flex;gap:6px;justify-content:flex-end">
                     <a href="{{ dashboardBase }}?tab=pilots&editType=pilot&edit={{ pilot.idUser }}" class="btn-icon" title="Modifier">
-                      <img src="/assets/icons/pencil.svg" alt="Modifier">
+                      <img src="{{ static_url }}/assets/icons/pencil.svg" alt="Modifier">
                     </a>
                     <form method="post" action="/admin/pilot/delete?id={{ pilot.idUser }}" onsubmit="return confirm('Désactiver ce pilote ?')">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                       <button type="submit" class="btn-icon btn-icon--danger" title="Désactiver">
-                        <img src="/assets/icons/trash.svg" alt="Désactiver">
+                        <img src="{{ static_url }}/assets/icons/trash.svg" alt="Désactiver">
                       </button>
                     </form>
                   </div>
@@ -380,7 +384,7 @@
                 <td style="font-weight:600">{{ application.firstName }} {{ application.surname }}</td>
                 <td style="color:var(--color-text-muted)">{{ application.email }}</td>
                 <td>
-                  <a href="/offer?id={{ application.idOffer }}" style="color:var(--color-primary-dark)">
+                  <a href="/offer/{{ application.idOffer }}" style="color:var(--color-primary-dark)">
                     {{ application.title }}
                   </a>
                 </td>

@@ -2,7 +2,7 @@
 
 {% block title %}Mon profil{% endblock %}
 
-{% block styles %}<link rel="stylesheet" href="/assets/css/profile.css">{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ static_url }}/assets/css/profile.css">{% endblock %}
 
 {% block content %}
 
@@ -54,7 +54,7 @@
     <div class="tab-panel active" id="tab-favorites">
       {% if favorites is empty %}
         <div class="empty-state">
-          <img src="/assets/icons/heart.svg" alt="">
+          <img src="{{ static_url }}/assets/icons/heart.svg" alt="">
           <p>Aucune offre dans votre wish-list.</p>
           <a class="btn btn-solid" href="/offers">Explorer les offres</a>
         </div>
@@ -63,27 +63,27 @@
           {% for offer in favorites %}
             <article class="profile-offer-card">
               <div class="profile-offer-logo">
-                <img src="/assets/icons/building-2.svg" alt="">
+                <img src="{{ static_url }}/assets/icons/building-2.svg" alt="">
               </div>
               <div class="profile-offer-body">
                 <h2 class="profile-offer-title">{{ offer.title }}</h2>
                 <div class="profile-offer-meta">
                   <span>
-                    <img src="/assets/icons/building-2.svg" alt="">
+                    <img src="{{ static_url }}/assets/icons/building-2.svg" alt="">
                     {{ offer.companyName }}
                   </span>
                   <span>
-                    <img src="/assets/icons/map-pin.svg" alt="">
+                    <img src="{{ static_url }}/assets/icons/map-pin.svg" alt="">
                     {{ offer.location }}
                   </span>
                   <span>
-                    <img src="/assets/icons/clock.svg" alt="">
+                    <img src="{{ static_url }}/assets/icons/clock.svg" alt="">
                     {{ offer.durationInWeeks }} semaines
                   </span>
                 </div>
               </div>
               <div class="profile-offer-actions">
-                <a class="btn btn-solid" href="/offer?id={{ offer.idOffer }}">Voir</a>
+                <a class="btn btn-solid" href="/offer/{{ offer.idOffer }}">Voir</a>
                 <!-- SFx25 - Retirer de la wish-list -->
                 <form method="post" action="/wishlist/remove?id={{ offer.idOffer }}">
                   <button class="btn btn-ghost" type="submit">Retirer</button>
@@ -99,7 +99,7 @@
     <div class="tab-panel" id="tab-applications">
       {% if applications is empty %}
         <div class="empty-state">
-          <img src="/assets/icons/send.svg" alt="">
+          <img src="{{ static_url }}/assets/icons/send.svg" alt="">
           <p>Aucune candidature pour le moment.</p>
           <a class="btn btn-solid" href="/offers">Trouver un stage</a>
         </div>
@@ -108,27 +108,27 @@
           {% for application in applications %}
             <article class="profile-offer-card">
               <div class="profile-offer-logo">
-                <img src="/assets/icons/panels-top-left.svg" alt="">
+                <img src="{{ static_url }}/assets/icons/panels-top-left.svg" alt="">
               </div>
               <div class="profile-offer-body">
                 <h2 class="profile-offer-title">{{ application.title }}</h2>
                 <div class="profile-offer-meta">
                   <span>
-                    <img src="/assets/icons/building-2.svg" alt="">
+                    <img src="{{ static_url }}/assets/icons/building-2.svg" alt="">
                     {{ application.companyName }}
                   </span>
                   <span>
-                    <img src="/assets/icons/map-pin.svg" alt="">
+                    <img src="{{ static_url }}/assets/icons/map-pin.svg" alt="">
                     {{ application.location }}
                   </span>
                   <span>
-                    <img src="/assets/icons/calendar.svg" alt="">
+                    <img src="{{ static_url }}/assets/icons/calendar.svg" alt="">
                     Postulé le {{ application.applicationDate }}
                   </span>
                 </div>
               </div>
               <div class="profile-offer-actions">
-                <a class="btn btn-solid" href="/apply?id={{ application.idOffer }}">Voir ma candidature</a>
+                <a class="btn btn-solid" href="/apply/{{ application.idOffer }}">Voir ma candidature</a>
               </div>
             </article>
           {% endfor %}

@@ -3,7 +3,7 @@
 <article class="card">
   <div class="card-top">
     <div class="card-logo">
-      <img src="/assets/icons/building-2.svg" alt="">
+      <img src="{{ static_url }}/assets/icons/building-2.svg" alt="">
     </div>
     <h3 class="card-title">{{ offer.title }}</h3>
 
@@ -11,11 +11,12 @@
       <form method="post"
             action="{{ isInWishlist ? '/wishlist/remove' : '/wishlist/add' }}?id={{ offer.idOffer }}"
             style="margin-left:auto;flex-shrink:0">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <input type="hidden" name="redirect" value="{{ current_url }}">
         <button type="submit"
                 class="btn-card-wishlist {{ isInWishlist ? 'btn-card-wishlist--active' : '' }}"
                 title="{{ isInWishlist ? 'Retirer de la wish-list' : 'Ajouter à la wish-list' }}">
-          <img src="/assets/icons/heart.svg" alt="">
+          <img src="{{ static_url }}/assets/icons/heart.svg" alt="">
         </button>
       </form>
     {% endif %}
@@ -23,16 +24,16 @@
 
   <div class="card-meta">
     <span>
-      <img src="/assets/icons/map-pin.svg" alt="">
+      <img src="{{ static_url }}/assets/icons/map-pin.svg" alt="">
       {{ offer.location }}
     </span>
     <span>
-      <img src="/assets/icons/clock.svg" alt="">
+      <img src="{{ static_url }}/assets/icons/clock.svg" alt="">
       {{ offer.durationInWeeks }} semaines
     </span>
   </div>
 
-  <a class="card-cta" href="/offer?id={{ offer.idOffer }}">
+  <a class="card-cta" href="/offer/{{ offer.idOffer }}">
     Voir le détail
   </a>
 </article>

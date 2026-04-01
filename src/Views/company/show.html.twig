@@ -2,9 +2,12 @@
 
 {% block title %}{{ company.name }}{% endblock %}
 
+{% block meta_description %}Découvrez {{ company.name }} sur GigaStage : offres de stage disponibles, évaluations et informations sur l'entreprise.{% endblock %}
+{% block meta_keywords %}{{ company.name }}, stage {{ company.name }}, entreprise, offres de stage{% endblock %}
+
 {% block styles %}
-  <link rel="stylesheet" href="/assets/css/offer.css">
-  <link rel="stylesheet" href="/assets/css/profile.css">
+  <link rel="stylesheet" href="{{ static_url }}/assets/css/offer.css">
+  <link rel="stylesheet" href="{{ static_url }}/assets/css/profile.css">
 {% endblock %}
 
 {% block content %}
@@ -29,13 +32,13 @@
 
         <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:14px;color:var(--color-text-muted)">
           <span style="display:flex;align-items:center;gap:6px">
-            <img src="/assets/icons/database.svg" alt="" style="width:14px;height:14px;filter:invert(47%) sepia(10%) saturate(400%) hue-rotate(175deg) brightness(90%)">
+            <img src="{{ static_url }}/assets/icons/database.svg" alt="" style="width:14px;height:14px;filter:invert(47%) sepia(10%) saturate(400%) hue-rotate(175deg) brightness(90%)">
             {{ company.email }}
           </span>
           {% if company.website %}
             <a href="{{ company.website }}" target="_blank" rel="noopener"
                style="display:flex;align-items:center;gap:6px;color:var(--color-primary-dark)">
-              <img src="/assets/icons/map-pin.svg" alt="" style="width:14px;height:14px;filter:invert(33%) sepia(60%) saturate(500%) hue-rotate(175deg) brightness(85%)">
+              <img src="{{ static_url }}/assets/icons/map-pin.svg" alt="" style="width:14px;height:14px;filter:invert(33%) sepia(60%) saturate(500%) hue-rotate(175deg) brightness(85%)">
               {{ company.website }}
             </a>
           {% endif %}
@@ -59,7 +62,7 @@
 
           {% if offers is empty %}
             <div class="empty-state">
-              <img src="/assets/icons/panels-top-left.svg" alt="">
+              <img src="{{ static_url }}/assets/icons/panels-top-left.svg" alt="">
               <p>Aucune offre active pour cette entreprise.</p>
             </div>
           {% else %}
@@ -67,18 +70,18 @@
               {% for offer in offers %}
                 <article class="profile-offer-card">
                   <div class="profile-offer-logo">
-                    <img src="/assets/icons/panels-top-left.svg" alt="">
+                    <img src="{{ static_url }}/assets/icons/panels-top-left.svg" alt="">
                   </div>
                   <div class="profile-offer-body">
                     <h3 class="profile-offer-title">{{ offer.title }}</h3>
                     <div class="profile-offer-meta">
-                      <span><img src="/assets/icons/map-pin.svg" alt="">{{ offer.location }}</span>
-                      <span><img src="/assets/icons/clock.svg" alt="">{{ offer.durationInWeeks }} semaines</span>
-                      <span><img src="/assets/icons/calendar.svg" alt="">{{ offer.startDate }}</span>
+                      <span><img src="{{ static_url }}/assets/icons/map-pin.svg" alt="">{{ offer.location }}</span>
+                      <span><img src="{{ static_url }}/assets/icons/clock.svg" alt="">{{ offer.durationInWeeks }} semaines</span>
+                      <span><img src="{{ static_url }}/assets/icons/calendar.svg" alt="">{{ offer.startDate }}</span>
                     </div>
                   </div>
                   <div class="profile-offer-actions">
-                    <a class="btn btn-solid" href="/offer?id={{ offer.idOffer }}">Voir l'offre</a>
+                    <a class="btn btn-solid" href="/offer/{{ offer.idOffer }}">Voir l'offre</a>
                   </div>
                 </article>
               {% endfor %}
@@ -97,7 +100,7 @@
 
           {% if ratings is empty %}
             <div class="empty-state" style="padding:40px 0">
-              <img src="/assets/icons/heart.svg" alt="">
+              <img src="{{ static_url }}/assets/icons/heart.svg" alt="">
               <p>Aucun avis pour l'instant.</p>
             </div>
           {% else %}
@@ -128,6 +131,7 @@
               Laisser une évaluation
             </h2>
             <form method="post" action="/admin/company/evaluate?id={{ company.idCompany }}" style="display:flex;flex-direction:column;gap:16px;max-width:480px">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
               <div>
                 <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Note (1 à 5)</label>
                 <input class="field-input" type="number" name="rate" min="1" max="5" required style="width:80px">
@@ -150,18 +154,18 @@
         <div class="sidebar-card">
 
           <div class="info-item">
-            <img src="/assets/icons/building-2.svg" alt="">
+            <img src="{{ static_url }}/assets/icons/building-2.svg" alt="">
             <span><strong>{{ company.name }}</strong></span>
           </div>
 
           <div class="info-item">
-            <img src="/assets/icons/database.svg" alt="">
+            <img src="{{ static_url }}/assets/icons/database.svg" alt="">
             <span>{{ company.email }}</span>
           </div>
 
           {% if company.website %}
             <div class="info-item">
-              <img src="/assets/icons/map-pin.svg" alt="">
+              <img src="{{ static_url }}/assets/icons/map-pin.svg" alt="">
               <a href="{{ company.website }}" target="_blank" rel="noopener" style="color:var(--color-primary-dark)">
                 Site web
               </a>

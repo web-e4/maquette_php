@@ -47,6 +47,8 @@ class PilotController extends AbstractDashboardController
             $this->redirectToDashboard('pilots');
         }
 
+        $this->validateCsrfToken();
+
         $email     = trim($_POST['email']     ?? '');
         $password  = trim($_POST['password']  ?? '');
         $firstName = trim($_POST['firstName'] ?? '');
@@ -78,6 +80,8 @@ class PilotController extends AbstractDashboardController
             $this->redirectToDashboard('pilots');
         }
 
+        $this->validateCsrfToken();
+
         $email     = trim($_POST['email']     ?? '');
         $firstName = trim($_POST['firstName'] ?? '');
         $surname   = trim($_POST['surname']   ?? '');
@@ -108,6 +112,8 @@ class PilotController extends AbstractDashboardController
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirectToDashboard('pilots');
         }
+
+        $this->validateCsrfToken();
 
         $this->userModel->delete($id);
 

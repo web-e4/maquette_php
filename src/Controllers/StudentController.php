@@ -26,6 +26,8 @@ class StudentController extends AbstractController
             $this->redirectToDashboard('students');
         }
 
+        $this->validateCsrfToken();
+
         $email     = trim($_POST['email']     ?? '');
         $password  = trim($_POST['password']  ?? '');
         $firstName = trim($_POST['firstName'] ?? '');
@@ -56,6 +58,8 @@ class StudentController extends AbstractController
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirectToDashboard('students');
         }
+
+        $this->validateCsrfToken();
 
         $email     = trim($_POST['email']     ?? '');
         $firstName = trim($_POST['firstName'] ?? '');
@@ -94,6 +98,8 @@ class StudentController extends AbstractController
             $this->redirectToDashboard('students');
         }
 
+        $this->validateCsrfToken();
+
         $idPilot = isset($_POST['idPilot']) && $_POST['idPilot'] !== ''
             ? (int) $_POST['idPilot']
             : null;
@@ -112,6 +118,8 @@ class StudentController extends AbstractController
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirectToDashboard('students');
         }
+
+        $this->validateCsrfToken();
 
         $this->userModel->delete($id);
 

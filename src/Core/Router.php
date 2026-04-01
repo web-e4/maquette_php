@@ -21,14 +21,14 @@ class Router
     private array $routes = [
         '/'                    => [HomeController::class,        'index'],
         '/offers'              => [OfferController::class,       'index'],
-        '/offer'               => [OfferController::class,       'show'],
         '/offer/create'        => [OfferController::class,       'create'],
         '/offer/create/submit' => [OfferController::class,       'createSubmit'],
         '/offer/edit'          => [OfferController::class,       'edit'],
         '/offer/delete'        => [OfferController::class,       'delete'],
-        '/apply'               => [ApplicationController::class, 'show'],
+        '/offer'               => [OfferController::class,       'show'],
         '/apply/submit'        => [ApplicationController::class, 'submit'],
         '/apply/update'        => [ApplicationController::class, 'update'],
+        '/apply'               => [ApplicationController::class, 'show'],
         '/login'               => [AuthController::class,        'index'],
         '/login/submit'        => [AuthController::class,        'login'],
         '/register'            => [AuthController::class,        'registerIndex'],
@@ -57,18 +57,28 @@ class Router
         '/wishlist/remove'          => [WishlistController::class, 'remove'],
     ];
 
+    // Routes avec segment d'ID dans le chemin : /ressource/{id}
+    private array $patternRoutes = [
+        '#^/offer/(\d+)$#'   => [OfferController::class,       'show'],
+        '#^/company/(\d+)$#' => [CompanyController::class,     'show'],
+        '#^/apply/(\d+)$#'   => [ApplicationController::class, 'show'],
+    ];
+
     public function __construct($twig)
     {
         $this->twig = $twig;
     }
 
-    public function dispatch(string $uri)
+    public function dispatch(string $uri): void
     {
-        if (array_key_exists($uri, $this->routes)) {
-            [$controllerClass, $method] = $this->routes[$uri];
+        // Retire la query string du chemin pour le matching des routes
+        $path = parse_url($uri, PHP_URL_PATH) ?? $uri;
+
+        // 1. Matching exact (routes statiques)
+        if (array_key_exists($path, $this->routes)) {
+            [$controllerClass, $method] = $this->routes[$path];
             $controller = new $controllerClass($this->twig);
-			// si méthode nécessite para=id, envoie avec id, sinon sans
-			// privilégie GET à POST avec ternaire imbriqué
+            // Privilégie GET à POST pour l'id
             $id = isset($_GET['id']) ? (int) $_GET['id'] : (isset($_POST['id']) ? (int) $_POST['id'] : null);
 
             if ($id !== null) {
@@ -76,9 +86,20 @@ class Router
             } else {
                 $controller->$method();
             }
-        } else {
-            http_response_code(404);
-            echo '404 - Page not found';
+            return;
         }
+
+        // 2. Matching par pattern (routes avec ID dans le chemin)
+        foreach ($this->patternRoutes as $pattern => [$controllerClass, $method]) {
+            if (preg_match($pattern, $path, $matches)) {
+                $id = (int) $matches[1];
+                $controller = new $controllerClass($this->twig);
+                $controller->$method($id);
+                return;
+            }
+        }
+
+        http_response_code(404);
+        echo '404 - Page not found';
     }
 }

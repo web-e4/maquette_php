@@ -58,6 +58,8 @@ class CompanyController extends AbstractController
             $this->redirectToDashboard('companies');
         }
 
+        $this->validateCsrfToken();
+
         $name    = trim($_POST['name']    ?? '');
         $email   = trim($_POST['email']   ?? '');
         $website = trim($_POST['website'] ?? '');
@@ -85,6 +87,8 @@ class CompanyController extends AbstractController
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirectToDashboard('companies');
         }
+
+        $this->validateCsrfToken();
 
         $name    = trim($_POST['name']    ?? '');
         $email   = trim($_POST['email']   ?? '');
@@ -117,6 +121,8 @@ class CompanyController extends AbstractController
             $this->redirectToDashboard('companies');
         }
 
+        $this->validateCsrfToken();
+
         $this->companyModel->delete($id);
 
         $_SESSION['flash'] = ['type' => 'success', 'message' => 'Entreprise supprimée.'];
@@ -132,18 +138,20 @@ class CompanyController extends AbstractController
             $this->redirectToDashboard('companies');
         }
 
+        $this->validateCsrfToken();
+
         $rate    = (int) ($_POST['rate']    ?? 0);
         $comment = trim($_POST['comment'] ?? '');
 
         if ($rate < 1 || $rate > 5) {
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'La note doit être entre 1 et 5.'];
-            $this->redirect('/company?id=' . $id);
+            $this->redirect('/company/' . $id);
         }
 
         $idUser = $_SESSION['user']['id'];
         $this->companyModel->addRating($idUser, $id, $rate, $comment);
 
         $_SESSION['flash'] = ['type' => 'success', 'message' => 'Évaluation enregistrée.'];
-        $this->redirect('/company?id=' . $id);
+        $this->redirect('/company/' . $id);
     }
 }

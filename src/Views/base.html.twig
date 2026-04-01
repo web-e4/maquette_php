@@ -5,9 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GigaStage - {% block title %}{% endblock %}</title>
-  <link rel="stylesheet" href="/assets/css/base.css">
-  <link rel="stylesheet" href="/assets/css/layout.css">
-  <link rel="stylesheet" href="/assets/css/components.css">
+  <meta name="description" content="{% block meta_description %}GigaStage — Trouvez votre stage idéal parmi des centaines d'offres en France. Plateforme de mise en relation entre étudiants et entreprises.{% endblock %}">
+  <meta name="keywords" content="{% block meta_keywords %}stage, offre de stage, alternance, étudiant, entreprise, recrutement, GigaStage{% endblock %}">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="{{ static_url }}/assets/css/base.css">
+  <link rel="stylesheet" href="{{ static_url }}/assets/css/layout.css">
+  <link rel="stylesheet" href="{{ static_url }}/assets/css/components.css">
   {% block styles %}{% endblock %}
 </head>
 
@@ -18,7 +21,7 @@
     <div class="container header-inner">
 
       <a class="brand" href="/">
-        <img class="brand-logo" src="/assets/logo.svg" alt="Logo GigaStage">
+        <img class="brand-logo" src="{{ static_url }}/assets/logo.svg" alt="Logo GigaStage">
         <span class="brand-name">GigaStage</span>
       </a>
 

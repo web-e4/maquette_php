@@ -1,10 +1,19 @@
 <?php
 // public/index.php
 
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path'     => '/',
+    'secure'   => isset($_SERVER['HTTPS']),
+    'httponly' => true,
+    'samesite' => 'Strict',
+]);
+
 session_start();
 
 require '../vendor/autoload.php';
 
+use Equipe4\Gigastage\Core\RedirectException;
 use Equipe4\Gigastage\Core\Router;
 
 // Chargement des variables d'environnement
@@ -27,6 +36,15 @@ $twig   = new \Twig\Environment($loader, [
     'debug' => $_ENV['APP_ENV'] === 'dev',
 ]);
 
+// Injecte l'URL du serveur de contenu statique dans tous les templates
+$twig->addGlobal('static_url', rtrim($_ENV['STATIC_URL'] ?? '', '/'));
+
 // Routeur
 $router = new Router($twig);
-$router->dispatch($_GET['uri'] ?? '/');
+
+try {
+    $router->dispatch($_GET['uri'] ?? '/');
+} catch (RedirectException) {
+    // La redirection a déjà été envoyée via header() dans AbstractController::redirect()
+    exit;
+}
