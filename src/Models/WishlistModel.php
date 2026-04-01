@@ -5,7 +5,7 @@ namespace Equipe4\Gigastage\Models;
 
 class WishlistModel extends AbstractModel
 {
-    // SFx23 — Récupère toutes les offres en wish-list d'un étudiant
+    // SFx23 - Récupère toutes les offres en wish-list d'un étudiant
     public function findByUser(int $idUser): array
     {
         $stmt = $this->getConnection()->prepare("
@@ -47,7 +47,7 @@ class WishlistModel extends AbstractModel
         return (int) $stmt->fetchColumn() > 0;
     }
 
-    // SFx24 — Ajoute une offre à la wish-list
+    // SFx24 - Ajoute une offre à la wish-list
     public function add(int $idUser, int $idOffer): void
     {
         if ($this->has($idUser, $idOffer)) {
@@ -65,7 +65,7 @@ class WishlistModel extends AbstractModel
         ]);
     }
 
-    // SFx25 — Retire une offre de la wish-list
+    // SFx25 - Retire une offre de la wish-list
     public function remove(int $idUser, int $idOffer): void
     {
         $stmt = $this->getConnection()->prepare("

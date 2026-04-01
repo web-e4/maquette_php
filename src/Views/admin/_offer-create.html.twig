@@ -11,7 +11,7 @@
       <div class="form-field">
         <label class="form-label" for="oc-company">Entreprise <span class="required">*</span></label>
         <select class="form-input" id="oc-company" name="idCompany" required>
-          <option value="">— Sélectionner —</option>
+          <option value="">- Sélectionner -</option>
           {% for company in companies %}
             <option value="{{ company.idCompany }}">{{ company.name }}</option>
           {% endfor %}

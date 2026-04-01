@@ -38,7 +38,7 @@ class PilotController extends AbstractDashboardController
         parent::dashboard();
     }
 
-    // POST /admin/pilot/create — SFx13
+    // POST /admin/pilot/create - SFx13
     public function create(): void
     {
         $this->requirePermission(Permission::PILOT_CREATE);
@@ -69,7 +69,7 @@ class PilotController extends AbstractDashboardController
         $this->redirectToDashboard('pilots');
     }
 
-    // POST /admin/pilot/update — SFx14
+    // POST /admin/pilot/update - SFx14
     public function update(int $id): void
     {
         $this->requirePermission(Permission::PILOT_EDIT);
@@ -100,7 +100,7 @@ class PilotController extends AbstractDashboardController
         $this->redirectToDashboard('pilots');
     }
 
-    // POST /admin/pilot/delete — SFx15
+    // POST /admin/pilot/delete - SFx15
     public function delete(int $id): void
     {
         $this->requirePermission(Permission::PILOT_DELETE);

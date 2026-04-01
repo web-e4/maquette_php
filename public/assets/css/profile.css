@@ -1,5 +1,5 @@
 /* ============================================================
-   GIGASTAGE — Pages Profil (stagiaire & entreprise)
+   GIGASTAGE - Pages Profil (stagiaire & entreprise)
    ============================================================ */
 
 
@@ -21,7 +21,7 @@
   gap: 24px;
 }
 
-/* Avatar — styles déplacés dans components.css */
+/* Avatar - styles déplacés dans components.css */
 
 .profile-info {
   flex: 1;

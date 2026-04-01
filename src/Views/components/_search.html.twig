@@ -1,8 +1,8 @@
 {#
   Variables optionnelles :
-    searchAction      — action du formulaire       (défaut : /offers)
-    searchPlaceholder — placeholder du champ texte (défaut : Trouver un stage...)
-    searchShowCity    — afficher le champ ville     (défaut : true)
+    searchAction      - action du formulaire       (défaut : /offers)
+    searchPlaceholder - placeholder du champ texte (défaut : Trouver un stage...)
+    searchShowCity    - afficher le champ ville     (défaut : true)
 #}
 {% set searchAction      = searchAction      ?? '/offers' %}
 {% set searchPlaceholder = searchPlaceholder ?? 'Trouver un stage...' %}
@@ -37,7 +37,7 @@
 </form>
 
 <script>
-    // — Bouton effacer (champ "q") —
+    // - Bouton effacer (champ "q") -
     const qInput    = document.getElementById('q-input');
     const qClearBtn = document.getElementById('q-clear-btn');
 
@@ -72,7 +72,7 @@
     updateClear();
 
     {% if searchShowCity %}
-    // — Dropdown villes —
+    // - Dropdown villes -
     const cityBtn      = document.getElementById('city-dropdown-btn');
     const cityDropdown = document.getElementById('city-dropdown');
     const cityInput    = document.getElementById('city-input');

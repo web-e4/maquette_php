@@ -17,7 +17,7 @@ class StudentController extends AbstractController
         $this->userModel = new UserModel();
     }
 
-    // POST /admin/student/create — SFx17
+    // POST /admin/student/create - SFx17
     public function create(): void
     {
         $this->requirePermission(Permission::STUDENT_CREATE);
@@ -48,7 +48,7 @@ class StudentController extends AbstractController
         $this->redirectToDashboard('students');
     }
 
-    // POST /admin/student/update — SFx18
+    // POST /admin/student/update - SFx18
     public function update(int $id): void
     {
         $this->requirePermission(Permission::STUDENT_EDIT);
@@ -104,7 +104,7 @@ class StudentController extends AbstractController
         $this->redirectToDashboard('students');
     }
 
-    // POST /admin/student/delete — SFx19
+    // POST /admin/student/delete - SFx19
     public function delete(int $id): void
     {
         $this->requirePermission(Permission::STUDENT_DELETE);

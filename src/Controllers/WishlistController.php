@@ -16,7 +16,7 @@ class WishlistController extends AbstractController
         $this->wishlistModel = new WishlistModel();
     }
 
-    // POST /wishlist/add?id=x — SFx24
+    // POST /wishlist/add?id=x - SFx24
     public function add(int $idOffer): void
     {
         $this->requirePermission(Permission::WISHLIST_ADD);
@@ -32,7 +32,7 @@ class WishlistController extends AbstractController
         $this->redirect($redirect ?: '/offer?id=' . $idOffer);
     }
 
-    // POST /wishlist/remove?id=x — SFx25
+    // POST /wishlist/remove?id=x - SFx25
     public function remove(int $idOffer): void
     {
         $this->requirePermission(Permission::WISHLIST_REMOVE);

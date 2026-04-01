@@ -140,7 +140,7 @@ class OfferController extends AbstractController
         $this->redirect($redirectTo);
     }
 
-    // POST /offer/edit — traite la mise à jour (soumission depuis le dashboard)
+    // POST /offer/edit - traite la mise à jour (soumission depuis le dashboard)
     public function edit(?int $id = null): void
     {
         $this->requirePermission(Permission::OFFER_EDIT);

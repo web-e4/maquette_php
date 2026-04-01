@@ -16,7 +16,7 @@ class CompanyController extends AbstractController
         $this->companyModel = new CompanyModel();
     }
 
-    // GET /companies — SFx2
+    // GET /companies - SFx2
     public function index(): void
     {
         $companies = $this->companyModel->findAll();
@@ -26,7 +26,7 @@ class CompanyController extends AbstractController
         ]);
     }
 
-    // GET /company?id=x — SFx2
+    // GET /company?id=x - SFx2
     public function show(int $id): void
     {
         $company = $this->companyModel->findById($id);
@@ -49,7 +49,7 @@ class CompanyController extends AbstractController
         ]);
     }
 
-    // POST /admin/company/create — SFx3
+    // POST /admin/company/create - SFx3
     public function create(): void
     {
         $this->requirePermission(Permission::COMPANY_CREATE);
@@ -77,7 +77,7 @@ class CompanyController extends AbstractController
         $this->redirectToDashboard('companies');
     }
 
-    // POST /admin/company/update — SFx4
+    // POST /admin/company/update - SFx4
     public function update(int $id): void
     {
         $this->requirePermission(Permission::COMPANY_EDIT);
@@ -108,7 +108,7 @@ class CompanyController extends AbstractController
         $this->redirectToDashboard('companies');
     }
 
-    // POST /admin/company/delete — SFx6
+    // POST /admin/company/delete - SFx6
     public function delete(int $id): void
     {
         $this->requirePermission(Permission::COMPANY_DELETE);
@@ -123,7 +123,7 @@ class CompanyController extends AbstractController
         $this->redirectToDashboard('companies');
     }
 
-    // POST /admin/company/evaluate — SFx5
+    // POST /admin/company/evaluate - SFx5
     public function evaluate(int $id): void
     {
         $this->requirePermission(Permission::COMPANY_EVALUATE);

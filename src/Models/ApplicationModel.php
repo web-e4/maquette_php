@@ -66,7 +66,7 @@ class ApplicationModel extends AbstractModel
         ]);
     }
 
-    // SFx21 — Récupère toutes les candidatures d'un étudiant avec le détail des offres
+    // SFx21 - Récupère toutes les candidatures d'un étudiant avec le détail des offres
     public function findByUser(int $idUser): array
     {
         $stmt = $this->getConnection()->prepare("
@@ -89,7 +89,7 @@ class ApplicationModel extends AbstractModel
         return $stmt->fetchAll();
     }
 
-    // SFx22 — Récupère toutes les candidatures (vue pilote) avec nom de l'étudiant
+    // SFx22 - Récupère toutes les candidatures (vue pilote) avec nom de l'étudiant
     public function findAllWithDetails(): array
     {
         $stmt = $this->getConnection()->prepare("
@@ -112,7 +112,7 @@ class ApplicationModel extends AbstractModel
         return $stmt->fetchAll();
     }
 
-    // SFx22 (pilote) — Candidatures des étudiants d'un pilote donné
+    // SFx22 (pilote) - Candidatures des étudiants d'un pilote donné
     public function findByPilot(int $idPilot): array
     {
         $stmt = $this->getConnection()->prepare("

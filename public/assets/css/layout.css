@@ -1,5 +1,5 @@
 /* ============================================================
-   GIGASTAGE — Layout
+   GIGASTAGE - Layout
    Header / Navigation, Footer
    ============================================================ */
 
@@ -55,7 +55,7 @@
   background-color: var(--color-bg-alt);
 }
 
-/* Zone authentification (droite du header) — desktop uniquement */
+/* Zone authentification (droite du header) - desktop uniquement */
 .header-auth {
   display: flex;
   gap: 10px;
@@ -63,7 +63,7 @@
   flex-shrink: 0;
 }
 
-/* Boutons auth dans le menu mobile — cachés en desktop */
+/* Boutons auth dans le menu mobile - cachés en desktop */
 .nav-auth-mobile {
   display: none;
 }

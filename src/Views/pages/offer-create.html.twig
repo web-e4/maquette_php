@@ -127,7 +127,7 @@
           Entreprise <span class="required">*</span>
         </label>
         <select class="form-input" id="idCompany" name="idCompany" required>
-          <option value="">— Sélectionner une entreprise —</option>
+          <option value="">- Sélectionner une entreprise -</option>
           {% for company in companies %}
             <option value="{{ company.idCompany }}"
               {{ (formData.idCompany is defined and formData.idCompany == company.idCompany) ? 'selected' : '' }}>

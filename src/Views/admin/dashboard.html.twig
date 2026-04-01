@@ -16,7 +16,7 @@
       <div class="profile-hero-inner">
         {% include "components/_avatar.html.twig" %}
         <div class="profile-info">
-          <h1>{{ app_user.firstName }} {{ app_user.surname }}</h1>
+          <h1>{{ (app_user.firstName or app_user.surname) ? app_user.firstName ~ ' ' ~ app_user.surname : app_user.email }}</h1>
           <span class="profile-role">{{ app_user.role }}</span>
           <p class="profile-meta">{{ app_user.email }}</p>
         </div>
@@ -93,14 +93,14 @@
                   {% if company.website %}
                     <a href="{{ company.website }}" target="_blank" style="color:var(--color-primary)">{{ company.website }}</a>
                   {% else %}
-                    —
+                    -
                   {% endif %}
                 </td>
                 <td>
                   {% if company.avgRating %}
                     <span style="color:var(--color-secondary)">★</span> {{ company.avgRating }}/5
                   {% else %}
-                    <span style="color:var(--color-text-muted)">—</span>
+                    <span style="color:var(--color-text-muted)">-</span>
                   {% endif %}
                 </td>
                 <td>
@@ -249,10 +249,10 @@
           <tbody>
             {% for student in students %}
               <tr>
-                <td>{{ student.firstName ?? '—' }}</td>
-                <td style="font-weight:600">{{ student.surname ?? '—' }}</td>
+                <td>{{ student.firstName ?? '-' }}</td>
+                <td style="font-weight:600">{{ student.surname ?? '-' }}</td>
                 <td style="color:var(--color-text-muted)">{{ student.email }}</td>
-                <td style="color:var(--color-text-muted)">{{ student.pilotName ?? '—' }}</td>
+                <td style="color:var(--color-text-muted)">{{ student.pilotName ?? '-' }}</td>
                 <td>
                   {% if student.statusUser %}
                     <span class="offer-status offer-status--active">Activé</span>
@@ -321,8 +321,8 @@
           <tbody>
             {% for pilot in pilots %}
               <tr>
-                <td>{{ pilot.firstName ?? '—' }}</td>
-                <td style="font-weight:600">{{ pilot.surname ?? '—' }}</td>
+                <td>{{ pilot.firstName ?? '-' }}</td>
+                <td style="font-weight:600">{{ pilot.surname ?? '-' }}</td>
                 <td style="color:var(--color-text-muted)">{{ pilot.email }}</td>
                 <td>
                   {% if pilot.statusUser %}

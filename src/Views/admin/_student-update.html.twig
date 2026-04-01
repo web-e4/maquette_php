@@ -18,7 +18,7 @@
       <div class="form-field">
         <label class="form-label" for="su-pilot">Pilote assigné</label>
         <select class="form-input" id="su-pilot" name="idPilot">
-          <option value="">— Aucun pilote —</option>
+          <option value="">- Aucun pilote -</option>
           {% for pilot in pilots %}
             <option value="{{ pilot.idUser }}" {{ student.idPilot is not null and student.idPilot == pilot.idUser ? 'selected' : '' }}>
               {{ pilot.firstName }} {{ pilot.surname }}

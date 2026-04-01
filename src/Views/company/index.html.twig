@@ -16,13 +16,13 @@
   } %}
 
   <!-- BARRE DE RECHERCHE -->
-  <section class="search-section" style="margin-bottom:40px">
+  <div class="search-section" style="margin-bottom:40px">
     {% include 'components/_search.html.twig' with {
         searchAction:      '/companies',
         searchPlaceholder: 'Trouver une entreprise...',
         searchShowCity:    false
     } %}
-  </section>
+  </div>
 
   <div class="container">
 

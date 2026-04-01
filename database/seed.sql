@@ -1,5 +1,5 @@
 -- =============================================================
--- SEED — Gigastage
+-- SEED - Gigastage
 -- Mot de passe de tous les comptes créés : password
 -- =============================================================
 
@@ -19,7 +19,7 @@ INSERT INTO Company (name, email, website, statusCompany) VALUES
   ('MediaPulse',        'stages@mediapulse.fr',       NULL,                        1);
 
 -- -------------------------------------------------------------
--- UTILISATEURS — Pilotes (3 nouveaux, idRole=2)
+-- UTILISATEURS - Pilotes (3 nouveaux, idRole=2)
 -- -------------------------------------------------------------
 INSERT INTO User_ (email, password, statusUser, idRole) VALUES
   ('sophie.martin@gigastage.fr',  '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 2),
@@ -32,7 +32,7 @@ INSERT INTO Profile (surname, firstName, idUser) VALUES
   ('Dupont',  'Clara',  (SELECT idUser FROM User_ WHERE email = 'clara.dupont@gigastage.fr'));
 
 -- -------------------------------------------------------------
--- UTILISATEURS — Étudiants (15 nouveaux, idRole=3)
+-- UTILISATEURS - Étudiants (15 nouveaux, idRole=3)
 -- Assignés aux pilotes idUser 4, 5 et 6
 -- -------------------------------------------------------------
 INSERT INTO User_ (email, password, statusUser, idRole, idPilot) VALUES

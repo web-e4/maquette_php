@@ -10,13 +10,15 @@
     } %}
 
     <!-- BARRE DE RECHERCHE -->
-    <section class="search-section" style="margin-bottom:40px">
+    <div class="search-section" style="margin-bottom:40px">
         {% include 'components/_search.html.twig' %}
-    </section>
+    </div>
 
     <!-- LISTE -->
     <main class="main">
         <div class="container">
+
+            <h2 class="section-title">Résultats</h2>
 
             <div class="cards">
                 {% for offer in offers %}
