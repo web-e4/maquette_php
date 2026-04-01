@@ -1,4 +1,6 @@
+//attend que la page soit chargée
 document.addEventListener('DOMContentLoaded', function () {
+<<<<<<< HEAD
 
   const offerId = new URLSearchParams(window.location.search).get('id') || '';
 
@@ -6,6 +8,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const deleteBtn = document.querySelector('.btn-delete-letter');
   if (deleteBtn) attachDeleteListener(deleteBtn);
+=======
+  // permet d'ajouter un listener à tous les boutons d'édition présents sur la page
+  document.querySelectorAll('.btn-edit').forEach(function (btn) {
+    //déclenche quand on clique sur le bouton d'édition
+    attachEditListener(btn);
+  });
+
+  // ── Logique d'édition inline ────────────────────────────────
+  // gère le clic sur un bouton d'édition
+  function handleEditClick(btn) {
+    // permet de savoir sur qu'elle champ (bouton) on a cliqué (email, cv, lettre)
+    const field      = btn.dataset.field;
+    // permet de trouver la ligne a modifier dans la page (ex: la ligne de l'email, du cv ou de la lettre)
+    const summaryRow = btn.closest('.summary-row');
+    // modifie l'interieur de la ligne via span pour modifier la valeur (ex: l'email, le nom du cv ou de la lettre)
+    const valueSpan  = summaryRow.querySelector('.summary-value');
+>>>>>>> cd9c0b4 (test uni com et control)
 
   // ── Remplacement de fichier ─────────────────────────────────
 
