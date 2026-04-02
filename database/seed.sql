@@ -1,6 +1,8 @@
+-- mysql -u root -p gigastage < database/seed.sql
+
 -- =============================================================
 -- SEED - Gigastage
--- Mot de passe de tous les comptes créés : password
+-- Mot de passe de tous les comptes créés : 1234
 -- =============================================================
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -8,23 +10,23 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- -------------------------------------------------------------
 -- ENTREPRISES (8 nouvelles, 10 au total)
 -- -------------------------------------------------------------
-INSERT INTO Company (name, email, website, statusCompany) VALUES
-  ('Nexio Digital',     'contact@nexiodigital.fr',   'https://nexiodigital.fr',   1),
-  ('Atelier Créatif',   'hello@ateliercrea.com',      NULL,                        1),
-  ('DataSphere',        'rh@datasphere.io',           'https://datasphere.io',     1),
-  ('Horizon Web',       'jobs@horizonweb.fr',         'https://horizonweb.fr',     1),
-  ('Softeam Rouen',     'recrutement@softeam.fr',     'https://softeam.fr',        1),
-  ('CyberSec France',   'contact@cybersecfr.com',     'https://cybersecfr.com',    1),
-  ('GreenTech Labs',    'rh@greentechlabs.fr',        'https://greentechlabs.fr',  1),
-  ('MediaPulse',        'stages@mediapulse.fr',       NULL,                        1);
+INSERT INTO Company (name, description, email, phone, website, statusCompany) VALUES
+  ('Nexio Digital',     'Agence digitale spécialisée dans le développement web et mobile pour des clients grands comptes.',     'contact@nexiodigital.fr',   '02 35 11 22 33', 'https://nexiodigital.fr',   1),
+  ('Atelier Créatif',   'Studio de design graphique et motion design reconnu pour la qualité de ses créations visuelles.',      'hello@ateliercrea.com',      '03 20 44 55 66', NULL,                        1),
+  ('DataSphere',        'Cabinet de conseil en data analytics et machine learning accompagnant des entreprises e-commerce.',    'rh@datasphere.io',           '01 42 33 44 55', 'https://datasphere.io',     1),
+  ('Horizon Web',       'Agence web spécialisée dans la création de sites WordPress et la stratégie SEO pour les PME.',         'jobs@horizonweb.fr',         '04 91 22 33 44', 'https://horizonweb.fr',     1),
+  ('Softeam Rouen',     'ESN normande proposant des missions de développement Java, tests QA et administration système.',       'recrutement@softeam.fr',     '02 35 77 88 99', 'https://softeam.fr',        1),
+  ('CyberSec France',   'Expert en cybersécurité offensive et défensive, SOC managé et tests d\'intrusion pour grands comptes.','contact@cybersecfr.com',     '01 55 66 77 88', 'https://cybersecfr.com',    1),
+  ('GreenTech Labs',    'Laboratoire de R&D dédié aux technologies vertes, à l\'IoT et à l\'efficacité énergétique.',           'rh@greentechlabs.fr',        '04 72 99 00 11', 'https://greentechlabs.fr',  1),
+  ('MediaPulse',        'Groupe média digital couvrant l\'actualité tech, startup et innovation via vidéo, articles et podcasts.','stages@mediapulse.fr',      '01 40 11 22 33', NULL,                        1);
 
 -- -------------------------------------------------------------
 -- UTILISATEURS - Pilotes (3 nouveaux, idRole=2)
 -- -------------------------------------------------------------
 INSERT INTO User_ (email, password, statusUser, idRole) VALUES
-  ('sophie.martin@gigastage.fr',  '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 2),
-  ('lucas.bernard@gigastage.fr',  '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 2),
-  ('clara.dupont@gigastage.fr',   '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 2);
+  ('sophie.martin@gigastage.fr',  '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 2),
+  ('lucas.bernard@gigastage.fr',  '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 2),
+  ('clara.dupont@gigastage.fr',   '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 2);
 
 INSERT INTO Profile (surname, firstName, idUser) VALUES
   ('Martin',  'Sophie', (SELECT idUser FROM User_ WHERE email = 'sophie.martin@gigastage.fr')),
@@ -36,21 +38,21 @@ INSERT INTO Profile (surname, firstName, idUser) VALUES
 -- Assignés aux pilotes idUser 4, 5 et 6
 -- -------------------------------------------------------------
 INSERT INTO User_ (email, password, statusUser, idRole, idPilot) VALUES
-  ('theo.leroy@etudiant.fr',       '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 3, 4),
-  ('emma.roux@etudiant.fr',        '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 3, 4),
-  ('hugo.moreau@etudiant.fr',      '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 3, 4),
-  ('chloe.simon@etudiant.fr',      '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 3, 4),
-  ('nathan.girard@etudiant.fr',    '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 3, 4),
-  ('lea.fontaine@etudiant.fr',     '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 3, 5),
-  ('maxime.lambert@etudiant.fr',   '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 3, 5),
-  ('julie.petit@etudiant.fr',      '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 3, 5),
-  ('antoine.chevalier@etudiant.fr','$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 3, 5),
-  ('manon.robin@etudiant.fr',      '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 3, 5),
-  ('pierre.blanc@etudiant.fr',     '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 3, 6),
-  ('alice.henry@etudiant.fr',      '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 3, 6),
-  ('romain.garnier@etudiant.fr',   '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 3, 6),
-  ('lucie.faure@etudiant.fr',      '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 3, 6),
-  ('baptiste.michaud@etudiant.fr', '$2y$10$SZAGM0rpshxllXTmlQKDjOoRsWI1kcfrziX9VY.fji3KTUFyzVNyq', 1, 3, 6);
+  ('theo.leroy@etudiant.fr',       '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 3, 4),
+  ('emma.roux@etudiant.fr',        '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 3, 4),
+  ('hugo.moreau@etudiant.fr',      '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 3, 4),
+  ('chloe.simon@etudiant.fr',      '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 3, 4),
+  ('nathan.girard@etudiant.fr',    '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 3, 4),
+  ('lea.fontaine@etudiant.fr',     '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 3, 5),
+  ('maxime.lambert@etudiant.fr',   '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 3, 5),
+  ('julie.petit@etudiant.fr',      '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 3, 5),
+  ('antoine.chevalier@etudiant.fr','$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 3, 5),
+  ('manon.robin@etudiant.fr',      '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 3, 5),
+  ('pierre.blanc@etudiant.fr',     '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 3, 6),
+  ('alice.henry@etudiant.fr',      '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 3, 6),
+  ('romain.garnier@etudiant.fr',   '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 3, 6),
+  ('lucie.faure@etudiant.fr',      '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 3, 6),
+  ('baptiste.michaud@etudiant.fr', '$2y$10$cPYlMTD7w8gPU9ratIq6t.iuJIiBjcwpr8NiZMFyOswzd3/HE8Jji', 1, 3, 6);
 
 INSERT INTO Profile (surname, firstName, idUser) VALUES
   ('Leroy',     'Théo',     (SELECT idUser FROM User_ WHERE email = 'theo.leroy@etudiant.fr')),
@@ -72,125 +74,150 @@ INSERT INTO Profile (surname, firstName, idUser) VALUES
 -- -------------------------------------------------------------
 -- OFFRES (25 offres réparties sur les 10 entreprises)
 -- -------------------------------------------------------------
-INSERT INTO Offer (title, description, missions, location, durationInWeeks, startDate, statusOffer, idCompany) VALUES
+INSERT INTO Offer (title, description, missions, skills, remuneration, location, durationInWeeks, startDate, statusOffer, idCompany) VALUES
   -- SuperTech (1)
   ('Stage Développeur Full-Stack',
    'Intégrez l\'équipe produit de SuperTech pour contribuer au développement de notre plateforme SaaS B2B utilisée par plus de 500 entreprises.',
    'Développer de nouvelles fonctionnalités front et back,Corriger les bugs remontés par les clients,Participer aux revues de code',
+   'PHP,JavaScript,React,MySQL', 600.00,
    'Paris (75)', 24, '2025-09-01', 1, 1),
   ('Stage DevOps',
    'Au sein de l\'équipe infrastructure, vous automatiserez le déploiement et améliorerez la résilience de nos services cloud.',
    'Mettre en place des pipelines CI/CD,Surveiller les métriques systèmes,Documenter les procédures d\'exploitation',
+   'Docker,Kubernetes,CI/CD,Linux', 550.00,
    'Paris (75)', 16, '2025-10-01', 1, 1),
 
   -- PetiteBoite (2)
   ('Stage UX Designer',
    'Rejoignez notre studio de design pour repenser l\'expérience utilisateur de notre application mobile grand public.',
    'Réaliser des interviews utilisateurs,Concevoir des wireframes et prototypes,Conduire des tests d\'utilisabilité',
+   'Figma,UX Research,Prototypage', 500.00,
    'Lyon (69)', 20, '2025-09-15', 1, 2),
 
   -- Nexio Digital (3)
   ('Stage Développeur React',
    'Participez à la refonte de notre portail client en React 18, en étroite collaboration avec notre équipe produit.',
    'Développer des composants React réutilisables,Intégrer des API REST,Écrire des tests unitaires avec Jest',
+   'React,TypeScript,Jest,REST API', 580.00,
    'Rouen (76)', 16, '2025-09-01', 1, 3),
   ('Stage Chef de projet digital',
    'Gérez le suivi de projets web pour nos clients grands comptes dans un environnement agile.',
    'Animer les cérémonies Scrum,Rédiger les spécifications fonctionnelles,Assurer le lien entre clients et développeurs',
+   'Gestion de projet,Agile,Scrum,Jira', 520.00,
    'Rouen (76)', 20, '2025-10-01', 1, 3),
   ('Stage Développeur mobile Flutter',
    'Contribuez au développement de notre application mobile cross-platform basée sur Flutter.',
    'Développer des écrans en Flutter/Dart,Intégrer les services Firebase,Optimiser les performances',
+   'Flutter,Dart,Firebase,Mobile', 580.00,
    'Rouen (76)', 24, '2026-01-05', 1, 3),
 
   -- Atelier Créatif (4)
   ('Stage Graphiste / Motion Design',
    'Participez à la création de contenus visuels animés pour les réseaux sociaux de nos clients.',
    'Concevoir des visuels selon les chartes graphiques,Produire des animations After Effects,Préparer les fichiers pour l\'impression et le web',
+   'After Effects,Illustrator,Photoshop', 480.00,
    'Lille (59)', 12, '2025-09-01', 1, 4),
   ('Stage Community Manager',
    'Gérez la présence sur les réseaux sociaux de nos clients et analysez les performances des campagnes.',
    'Créer et planifier les publications,Répondre aux commentaires et messages,Produire des rapports mensuels de performance',
+   'Réseaux sociaux,Canva,Analytics', 460.00,
    'Lille (59)', 16, '2025-10-15', 1, 4),
 
   -- DataSphere (5)
   ('Stage Data Analyst',
    'Analysez les données de nos clients e-commerce pour identifier des leviers de croissance et optimiser les performances.',
    'Extraire et nettoyer des jeux de données,Construire des tableaux de bord Power BI,Présenter les insights aux clients',
+   'Python,SQL,Power BI,Excel', 580.00,
    'Paris (75)', 20, '2025-09-01', 1, 5),
   ('Stage Machine Learning',
    'Participez à des projets de prédiction et de classification appliqués aux données clients.',
    'Préparer et explorer des datasets,Entraîner et évaluer des modèles ML,Déployer des modèles en API Flask',
+   'Python,Scikit-learn,TensorFlow,Flask', 620.00,
    'Paris (75)', 24, '2026-02-02', 1, 5),
   ('Stage Ingénieur Data',
    'Contribuez à la construction de nos pipelines de données en Python et au maintien de notre data warehouse.',
    'Développer des pipelines ETL avec Airflow,Optimiser les requêtes SQL,Documenter les flux de données',
+   'Python,Airflow,SQL,BigQuery', 600.00,
    'Paris (75)', 20, '2025-09-01', 0, 5),
 
   -- Horizon Web (6)
   ('Stage Développeur WordPress',
    'Créez et personnalisez des sites WordPress pour les PME de notre portefeuille clients.',
    'Développer des thèmes et plugins sur mesure,Intégrer des maquettes Figma,Assurer la maintenance et les mises à jour',
+   'WordPress,PHP,HTML/CSS,Figma', 480.00,
    'Marseille (13)', 12, '2025-09-01', 1, 6),
   ('Stage Référenceur SEO',
    'Optimisez le référencement naturel des sites de nos clients et suivez les positions sur les moteurs de recherche.',
    'Réaliser des audits SEO techniques,Rédiger des contenus optimisés,Construire des plans de netlinking',
+   'SEO,Google Analytics,Search Console', 500.00,
    'Marseille (13)', 16, '2025-10-01', 1, 6),
 
   -- Softeam Rouen (7)
   ('Stage Développeur Java Spring',
    'Développez des microservices Java Spring Boot pour notre plateforme de gestion documentaire.',
    'Concevoir et implémenter des API REST,Écrire des tests unitaires et d\'intégration,Participer aux daily Scrum',
+   'Java,Spring Boot,JUnit,REST API', 600.00,
    'Rouen (76)', 24, '2025-09-01', 1, 7),
   ('Stage Testeur QA',
    'Assurez la qualité de nos livrables en rédigeant et exécutant des plans de test fonctionnels et automatisés.',
    'Rédiger des cas de test,Automatiser les tests avec Selenium,Remonter et suivre les anomalies dans Jira',
+   'Selenium,Jira,Tests fonctionnels', 520.00,
    'Rouen (76)', 16, '2026-01-05', 1, 7),
   ('Stage Administrateur Système',
    'Gérez et faites évoluer notre parc de serveurs Linux en garantissant disponibilité et sécurité.',
    'Administrer des serveurs Linux,Mettre en place des sauvegardes,Traiter les incidents de niveau 2',
+   'Linux,Bash,Ansible,Supervision', 540.00,
    'Rouen (76)', 20, '2025-10-01', 1, 7),
 
   -- CyberSec France (8)
   ('Stage Analyste SOC',
    'Intégrez notre centre opérationnel de sécurité et participez à la surveillance des systèmes d\'information de nos clients.',
    'Analyser les alertes SIEM,Qualifier les incidents de sécurité,Rédiger des rapports d\'incidents',
+   'SIEM,Splunk,Cybersécurité,Linux', 600.00,
    'Paris (75)', 20, '2025-09-15', 1, 8),
   ('Stage Pentester Junior',
    'Réalisez des tests d\'intrusion sur des périmètres web et réseau pour nos clients sous contrat.',
    'Conduire des tests de pénétration web,Rédiger des rapports de vulnérabilités,Présenter les résultats aux clients',
+   'Kali Linux,Burp Suite,OWASP,Réseau', 640.00,
    'Paris (75)', 24, '2026-02-02', 1, 8),
 
   -- GreenTech Labs (9)
   ('Stage Développeur IoT',
    'Participez au développement de solutions IoT pour la gestion de l\'énergie dans les bâtiments connectés.',
    'Programmer des capteurs embarqués,Développer un dashboard de monitoring,Intégrer des protocoles MQTT et HTTP',
+   'C/C++,Python,MQTT,IoT', 580.00,
    'Lyon (69)', 24, '2025-09-01', 1, 9),
   ('Stage Ingénieur R&D',
    'Contribuez à nos travaux de recherche sur l\'efficacité énergétique et les énergies renouvelables.',
    'Analyser des données de consommation,Modéliser des scénarios énergétiques,Rédiger des livrables de recherche',
+   'Python,MATLAB,Excel,Énergie', 560.00,
    'Lyon (69)', 20, '2026-01-05', 1, 9),
 
   -- MediaPulse (10)
   ('Stage Journaliste Web',
    'Rédigez des articles de fond sur l\'actualité tech et startup pour nos portails d\'information.',
    'Rédiger des articles et reportages,Réaliser des interviews,Optimiser les contenus pour le SEO',
+   'Rédaction,SEO,WordPress,Interviews', 460.00,
    'Paris (75)', 12, '2025-09-01', 1, 10),
   ('Stage Vidéaste / Monteur',
    'Produisez des contenus vidéo pour nos clients médias, du tournage au montage final.',
    'Filmer des reportages et interviews,Monter des vidéos avec Premiere Pro,Gérer le planning de production',
+   'Premiere Pro,After Effects,Tournage', 500.00,
    'Paris (75)', 16, '2025-10-01', 1, 10),
   ('Stage Développeur Back-end PHP',
    'Développez de nouvelles fonctionnalités pour notre CMS maison basé sur PHP/Symfony.',
    'Développer des modules Symfony,Écrire des tests PHPUnit,Optimiser les performances SQL',
+   'PHP,Symfony,PHPUnit,SQL', 580.00,
    'Paris (75)', 20, '2026-01-05', 1, 10),
   ('Stage Designer UI',
    'Créez des interfaces modernes et accessibles pour nos clients en vous basant sur un design system existant.',
    'Décliner le design system sur de nouveaux écrans,Produire des prototypes Figma interactifs,Collaborer avec les développeurs front',
+   'Figma,UI Design,Design System,Accessibilité', 500.00,
    'Rouen (76)', 16, '2025-09-15', 1, 10),
   ('Stage Développeur Node.js',
    'Rejoignez l\'équipe technique pour développer des API performantes en Node.js/Express.',
    'Concevoir des routes REST sécurisées,Gérer l\'authentification JWT,Mettre en place la documentation Swagger',
+   'Node.js,Express,JWT,Swagger', 580.00,
    'Lille (59)', 20, '2026-02-02', 1, 3);
 
 -- -------------------------------------------------------------
@@ -198,31 +225,31 @@ INSERT INTO Offer (title, description, missions, location, durationInWeeks, star
 -- Étudiants : idUser 7 à 21  |  Offres : idOffer 2 à 26
 -- -------------------------------------------------------------
 INSERT INTO Application (idUser, idOffer, resume, motivationLetter, applicationDate) VALUES
-  (7,  2,  'uploads/resumes/cv_theo_leroy.pdf',       'uploads/letters/lm_theo_leroy_2.pdf',       '2025-03-10'),
+  (7,  2,  'uploads/resumes/cv_theo_leroy.pdf',       'Je suis très motivé par ce stage chez vous car vos projets correspondent parfaitement à mon parcours en développement web. Je suis rigoureux, curieux et prêt à m''investir pleinement.',       '2025-03-10'),
   (7,  4,  'uploads/resumes/cv_theo_leroy.pdf',       NULL,                                         '2025-03-15'),
-  (8,  4,  'uploads/resumes/cv_emma_roux.pdf',        'uploads/letters/lm_emma_roux_4.pdf',         '2025-03-12'),
+  (8,  4,  'uploads/resumes/cv_emma_roux.pdf',        'Ce stage représente une opportunité idéale pour mettre en pratique mes compétences en design et en développement front-end. Je suis passionnée par l''expérience utilisateur et l''accessibilité.',         '2025-03-12'),
   (8,  9,  'uploads/resumes/cv_emma_roux.pdf',        NULL,                                         '2025-03-20'),
-  (9,  14, 'uploads/resumes/cv_hugo_moreau.pdf',      'uploads/letters/lm_hugo_moreau_14.pdf',      '2025-03-08'),
+  (9,  14, 'uploads/resumes/cv_hugo_moreau.pdf',      'Votre entreprise est reconnue pour l''innovation dans le secteur tech. Je souhaite contribuer à vos projets tout en développant mes compétences en backend et en base de données.',      '2025-03-08'),
   (9,  15, 'uploads/resumes/cv_hugo_moreau.pdf',      NULL,                                         '2025-03-22'),
-  (10, 7,  'uploads/resumes/cv_chloe_simon.pdf',      'uploads/letters/lm_chloe_simon_7.pdf',       '2025-03-05'),
+  (10, 7,  'uploads/resumes/cv_chloe_simon.pdf',      'Je postule avec enthousiasme à ce stage car il correspond exactement à mon projet professionnel. Ma formation en informatique m''a préparé à relever ce type de défi.',       '2025-03-05'),
   (10, 21, 'uploads/resumes/cv_chloe_simon.pdf',      NULL,                                         '2025-03-18'),
-  (11, 17, 'uploads/resumes/cv_nathan_girard.pdf',    'uploads/letters/lm_nathan_girard_17.pdf',    '2025-03-11'),
-  (11, 18, 'uploads/resumes/cv_nathan_girard.pdf',    'uploads/letters/lm_nathan_girard_18.pdf',    '2025-03-14'),
+  (11, 17, 'uploads/resumes/cv_nathan_girard.pdf',    'Passionné par les systèmes embarqués et l''IoT, je suis convaincu que ce stage me permettra d''acquérir une expérience concrète en conditions réelles de production.',    '2025-03-11'),
+  (11, 18, 'uploads/resumes/cv_nathan_girard.pdf',    'Ce poste m''attire particulièrement en raison de la diversité des missions proposées. Je suis adaptable, motivé et j''apprends très rapidement de nouveaux environnements techniques.',    '2025-03-14'),
   (12, 4,  'uploads/resumes/cv_lea_fontaine.pdf',     NULL,                                         '2025-03-09'),
-  (12, 6,  'uploads/resumes/cv_lea_fontaine.pdf',     'uploads/letters/lm_lea_fontaine_6.pdf',      '2025-03-17'),
-  (13, 5,  'uploads/resumes/cv_maxime_lambert.pdf',   'uploads/letters/lm_maxime_lambert_5.pdf',    '2025-03-06'),
+  (12, 6,  'uploads/resumes/cv_lea_fontaine.pdf',     'Votre offre de stage en cybersécurité correspond exactement à ma spécialisation. Je cherche à approfondir mes connaissances en tests d''intrusion et en audit de sécurité.',      '2025-03-17'),
+  (13, 5,  'uploads/resumes/cv_maxime_lambert.pdf',   'Je souhaite intégrer votre équipe pour contribuer à vos projets data. Mon expérience avec Python et SQL me permettra d''être opérationnel rapidement et d''apporter une réelle valeur ajoutée.',    '2025-03-06'),
   (13, 26, 'uploads/resumes/cv_maxime_lambert.pdf',   NULL,                                         '2025-03-21'),
-  (14, 3,  'uploads/resumes/cv_julie_petit.pdf',      'uploads/letters/lm_julie_petit_3.pdf',       '2025-03-13'),
+  (14, 3,  'uploads/resumes/cv_julie_petit.pdf',      'Attirée par le domaine du cloud computing, je souhaite mettre à profit mes compétences en DevOps et en automatisation. Votre environnement technique stimulant est exactement ce que je recherche.',      '2025-03-13'),
   (14, 8,  'uploads/resumes/cv_julie_petit.pdf',      NULL,                                         '2025-03-19'),
-  (15, 19, 'uploads/resumes/cv_antoine_chev.pdf',     'uploads/letters/lm_antoine_chev_19.pdf',     '2025-03-07'),
+  (15, 19, 'uploads/resumes/cv_antoine_chev.pdf',     'Ce stage en intelligence artificielle est une opportunité unique d''explorer les applications concrètes du machine learning. Je suis déterminé à apporter mon énergie et ma créativité à votre équipe.',     '2025-03-07'),
   (15, 20, 'uploads/resumes/cv_antoine_chev.pdf',     NULL,                                         '2025-03-16'),
-  (16, 22, 'uploads/resumes/cv_manon_robin.pdf',      'uploads/letters/lm_manon_robin_22.pdf',      '2025-03-10'),
+  (16, 22, 'uploads/resumes/cv_manon_robin.pdf',      'Motivée par le développement mobile, je cherche à acquérir une première expérience significative en conditions professionnelles. Votre approche centrée sur l''utilisateur correspond à mes valeurs.',      '2025-03-10'),
   (17, 14, 'uploads/resumes/cv_pierre_blanc.pdf',     NULL,                                         '2025-03-23'),
-  (17, 16, 'uploads/resumes/cv_pierre_blanc.pdf',     'uploads/letters/lm_pierre_blanc_16.pdf',     '2025-03-24'),
-  (18, 25, 'uploads/resumes/cv_alice_henry.pdf',      'uploads/letters/lm_alice_henry_25.pdf',      '2025-03-11'),
+  (17, 16, 'uploads/resumes/cv_pierre_blanc.pdf',     'Votre offre de stage m''intéresse vivement car elle combine gestion de projet et développement technique. Je suis organisé, rigoureux et j''ai déjà eu l''occasion de coordonner des projets en équipe.',     '2025-03-24'),
+  (18, 25, 'uploads/resumes/cv_alice_henry.pdf',      'Sensible aux enjeux du numérique responsable, je suis particulièrement attirée par votre engagement en matière d''éco-conception. Ce stage s''inscrit parfaitement dans mon projet de carrière.',      '2025-03-11'),
   (19, 10, 'uploads/resumes/cv_romain_garnier.pdf',   NULL,                                         '2025-03-18'),
-  (20, 24, 'uploads/resumes/cv_lucie_faure.pdf',      'uploads/letters/lm_lucie_faure_24.pdf',      '2025-03-09'),
-  (21, 23, 'uploads/resumes/cv_baptiste_mich.pdf',    'uploads/letters/lm_baptiste_mich_23.pdf',    '2025-03-20');
+  (20, 24, 'uploads/resumes/cv_lucie_faure.pdf',      'Je suis passionnée par l''analyse de données et la visualisation. Votre entreprise offre un contexte idéal pour appliquer mes connaissances en statistiques et en business intelligence.',      '2025-03-09'),
+  (21, 23, 'uploads/resumes/cv_baptiste_mich.pdf',    'Désireux de travailler dans un environnement agile et innovant, je souhaite apporter mes compétences en développement fullstack à votre équipe dynamique et contribuer à des projets à fort impact.',    '2025-03-20');
 
 -- -------------------------------------------------------------
 -- ÉVALUATIONS (étudiants notent les entreprises)

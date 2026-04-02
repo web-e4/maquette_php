@@ -18,10 +18,10 @@ abstract class AbstractController
 
     protected function render(string $template, array $data = []): void
     {
-        // Injecte l'utilisateur connecté dans tous les templates
-        $data['app_user']    = $_SESSION['user'] ?? null;
+        // injecte l'utilisateur connecté dans tous les templates
+        $data['app_user'] = $_SESSION['user'] ?? null;
         $data['current_url'] = $_SERVER['REQUEST_URI'] ?? '/';
-        $data['csrf_token']  = $this->getCsrfToken();
+        $data['csrf_token'] = $this->getCsrfToken();
         echo $this->twig->render($template, $data);
     }
 
@@ -43,7 +43,7 @@ abstract class AbstractController
         }
     }
 
-    protected function redirect(string $url): never
+    protected function redirect(string $url): void
     {
         header('Location: ' . $url);
         throw new RedirectException($url);

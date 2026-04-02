@@ -1,6 +1,4 @@
-/* ============================================================
-   GIGASTAGE - Pages Profil (stagiaire & entreprise)
-   ============================================================ */
+/* pages Profil (stagiaire & entreprise) */
 
 
 .profile-page {
@@ -255,9 +253,7 @@
 }
 
 
-/* ============================================================
-   Tables admin
-   ============================================================ */
+/* tables admin */
 .admin-table {
   width: 100%;
   border-collapse: collapse;
@@ -342,9 +338,7 @@ select.form-input {
 }
 
 
-/* ============================================================
-   Responsive
-   ============================================================ */
+/* responsive */
 @media (max-width: 650px) {
   .profile-hero-inner {
     flex-direction: column;

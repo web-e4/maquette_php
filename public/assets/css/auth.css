@@ -1,6 +1,4 @@
-/* ============================================================
-   GIGASTAGE - Pages Connexion / Inscription
-   ============================================================ */
+/* pages Connexion / Inscription */
 
 
 /* Zone de contenu : centrée, même fond gris que le reste du site */
@@ -175,9 +173,7 @@
 }
 
 
-/* ============================================================
-   Responsive
-   ============================================================ */
+/* responsive */
 @media (max-width: 900px) {
   .auth-card {
     padding: 28px 20px;

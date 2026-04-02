@@ -10,7 +10,7 @@ class CompanyModel extends AbstractModel
     {
         $stmt = $this->getConnection()->prepare("
             SELECT
-                c.idCompany, c.name, c.email, c.website,
+                c.idCompany, c.name, c.description, c.email, c.phone, c.website,
                 ROUND(AVG(r.rate), 1) AS avgRating,
                 COUNT(DISTINCT r.idUser) AS ratingCount,
                 COUNT(DISTINCT o.idOffer) AS offerCount
@@ -25,12 +25,66 @@ class CompanyModel extends AbstractModel
         return $stmt->fetchAll();
     }
 
+    // Récupère les entreprises actives paginées avec recherche par nom
+    public function findPaginated(int $page, int $perPage, string $q = ''): array
+    {
+        $pdo = $this->getConnection();
+        $offset = ($page - 1) * $perPage;
+
+        $where = 'WHERE c.statusCompany = 1';
+        $params = [];
+
+        if ($q !== '') {
+            $where .= ' AND c.name LIKE :q';
+            $params['q'] = '%' . $q . '%';
+        }
+
+        $stmtCount = $pdo->prepare("SELECT COUNT(*) FROM Company c $where");
+        $stmtCount->execute($params);
+        $total = (int) $stmtCount->fetchColumn();
+
+        $params['limit'] = $perPage;
+        $params['offset'] = $offset;
+
+        $stmt = $pdo->prepare("
+            SELECT
+                c.idCompany, c.name, c.description, c.email, c.phone, c.website,
+                ROUND(AVG(r.rate), 1) AS avgRating,
+                COUNT(DISTINCT r.idUser) AS ratingCount,
+                COUNT(DISTINCT o.idOffer) AS offerCount
+            FROM Company c
+            LEFT JOIN Rating r ON c.idCompany = r.idCompany
+            LEFT JOIN Offer  o ON c.idCompany = o.idCompany AND o.statusOffer = 1
+            $where
+            GROUP BY c.idCompany
+            ORDER BY c.name ASC
+            LIMIT :limit OFFSET :offset
+        ");
+
+        foreach ($params as $key => $value) {
+            if ($key === 'limit' || $key === 'offset') {
+                $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue(":$key", $value);
+            }
+        }
+
+        $stmt->execute();
+
+        return [
+            'companies'   => $stmt->fetchAll(),
+            'total'       => $total,
+            'totalPages'  => (int) ceil($total / $perPage),
+            'currentPage' => $page,
+        ];
+    }
+
     // Récupère toutes les entreprises (actives et inactives) pour l'admin
     public function findAllForAdmin(): array
     {
         $stmt = $this->getConnection()->prepare("
             SELECT
-                c.idCompany, c.name, c.email, c.website, c.statusCompany,
+                c.idCompany, c.name, c.description, c.email, c.phone, c.website, c.statusCompany,
                 ROUND(AVG(r.rate), 1) AS avgRating
             FROM Company c
             LEFT JOIN Rating r ON c.idCompany = r.idCompany
@@ -45,7 +99,7 @@ class CompanyModel extends AbstractModel
     public function findById(int $id): ?array
     {
         $stmt = $this->getConnection()->prepare("
-            SELECT idCompany, name, email, website, statusCompany
+            SELECT idCompany, name, description, email, phone, website, statusCompany
             FROM Company
             WHERE idCompany = :id
         ");
@@ -58,13 +112,15 @@ class CompanyModel extends AbstractModel
     public function create(array $data): void
     {
         $stmt = $this->getConnection()->prepare("
-            INSERT INTO Company (name, email, website, statusCompany)
-            VALUES (:name, :email, :website, 1)
+            INSERT INTO Company (name, description, email, phone, website, statusCompany)
+            VALUES (:name, :description, :email, :phone, :website, 1)
         ");
         $stmt->execute([
-            'name'    => $data['name'],
-            'email'   => $data['email'],
-            'website' => $data['website'] ?: null,
+            'name'        => $data['name'],
+            'description' => $data['description'] ?: null,
+            'email'       => $data['email'],
+            'phone'       => $data['phone'] ?: null,
+            'website'     => $data['website'] ?: null,
         ]);
     }
 
@@ -73,12 +129,15 @@ class CompanyModel extends AbstractModel
     {
         $stmt = $this->getConnection()->prepare("
             UPDATE Company
-            SET name = :name, email = :email, website = :website, statusCompany = :statusCompany
+            SET name = :name, description = :description, email = :email,
+                phone = :phone, website = :website, statusCompany = :statusCompany
             WHERE idCompany = :id
         ");
         $stmt->execute([
             'name'          => $data['name'],
+            'description'   => $data['description'] ?: null,
             'email'         => $data['email'],
+            'phone'         => $data['phone'] ?: null,
             'website'       => $data['website'] ?: null,
             'statusCompany' => $data['statusCompany'] ?? 1,
             'id'            => $id,
@@ -146,5 +205,17 @@ class CompanyModel extends AbstractModel
         ");
         $stmt->execute(['idCompany' => $idCompany]);
         return $stmt->fetchAll();
+    }
+
+    // Compte le nombre de candidatures déposées sur les offres d'une entreprise
+    public function countApplicants(int $idCompany): int
+    {
+        $stmt = $this->getConnection()->prepare("
+            SELECT COUNT(*) FROM Application a
+            JOIN Offer o ON a.idOffer = o.idOffer
+            WHERE o.idCompany = :idCompany
+        ");
+        $stmt->execute(['idCompany' => $idCompany]);
+        return (int) $stmt->fetchColumn();
     }
 }

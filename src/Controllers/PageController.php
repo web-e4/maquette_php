@@ -11,20 +11,20 @@ class PageController extends AbstractController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCsrfToken();
 
-            $name    = trim($_POST['name']    ?? '');
-            $email   = trim($_POST['email']   ?? '');
+            $name = trim($_POST['name'] ?? '');
+            $email = trim($_POST['email'] ?? '');
             $message = trim($_POST['message'] ?? '');
 
             $errors = [];
-            if (empty($name))                      $errors['name']    = 'Le nom est obligatoire.';
-            if (empty($email))                     $errors['email']   = 'L\'email est obligatoire.';
+            if (empty($name)) $errors['name'] = 'Le nom est obligatoire.';
+            if (empty($email)) $errors['email'] = 'L\'email est obligatoire.';
             elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors['email'] = 'L\'email est invalide.';
-            if (empty($message))                   $errors['message'] = 'Le message est obligatoire.';
+            if (empty($message)) $errors['message'] = 'Le message est obligatoire.';
 
             if (!empty($errors)) {
                 $this->render('pages/contact.html.twig', [
                     'errors' => $errors,
-                    'old'    => $_POST,
+                    'old' => $_POST,
                 ]);
                 return;
             }

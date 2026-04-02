@@ -27,7 +27,7 @@ class ApplicationModel extends AbstractModel
                 p.surname,
                 p.firstName
             FROM Application a
-            JOIN User_   u ON a.idUser = u.idUser
+            JOIN User_ u ON a.idUser = u.idUser
             JOIN Profile p ON a.idUser = p.idUser
             WHERE a.idUser = :idUser AND a.idOffer = :idOffer
         ");
@@ -80,8 +80,8 @@ class ApplicationModel extends AbstractModel
                 o.durationInWeeks,
                 c.name AS companyName
             FROM Application a
-            JOIN Offer   o ON a.idOffer    = o.idOffer
-            JOIN Company c ON o.idCompany  = c.idCompany
+            JOIN Offer o ON a.idOffer = o.idOffer
+            JOIN Company c ON o.idCompany = c.idCompany
             WHERE a.idUser = :idUser
             ORDER BY a.applicationDate DESC
         ");
@@ -89,22 +89,25 @@ class ApplicationModel extends AbstractModel
         return $stmt->fetchAll();
     }
 
-    // SFx22 - Récupère toutes les candidatures (vue pilote) avec nom de l'étudiant
+    // SFx22 - Récupère toutes les candidatures (vue admin) avec nom de l'étudiant
     public function findAllWithDetails(): array
     {
         $stmt = $this->getConnection()->prepare("
             SELECT
+                a.idUser,
+                a.idOffer,
                 a.applicationDate,
+                a.resume,
+                a.motivationLetter,
                 p.firstName,
                 p.surname,
                 u.email,
-                o.idOffer,
                 o.title,
                 c.name AS companyName
             FROM Application a
-            JOIN User_   u ON a.idUser    = u.idUser
-            JOIN Profile p ON a.idUser    = p.idUser
-            JOIN Offer   o ON a.idOffer   = o.idOffer
+            JOIN User_ u ON a.idUser = u.idUser
+            JOIN Profile p ON a.idUser = p.idUser
+            JOIN Offer o ON a.idOffer = o.idOffer
             JOIN Company c ON o.idCompany = c.idCompany
             ORDER BY a.applicationDate DESC
         ");
@@ -117,17 +120,20 @@ class ApplicationModel extends AbstractModel
     {
         $stmt = $this->getConnection()->prepare("
             SELECT
+                a.idUser,
+                a.idOffer,
                 a.applicationDate,
+                a.resume,
+                a.motivationLetter,
                 p.firstName,
                 p.surname,
                 u.email,
-                o.idOffer,
                 o.title,
                 c.name AS companyName
             FROM Application a
-            JOIN User_   u ON a.idUser    = u.idUser
-            JOIN Profile p ON a.idUser    = p.idUser
-            JOIN Offer   o ON a.idOffer   = o.idOffer
+            JOIN User_ u ON a.idUser = u.idUser
+            JOIN Profile p ON a.idUser = p.idUser
+            JOIN Offer o ON a.idOffer = o.idOffer
             JOIN Company c ON o.idCompany = c.idCompany
             WHERE u.idPilot = :idPilot
             ORDER BY a.applicationDate DESC

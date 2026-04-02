@@ -12,8 +12,16 @@
         <input class="form-input" type="email" id="cu-email" name="email" value="{{ company.email }}" required>
       </div>
       <div class="form-field">
+        <label class="form-label" for="cu-phone">Téléphone</label>
+        <input class="form-input" type="text" id="cu-phone" name="phone" value="{{ company.phone ?? '' }}" placeholder="Ex : 02 35 11 22 33">
+      </div>
+      <div class="form-field">
         <label class="form-label" for="cu-website">Site web</label>
         <input class="form-input" type="text" id="cu-website" name="website" value="{{ company.website ?? '' }}" placeholder="https://...">
+      </div>
+      <div class="form-field field-full">
+        <label class="form-label" for="cu-description">Description</label>
+        <textarea class="form-textarea" id="cu-description" name="description" placeholder="Décrivez l'entreprise...">{{ company.description ?? '' }}</textarea>
       </div>
       <div class="form-field">
         <label class="form-label" for="cu-status">État</label>

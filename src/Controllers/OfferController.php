@@ -18,20 +18,21 @@ class OfferController extends AbstractController
     public function __construct($twig)
     {
         parent::__construct($twig);
-        $this->offerModel    = new OfferModel();
+        $this->offerModel = new OfferModel();
         $this->wishlistModel = new WishlistModel();
-        $this->companyModel  = new CompanyModel();
+        $this->companyModel = new CompanyModel();
     }
 
     // GET /offers
     public function index(): void
     {
-        $q       = $_GET['q']    ?? '';
-        $city    = $_GET['city'] ?? '';
-        $page    = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+        $q     = $_GET['q'] ?? '';
+        $city  = $_GET['city'] ?? '';
+        $skill = $_GET['skill'] ?? '';
+        $page  = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
         $perPage = 15;
 
-        $result = $this->offerModel->findPaginated($page, $perPage, $q, $city);
+        $result = $this->offerModel->findPaginated($page, $perPage, $q, $city, $skill);
 
         $wishlistIds = [];
         if ($this->isLoggedIn() && $_SESSION['user']['role'] === Role::STUDENT) {
@@ -43,6 +44,7 @@ class OfferController extends AbstractController
             'wishlistIds' => $wishlistIds,
             'q'           => $q,
             'city'        => $city,
+            'skill'       => $skill,
             'pagination'  => [
                 'totalPages'  => $result['totalPages'],
                 'currentPage' => $result['currentPage'],
@@ -80,10 +82,10 @@ class OfferController extends AbstractController
     public function create(): void
     {
         $this->requirePermission(Permission::OFFER_CREATE);
-        $companies  = $this->companyModel->findAll();
-        $from       = $_GET['from'] ?? '';
-        $role       = $_SESSION['user']['role'] ?? '';
-        $base       = $role === \Equipe4\Gigastage\Core\Role::ADMIN ? '/admin' : '/pilot';
+        $companies = $this->companyModel->findAll();
+        $from = $_GET['from'] ?? '';
+        $role = $_SESSION['user']['role'] ?? '';
+        $base = $role === Role::ADMIN ? '/admin' : '/pilot';
         $redirectTo = in_array($from, ['admin', 'pilot']) ? $base . '?tab=offers' : '/offers';
         $this->render('pages/offer-create.html.twig', [
             'companies'  => $companies,
@@ -102,12 +104,14 @@ class OfferController extends AbstractController
 
         $this->validateCsrfToken();
 
-        $title       = trim($_POST['title']       ?? '');
-        $location    = trim($_POST['location']    ?? '');
-        $duration    = trim($_POST['duration']    ?? '');
-        $startDate   = trim($_POST['startDate']   ?? '');
-        $description = trim($_POST['description'] ?? '');
-        $missions    = trim($_POST['missions']    ?? '');
+        $title        = trim($_POST['title'] ?? '');
+        $location     = trim($_POST['location'] ?? '');
+        $duration     = trim($_POST['duration'] ?? '');
+        $startDate    = trim($_POST['startDate'] ?? '');
+        $description  = trim($_POST['description'] ?? '');
+        $missions     = trim($_POST['missions'] ?? '');
+        $skills       = trim($_POST['skills'] ?? '');
+        $remuneration = trim($_POST['remuneration'] ?? '');
 
         $errors = [];
         if (empty($title))       $errors[] = 'L\'intitulé est obligatoire.';
@@ -118,14 +122,17 @@ class OfferController extends AbstractController
         if (empty($missions))    $errors[] = 'Les missions sont obligatoires.';
 
         if (!empty($errors)) {
+            $companies = $this->companyModel->findAll();
             $this->render('pages/offer-create.html.twig', [
-                'errors'   => $errors,
-                'formData' => $_POST,
+                'errors'     => $errors,
+                'formData'   => $_POST,
+                'companies'  => $companies,
+                'redirectTo' => $_POST['redirectTo'] ?? '/offers',
             ]);
             return;
         }
 
-        $idCompany  = (int) ($_POST['idCompany']  ?? 0);
+        $idCompany  = (int) ($_POST['idCompany'] ?? 0);
         $redirectTo = trim($_POST['redirectTo'] ?? '/offers');
 
         $this->offerModel->createOffer([
@@ -135,6 +142,8 @@ class OfferController extends AbstractController
             'startDate'       => $startDate,
             'description'     => $description,
             'missions'        => $missions,
+            'skills'          => $skills,
+            'remuneration'    => $remuneration,
             'idCompany'       => $idCompany,
         ]);
 
@@ -148,7 +157,7 @@ class OfferController extends AbstractController
         $this->requirePermission(Permission::OFFER_EDIT);
 
         $role = $_SESSION['user']['role'] ?? '';
-        $base = $role === \Equipe4\Gigastage\Core\Role::ADMIN ? '/admin' : '/pilot';
+        $base = $role === Role::ADMIN ? '/admin' : '/pilot';
 
         if ($id === null || $_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect($base . '?tab=offers');
@@ -156,17 +165,19 @@ class OfferController extends AbstractController
 
         $this->validateCsrfToken();
 
-        $title       = trim($_POST['title']       ?? '');
-        $location    = trim($_POST['location']    ?? '');
-        $duration    = trim($_POST['duration']    ?? '');
-        $startDate   = trim($_POST['startDate']   ?? '');
-        $description = trim($_POST['description'] ?? '');
-        $missions    = trim($_POST['missions']    ?? '');
-        $statusOffer = isset($_POST['statusOffer']) ? (int) $_POST['statusOffer'] : 1;
+        $title        = trim($_POST['title'] ?? '');
+        $location     = trim($_POST['location'] ?? '');
+        $duration     = trim($_POST['duration'] ?? '');
+        $startDate    = trim($_POST['startDate'] ?? '');
+        $description  = trim($_POST['description'] ?? '');
+        $missions     = trim($_POST['missions'] ?? '');
+        $skills       = trim($_POST['skills'] ?? '');
+        $remuneration = trim($_POST['remuneration'] ?? '');
+        $statusOffer  = isset($_POST['statusOffer']) ? (int) $_POST['statusOffer'] : 1;
 
         if (empty($title) || empty($location) || empty($duration) || empty($startDate) || empty($description) || empty($missions)) {
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Tous les champs obligatoires doivent être remplis.'];
-            $redirectTo = trim($_POST['redirectTo'] ?? '/admin?tab=offers');
+            $redirectTo = trim($_POST['redirectTo'] ?? $base . '?tab=offers');
             $this->redirect($redirectTo);
         }
 
@@ -177,10 +188,12 @@ class OfferController extends AbstractController
             'startDate'       => $startDate,
             'description'     => $description,
             'missions'        => $missions,
+            'skills'          => $skills,
+            'remuneration'    => $remuneration,
             'statusOffer'     => $statusOffer,
         ]);
 
-        $redirectTo = trim($_POST['redirectTo'] ?? '/admin?tab=offers');
+        $redirectTo = trim($_POST['redirectTo'] ?? $base . '?tab=offers');
         $_SESSION['flash'] = ['type' => 'success', 'message' => 'Offre mise à jour avec succès.'];
         $this->redirect($redirectTo);
     }
@@ -200,5 +213,18 @@ class OfferController extends AbstractController
 
         $_SESSION['flash'] = ['type' => 'success', 'message' => 'Offre supprimée.'];
         $this->redirectToDashboard('offers');
+    }
+
+    // GET /offer/stats - SFx11
+    public function stats(): void
+    {
+        $this->requirePermission(Permission::OFFER_STATS);
+
+        $this->render('pages/offer-stats.html.twig', [
+            'statsByDuration' => $this->offerModel->statsByDuration(),
+            'topWishlisted'   => $this->offerModel->topWishlisted(5),
+            'totalActive'     => $this->offerModel->countActive(),
+            'avgApplications' => $this->offerModel->avgApplicationsPerOffer(),
+        ]);
     }
 }

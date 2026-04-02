@@ -19,10 +19,20 @@ class CompanyController extends AbstractController
     // GET /companies - SFx2
     public function index(): void
     {
-        $companies = $this->companyModel->findAll();
+        $q = $_GET['q'] ?? '';
+        $page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+        $perPage = 12;
+
+        $result = $this->companyModel->findPaginated($page, $perPage, $q);
 
         $this->render('company/index.html.twig', [
-            'companies' => $companies,
+            'companies' => $result['companies'],
+            'q' => $q,
+            'pagination' => [
+                'totalPages'  => $result['totalPages'],
+                'currentPage' => $result['currentPage'],
+                'total'       => $result['total'],
+            ],
         ]);
     }
 
@@ -37,15 +47,21 @@ class CompanyController extends AbstractController
             return;
         }
 
-        $offers    = $this->companyModel->getOffers($id);
-        $ratings   = $this->companyModel->getRatings($id);
-        $avgRating = $this->companyModel->getAverageRating($id);
+        $offers      = $this->companyModel->getOffers($id);
+        $ratings     = $this->companyModel->getRatings($id);
+        $avgRating   = $this->companyModel->getAverageRating($id);
+        $applicants  = $this->companyModel->countApplicants($id);
+
+        $flash = $_SESSION['flash'] ?? null;
+        unset($_SESSION['flash']);
 
         $this->render('company/show.html.twig', [
-            'company'   => $company,
-            'offers'    => $offers,
-            'ratings'   => $ratings,
-            'avgRating' => $avgRating,
+            'company'    => $company,
+            'offers'     => $offers,
+            'ratings'    => $ratings,
+            'avgRating'  => $avgRating,
+            'applicants' => $applicants,
+            'flash'      => $flash,
         ]);
     }
 
@@ -60,9 +76,11 @@ class CompanyController extends AbstractController
 
         $this->validateCsrfToken();
 
-        $name    = trim($_POST['name']    ?? '');
-        $email   = trim($_POST['email']   ?? '');
-        $website = trim($_POST['website'] ?? '');
+        $name        = trim($_POST['name'] ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $email       = trim($_POST['email'] ?? '');
+        $phone       = trim($_POST['phone'] ?? '');
+        $website     = trim($_POST['website'] ?? '');
 
         if (empty($name) || empty($email)) {
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Le nom et l\'email sont obligatoires.'];
@@ -70,9 +88,11 @@ class CompanyController extends AbstractController
         }
 
         $this->companyModel->create([
-            'name'    => $name,
-            'email'   => $email,
-            'website' => $website,
+            'name'        => $name,
+            'description' => $description,
+            'email'       => $email,
+            'phone'       => $phone,
+            'website'     => $website,
         ]);
 
         $_SESSION['flash'] = ['type' => 'success', 'message' => 'Entreprise créée avec succès.'];
@@ -90,9 +110,11 @@ class CompanyController extends AbstractController
 
         $this->validateCsrfToken();
 
-        $name    = trim($_POST['name']    ?? '');
-        $email   = trim($_POST['email']   ?? '');
-        $website = trim($_POST['website'] ?? '');
+        $name        = trim($_POST['name'] ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $email       = trim($_POST['email'] ?? '');
+        $phone       = trim($_POST['phone'] ?? '');
+        $website     = trim($_POST['website'] ?? '');
 
         if (empty($name) || empty($email)) {
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Le nom et l\'email sont obligatoires.'];
@@ -103,7 +125,9 @@ class CompanyController extends AbstractController
 
         $this->companyModel->update($id, [
             'name'          => $name,
+            'description'   => $description,
             'email'         => $email,
+            'phone'         => $phone,
             'website'       => $website,
             'statusCompany' => $statusCompany,
         ]);
@@ -125,7 +149,7 @@ class CompanyController extends AbstractController
 
         $this->companyModel->delete($id);
 
-        $_SESSION['flash'] = ['type' => 'success', 'message' => 'Entreprise supprimée.'];
+        $_SESSION['flash'] = ['type' => 'success', 'message' => 'Entreprise désactivée.'];
         $this->redirectToDashboard('companies');
     }
 
@@ -135,12 +159,12 @@ class CompanyController extends AbstractController
         $this->requirePermission(Permission::COMPANY_EVALUATE);
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirectToDashboard('companies');
+            $this->redirect('/company/' . $id);
         }
 
         $this->validateCsrfToken();
 
-        $rate    = (int) ($_POST['rate']    ?? 0);
+        $rate    = (int) ($_POST['rate'] ?? 0);
         $comment = trim($_POST['comment'] ?? '');
 
         if ($rate < 1 || $rate > 5) {

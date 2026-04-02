@@ -13,32 +13,38 @@
 {% block content %}
 
   {% if flash %}
-    <div class="container" style="padding-top:16px">
+    <div class="container" style="padding-top: 16px">
       <div class="alert {{ flash.type }}">{{ flash.message }}</div>
     </div>
   {% endif %}
 
-  <!-- HEADER -->
+  <!-- header -->
   <header class="job-header">
     <div class="container job-header-inner">
       <div class="job-title-group">
 
-        <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px">
-          <div class="profile-avatar profile-avatar--company" style="width:56px;height:56px;font-size:20px;border-radius:10px">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px">
+          <div class="profile-avatar profile-avatar--company" style="width: 56px; height: 56px; font-size: 20px; border-radius: 10px">
             {{ company.name|slice(0,1)|upper }}
           </div>
-          <h1 style="margin:0">{{ company.name }}</h1>
+          <h1 style="margin: 0">{{ company.name }}</h1>
         </div>
 
-        <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:14px;color:var(--color-text-muted)">
-          <span style="display:flex;align-items:center;gap:6px">
-            <img src="{{ static_url }}/assets/icons/database.svg" alt="" style="width:14px;height:14px;filter:invert(47%) sepia(10%) saturate(400%) hue-rotate(175deg) brightness(90%)">
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 14px; color: var(--color-text-muted)">
+          <span style="display: flex; align-items: center; gap: 6px">
+            <img src="{{ static_url }}/assets/icons/database.svg" alt="" style="width: 14px; height: 14px; filter: invert(47%) sepia(10%) saturate(400%) hue-rotate(175deg) brightness(90%)">
             {{ company.email }}
           </span>
+          {% if company.phone %}
+            <span style="display: flex; align-items: center; gap: 6px">
+              <img src="{{ static_url }}/assets/icons/clock.svg" alt="" style="width: 14px; height: 14px; filter: invert(47%) sepia(10%) saturate(400%) hue-rotate(175deg) brightness(90%)">
+              {{ company.phone }}
+            </span>
+          {% endif %}
           {% if company.website %}
             <a href="{{ company.website }}" target="_blank" rel="noopener"
-               style="display:flex;align-items:center;gap:6px;color:var(--color-primary-dark)">
-              <img src="{{ static_url }}/assets/icons/map-pin.svg" alt="" style="width:14px;height:14px;filter:invert(33%) sepia(60%) saturate(500%) hue-rotate(175deg) brightness(85%)">
+               style="display: flex; align-items: center; gap: 6px; color: var(--color-primary-dark)">
+              <img src="{{ static_url }}/assets/icons/map-pin.svg" alt="" style="width: 14px; height: 14px; filter: invert(33%) sepia(60%) saturate(500%) hue-rotate(175deg) brightness(85%)">
               {{ company.website }}
             </a>
           {% endif %}
@@ -51,12 +57,22 @@
   <div class="container">
     <div class="job-grid">
 
-      <!-- CONTENU PRINCIPAL -->
+      <!-- contenu principal -->
       <div>
 
-        <!-- OFFRES DE STAGE -->
-        <section style="margin-bottom:40px">
-          <h2 style="font-size:20px;border-left:4px solid var(--color-secondary);padding-left:15px;margin-bottom:20px">
+        <!-- description -->
+        {% if company.description %}
+        <section style="margin-bottom: 40px">
+          <h2 style="font-size: 20px; border-left: 4px solid var(--color-secondary); padding-left: 15px; margin-bottom: 16px">
+            À propos
+          </h2>
+          <p style="color: var(--color-text-muted); line-height: 1.7">{{ company.description }}</p>
+        </section>
+        {% endif %}
+
+      <!-- offres de stage -->
+        <section style="margin-bottom: 40px">
+          <h2 style="font-size: 20px; border-left: 4px solid var(--color-secondary); padding-left: 15px; margin-bottom: 20px">
             Offres de stage
           </h2>
 
@@ -89,34 +105,34 @@
           {% endif %}
         </section>
 
-        <!-- ÉVALUATIONS -->
+        <!-- évaluations -->
         <section>
-          <div class="section-header" style="margin-bottom:20px">
-            <h2 style="font-size:20px;border-left:4px solid var(--color-secondary);padding-left:15px;margin:0">
+          <div class="section-header" style="margin-bottom: 20px">
+            <h2 style="font-size: 20px; border-left: 4px solid var(--color-secondary); padding-left: 15px; margin: 0">
               Évaluations
             </h2>
             <span class="count-badge">{{ ratings|length }}</span>
           </div>
 
           {% if ratings is empty %}
-            <div class="empty-state" style="padding:40px 0">
+            <div class="empty-state" style="padding: 40px 0">
               <img src="{{ static_url }}/assets/icons/heart.svg" alt="">
               <p>Aucun avis pour l'instant.</p>
             </div>
           {% else %}
-            <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display: flex; flex-direction: column; gap: 12px">
               {% for rating in ratings %}
-                <div class="profile-offer-card" style="flex-direction:column;align-items:flex-start;gap:8px">
-                  <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+                <div class="profile-offer-card" style="flex-direction: column; align-items: flex-start; gap: 8px">
+                  <div style="display: flex; align-items: center; justify-content: space-between; width: 100%">
                     <strong>{{ rating.firstName }} {{ rating.surname }}</strong>
-                    <span style="display:flex;gap:3px">
+                    <span style="display: flex; gap: 3px">
                       {% for i in 1..5 %}
-                        <span style="font-size:16px;color:{{ i <= rating.rate ? 'var(--color-secondary)' : 'var(--color-border)' }}">★</span>
+                        <span style="font-size: 16px; color: {{ i <= rating.rate ? 'var(--color-secondary)' : 'var(--color-border)' }}">★</span>
                       {% endfor %}
                     </span>
                   </div>
                   {% if rating.comment %}
-                    <p style="margin:0;color:var(--color-text-muted);font-size:14px">{{ rating.comment }}</p>
+                    <p style="margin: 0; color: var(--color-text-muted); font-size: 14px">{{ rating.comment }}</p>
                   {% endif %}
                 </div>
               {% endfor %}
@@ -124,21 +140,21 @@
           {% endif %}
         </section>
 
-        <!-- FORMULAIRE D'ÉVALUATION (Admin / Pilote) -->
+        <!-- formulaire d'évaluation (Admin / Pilote) -->
         {% if app_user is not null and app_user.role in ['Admin', 'Pilote'] %}
-          <section style="margin-top:40px">
-            <h2 style="font-size:20px;border-left:4px solid var(--color-secondary);padding-left:15px;margin-bottom:20px">
+          <section style="margin-top: 40px">
+            <h2 style="font-size: 20px; border-left: 4px solid var(--color-secondary); padding-left: 15px; margin-bottom: 20px">
               Laisser une évaluation
             </h2>
-            <form method="post" action="/admin/company/evaluate?id={{ company.idCompany }}" style="display:flex;flex-direction:column;gap:16px;max-width:480px">
+            <form method="post" action="/admin/company/evaluate?id={{ company.idCompany }}" style="display: flex; flex-direction: column; gap: 16px; max-width: 480px">
               <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
               <div>
-                <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Note (1 à 5)</label>
-                <input class="field-input" type="number" name="rate" min="1" max="5" required style="width:80px">
+                <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px">Note (1 à 5)</label>
+                <input class="field-input" type="number" name="rate" min="1" max="5" required style="width: 80px">
               </div>
               <div>
-                <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Commentaire</label>
-                <textarea class="field-input" name="comment" rows="3" placeholder="Votre avis sur cette entreprise..." style="width:100%;resize:vertical"></textarea>
+                <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px">Commentaire</label>
+                <textarea class="field-input" name="comment" rows="3" placeholder="Votre avis sur cette entreprise..." style="width: 100%; resize: vertical"></textarea>
               </div>
               <div>
                 <button class="btn btn-solid" type="submit">Envoyer l'évaluation</button>
@@ -149,7 +165,7 @@
 
       </div>
 
-      <!-- SIDEBAR -->
+      <!-- sidebar -->
       <aside>
         <div class="sidebar-card">
 
@@ -163,10 +179,17 @@
             <span>{{ company.email }}</span>
           </div>
 
+          {% if company.phone %}
+            <div class="info-item">
+              <img src="{{ static_url }}/assets/icons/clock.svg" alt="">
+              <span>{{ company.phone }}</span>
+            </div>
+          {% endif %}
+
           {% if company.website %}
             <div class="info-item">
               <img src="{{ static_url }}/assets/icons/map-pin.svg" alt="">
-              <a href="{{ company.website }}" target="_blank" rel="noopener" style="color:var(--color-primary-dark)">
+              <a href="{{ company.website }}" target="_blank" rel="noopener" style="color: var(--color-primary-dark)">
                 Site web
               </a>
             </div>
@@ -174,27 +197,34 @@
 
           <hr class="separator">
 
-          <div style="text-align:center">
+          <div style="text-align: center">
             {% if avgRating %}
-              <div style="font-size:28px;font-weight:800;color:var(--color-primary-dark)">
-                {{ avgRating }}<span style="font-size:16px;color:var(--color-text-muted)">/5</span>
+              <div style="font-size: 28px; font-weight: 800; color: var(--color-primary-dark)">
+                {{ avgRating }}<span style="font-size: 16px; color: var(--color-text-muted)">/5</span>
               </div>
-              <div style="display:flex;justify-content:center;gap:3px;margin:6px 0">
+              <div style="display: flex; justify-content: center; gap: 3px; margin: 6px 0">
                 {% for i in 1..5 %}
-                  <span style="font-size:20px;color:{{ i <= avgRating ? 'var(--color-secondary)' : 'var(--color-border)' }}">★</span>
+                  <span style="font-size: 20px; color: {{ i <= avgRating ? 'var(--color-secondary)' : 'var(--color-border)' }}">★</span>
                 {% endfor %}
               </div>
-              <p style="font-size:13px;color:var(--color-text-muted);margin:0">{{ ratings|length }} avis</p>
+              <p style="font-size: 13px; color: var(--color-text-muted); margin: 0">{{ ratings|length }} avis</p>
             {% else %}
-              <p style="font-size:13px;color:var(--color-text-muted);margin:0">Aucune évaluation</p>
+              <p style="font-size: 13px; color: var(--color-text-muted); margin: 0">Aucune évaluation</p>
             {% endif %}
           </div>
 
           <hr class="separator">
 
-          <div style="text-align:center">
-            <span style="font-size:22px;font-weight:800;color:var(--color-primary-dark)">{{ offers|length }}</span>
-            <p style="font-size:13px;color:var(--color-text-muted);margin:4px 0 0">offre{{ offers|length > 1 ? 's' : '' }} active{{ offers|length > 1 ? 's' : '' }}</p>
+          <div style="text-align: center">
+            <span style="font-size: 22px; font-weight: 800; color: var(--color-primary-dark)">{{ offers|length }}</span>
+            <p style="font-size: 13px; color: var(--color-text-muted); margin: 4px 0 0">offre{{ offers|length > 1 ? 's' : '' }} active{{ offers|length > 1 ? 's' : '' }}</p>
+          </div>
+
+          <hr class="separator">
+
+          <div style="text-align: center">
+            <span style="font-size: 22px; font-weight: 800; color: var(--color-primary-dark)">{{ applicants }}</span>
+            <p style="font-size: 13px; color: var(--color-text-muted); margin: 4px 0 0">candidature{{ applicants > 1 ? 's' : '' }} déposée{{ applicants > 1 ? 's' : '' }}</p>
           </div>
 
         </div>

@@ -1,12 +1,8 @@
-/* ============================================================
-   GIGASTAGE - Page d'accueil
-   Section Hero, Section Stats
-   ============================================================ */
+/* page d'accueil
+   Section Hero, Section Stats */
 
 
-/* ============================================================
-   Section Hero
-   ============================================================ */
+/* section Hero */
 .hero {
   background-color: var(--color-primary);
   padding: 50px 0;
@@ -40,9 +36,7 @@
 }
 
 
-/* ============================================================
-   Section Stats
-   ============================================================ */
+/* section Stats */
 .stats {
   background-color: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
@@ -60,9 +54,7 @@
 }
 
 
-/* ============================================================
-   Responsive
-   ============================================================ */
+/* responsive */
 @media (max-width: 650px) {
   .hero-title .line-1 {
     font-size: 32px;

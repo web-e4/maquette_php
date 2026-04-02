@@ -10,7 +10,7 @@
 
 <div class="profile-page">
 
-  <!-- HERO HEADER -->
+  <!-- hero header -->
   <div class="profile-hero">
     <div class="container">
       <div class="profile-hero-inner">
@@ -27,43 +27,41 @@
   <div class="container">
 
     {% if flash %}
-      <div class="flash flash--{{ flash.type == 'success' ? 'success' : 'error' }}" style="margin-bottom:24px">
+      <div class="flash flash--{{ flash.type == 'success' ? 'success' : 'error' }}" style="margin-bottom: 24px">
         {{ flash.message }}
       </div>
     {% endif %}
 
-    <!-- TABS -->
+    <!-- tabs -->
     <div class="profile-tabs" id="admin-tabs">
       <button class="profile-tab {{ activeTab == 'companies' ? 'active' : '' }}" data-tab="companies">Entreprises</button>
-      <button class="profile-tab {{ activeTab == 'offers'    ? 'active' : '' }}" data-tab="offers">Offres</button>
-      <button class="profile-tab {{ activeTab == 'students'  ? 'active' : '' }}" data-tab="students">Étudiants</button>
+      <button class="profile-tab {{ activeTab == 'offers' ? 'active' : '' }}" data-tab="offers">Offres</button>
+      <button class="profile-tab {{ activeTab == 'students' ? 'active' : '' }}" data-tab="students">Étudiants</button>
       {% if app_user.role == 'Admin' %}
         <button class="profile-tab {{ activeTab == 'pilots' ? 'active' : '' }}" data-tab="pilots">Pilotes</button>
       {% endif %}
       <button class="profile-tab {{ activeTab == 'applications' ? 'active' : '' }}" data-tab="applications">Candidatures</button>
     </div>
 
-    <!-- ============================================================
-         ONGLET ENTREPRISES
-         ============================================================ -->
+    <!-- onglet entreprises -->
     <div class="tab-panel {{ activeTab == 'companies' ? 'active' : '' }}" id="tab-companies">
 
       <div class="section-header">
         <h2>Entreprises</h2>
         <span class="count-badge">{{ companies|length }}</span>
-        <div style="margin-left:auto;display:flex;gap:8px">
+        <div style="margin-left: auto; display: flex; gap: 8px">
           <button class="btn btn-solid" type="button" onclick="toggleForm('form-company-create')">
             <img src="{{ static_url }}/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
           </button>
         </div>
       </div>
 
-      <!-- Formulaire CRÉER -->
-      <div id="form-company-create" style="display:{{ (editType == 'company' and editId is null) ? 'block' : 'none' }}">
+      <!-- formulaire créer -->
+      <div id="form-company-create" style="display: {{ (editType == 'company' and editId is null) ? 'block' : 'none' }}">
         {% include "admin/_company-create.html.twig" %}
       </div>
 
-      <!-- Formulaire MODIFIER -->
+      <!-- formulaire modifier -->
       {% if editType == 'company' and editData %}
         {% include "admin/_company-update.html.twig" with { company: editData } %}
       {% endif %}
@@ -84,23 +82,23 @@
             {% for company in companies %}
               <tr>
                 <td>
-                  <a href="/company/{{ company.idCompany }}" style="font-weight:600;color:var(--color-primary-dark)">
+                  <a href="/company/{{ company.idCompany }}" style="font-weight: 600; color: var(--color-primary-dark)">
                     {{ company.name }}
                   </a>
                 </td>
-                <td style="color:var(--color-text-muted)">{{ company.email }}</td>
-                <td style="color:var(--color-text-muted)">
+                <td style="color: var(--color-text-muted)">{{ company.email }}</td>
+                <td style="color: var(--color-text-muted)">
                   {% if company.website %}
-                    <a href="{{ company.website }}" target="_blank" style="color:var(--color-primary)">{{ company.website }}</a>
+                    <a href="{{ company.website }}" target="_blank" style="color: var(--color-primary)">{{ company.website }}</a>
                   {% else %}
                     -
                   {% endif %}
                 </td>
                 <td>
                   {% if company.avgRating %}
-                    <span style="color:var(--color-secondary)">★</span> {{ company.avgRating }}/5
+                    <span style="color: var(--color-secondary)">★</span> {{ company.avgRating }}/5
                   {% else %}
-                    <span style="color:var(--color-text-muted)">-</span>
+                    <span style="color: var(--color-text-muted)">-</span>
                   {% endif %}
                 </td>
                 <td>
@@ -111,7 +109,7 @@
                   {% endif %}
                 </td>
                 <td>
-                  <div style="display:flex;gap:6px;justify-content:flex-end">
+                  <div style="display: flex; gap: 6px; justify-content: flex-end">
                     <a href="{{ dashboardBase }}?tab=companies&editType=company&edit={{ company.idCompany }}" class="btn-icon" title="Modifier">
                       <img src="{{ static_url }}/assets/icons/pencil.svg" alt="Modifier">
                     </a>
@@ -125,34 +123,32 @@
                 </td>
               </tr>
             {% else %}
-              <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--color-text-muted)">Aucune entreprise.</td></tr>
+              <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--color-text-muted)">Aucune entreprise.</td></tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- ============================================================
-         ONGLET OFFRES
-         ============================================================ -->
+    <!-- onglet offres -->
     <div class="tab-panel {{ activeTab == 'offers' ? 'active' : '' }}" id="tab-offers">
 
       <div class="section-header">
         <h2>Offres de stage</h2>
         <span class="count-badge">{{ offers|length }}</span>
-        <div style="margin-left:auto;display:flex;gap:8px">
+        <div style="margin-left: auto; display: flex; gap: 8px">
           <button class="btn btn-solid" type="button" onclick="toggleForm('form-offer-create')">
             <img src="{{ static_url }}/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
           </button>
         </div>
       </div>
 
-      <!-- Formulaire CRÉER -->
-      <div id="form-offer-create" style="display:none">
+      <!-- formulaire créer -->
+      <div id="form-offer-create" style="display: none">
         {% include "admin/_offer-create.html.twig" %}
       </div>
 
-      <!-- Formulaire MODIFIER -->
+      <!-- formulaire modifier -->
       {% if editType == 'offer' and editData %}
         {% include "admin/_offer-update.html.twig" with { offer: editData } %}
       {% endif %}
@@ -174,14 +170,14 @@
             {% for offer in offers %}
               <tr>
                 <td>
-                  <a href="/offer/{{ offer.idOffer }}" style="font-weight:600;color:var(--color-primary-dark)">
+                  <a href="/offer/{{ offer.idOffer }}" style="font-weight: 600; color: var(--color-primary-dark)">
                     {{ offer.title }}
                   </a>
                 </td>
-                <td style="color:var(--color-text-muted)">{{ offer.companyName }}</td>
-                <td style="color:var(--color-text-muted)">{{ offer.location }}</td>
-                <td style="color:var(--color-text-muted)">{{ offer.durationInWeeks }} sem.</td>
-                <td style="color:var(--color-text-muted)">{{ offer.startDate }}</td>
+                <td style="color: var(--color-text-muted)">{{ offer.companyName }}</td>
+                <td style="color: var(--color-text-muted)">{{ offer.location }}</td>
+                <td style="color: var(--color-text-muted)">{{ offer.durationInWeeks }} sem.</td>
+                <td style="color: var(--color-text-muted)">{{ offer.startDate }}</td>
                 <td>
                   {% if offer.statusOffer %}
                     <span class="offer-status offer-status--active">Activé</span>
@@ -190,7 +186,7 @@
                   {% endif %}
                 </td>
                 <td>
-                  <div style="display:flex;gap:6px;justify-content:flex-end">
+                  <div style="display: flex; gap: 6px; justify-content: flex-end">
                     <a href="{{ dashboardBase }}?tab=offers&editType=offer&edit={{ offer.idOffer }}" class="btn-icon" title="Modifier">
                       <img src="{{ static_url }}/assets/icons/pencil.svg" alt="Modifier">
                     </a>
@@ -204,34 +200,37 @@
                 </td>
               </tr>
             {% else %}
-              <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--color-text-muted)">Aucune offre.</td></tr>
+              <tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--color-text-muted)">Aucune offre.</td></tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- ============================================================
-         ONGLET ÉTUDIANTS
-         ============================================================ -->
+    <!-- onglet étudiants -->
     <div class="tab-panel {{ activeTab == 'students' ? 'active' : '' }}" id="tab-students">
 
       <div class="section-header">
         <h2>Étudiants</h2>
         <span class="count-badge">{{ students|length }}</span>
-        <div style="margin-left:auto;display:flex;gap:8px">
+        <div style="margin-left: auto; display: flex; gap: 8px">
+          <form method="get" action="{{ dashboardBase }}" style="display: flex; gap: 8px">
+            <input type="hidden" name="tab" value="students">
+            <input class="form-input" type="search" name="qStudent" value="{{ qStudent ?? '' }}" placeholder="Rechercher un étudiant..." style="width: 220px; padding: 6px 12px; font-size: 13px">
+            <button class="btn btn-ghost" type="submit" style="padding: 6px 14px; font-size: 13px">Chercher</button>
+          </form>
           <button class="btn btn-solid" type="button" onclick="toggleForm('form-student-create')">
             <img src="{{ static_url }}/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
           </button>
         </div>
       </div>
 
-      <!-- Formulaire CRÉER -->
-      <div id="form-student-create" style="display:none">
+      <!-- formulaire créer -->
+      <div id="form-student-create" style="display: none">
         {% include "admin/_student-create.html.twig" %}
       </div>
 
-      <!-- Formulaire MODIFIER -->
+      <!-- formulaire modifier -->
       {% if editType == 'student' and editData %}
         {% include "admin/_student-update.html.twig" with { student: editData, pilots: pilots } %}
       {% endif %}
@@ -252,9 +251,9 @@
             {% for student in students %}
               <tr>
                 <td>{{ student.firstName ?? '-' }}</td>
-                <td style="font-weight:600">{{ student.surname ?? '-' }}</td>
-                <td style="color:var(--color-text-muted)">{{ student.email }}</td>
-                <td style="color:var(--color-text-muted)">{{ student.pilotName ?? '-' }}</td>
+                <td style="font-weight: 600">{{ student.surname ?? '-' }}</td>
+                <td style="color: var(--color-text-muted)">{{ student.email }}</td>
+                <td style="color: var(--color-text-muted)">{{ student.pilotName ?? '-' }}</td>
                 <td>
                   {% if student.statusUser %}
                     <span class="offer-status offer-status--active">Activé</span>
@@ -263,7 +262,7 @@
                   {% endif %}
                 </td>
                 <td>
-                  <div style="display:flex;gap:6px;justify-content:flex-end">
+                  <div style="display: flex; gap: 6px; justify-content: flex-end">
                     <a href="{{ dashboardBase }}?tab=students&editType=student&edit={{ student.idUser }}" class="btn-icon" title="Modifier">
                       <img src="{{ static_url }}/assets/icons/pencil.svg" alt="Modifier">
                     </a>
@@ -277,35 +276,38 @@
                 </td>
               </tr>
             {% else %}
-              <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--color-text-muted)">Aucun étudiant trouvé.</td></tr>
+              <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--color-text-muted)">Aucun étudiant trouvé.</td></tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- ============================================================
-         ONGLET PILOTES (Admin uniquement)
-         ============================================================ -->
+    <!-- onglet pilotes (admin uniquement) -->
     {% if app_user.role == 'Admin' %}
     <div class="tab-panel {{ activeTab == 'pilots' ? 'active' : '' }}" id="tab-pilots">
 
       <div class="section-header">
         <h2>Pilotes</h2>
         <span class="count-badge">{{ pilots|length }}</span>
-        <div style="margin-left:auto;display:flex;gap:8px">
+        <div style="margin-left: auto; display: flex; gap: 8px">
+          <form method="get" action="{{ dashboardBase }}" style="display: flex; gap: 8px">
+            <input type="hidden" name="tab" value="pilots">
+            <input class="form-input" type="search" name="qPilot" value="{{ qPilot ?? '' }}" placeholder="Rechercher un pilote..." style="width: 220px; padding: 6px 12px; font-size: 13px">
+            <button class="btn btn-ghost" type="submit" style="padding: 6px 14px; font-size: 13px">Chercher</button>
+          </form>
           <button class="btn btn-solid" type="button" onclick="toggleForm('form-pilot-create')">
             <img src="{{ static_url }}/assets/icons/pencil.svg" alt="" class="icon-white"> Créer
           </button>
         </div>
       </div>
 
-      <!-- Formulaire CRÉER -->
-      <div id="form-pilot-create" style="display:none">
+      <!-- formulaire créer -->
+      <div id="form-pilot-create" style="display: none">
         {% include "admin/_pilot-create.html.twig" %}
       </div>
 
-      <!-- Formulaire MODIFIER -->
+      <!-- formulaire modifier -->
       {% if editType == 'pilot' and editData %}
         {% include "admin/_pilot-update.html.twig" with { pilot: editData } %}
       {% endif %}
@@ -325,8 +327,8 @@
             {% for pilot in pilots %}
               <tr>
                 <td>{{ pilot.firstName ?? '-' }}</td>
-                <td style="font-weight:600">{{ pilot.surname ?? '-' }}</td>
-                <td style="color:var(--color-text-muted)">{{ pilot.email }}</td>
+                <td style="font-weight: 600">{{ pilot.surname ?? '-' }}</td>
+                <td style="color: var(--color-text-muted)">{{ pilot.email }}</td>
                 <td>
                   {% if pilot.statusUser %}
                     <span class="offer-status offer-status--active">Activé</span>
@@ -335,7 +337,7 @@
                   {% endif %}
                 </td>
                 <td>
-                  <div style="display:flex;gap:6px;justify-content:flex-end">
+                  <div style="display: flex; gap: 6px; justify-content: flex-end">
                     <a href="{{ dashboardBase }}?tab=pilots&editType=pilot&edit={{ pilot.idUser }}" class="btn-icon" title="Modifier">
                       <img src="{{ static_url }}/assets/icons/pencil.svg" alt="Modifier">
                     </a>
@@ -349,7 +351,7 @@
                 </td>
               </tr>
             {% else %}
-              <tr><td colspan="5" style="text-align:center;padding:40px;color:var(--color-text-muted)">Aucun pilote trouvé.</td></tr>
+              <tr><td colspan="5" style="text-align: center; padding: 40px; color: var(--color-text-muted)">Aucun pilote trouvé.</td></tr>
             {% endfor %}
           </tbody>
         </table>
@@ -357,9 +359,7 @@
     </div>
     {% endif %}
 
-    <!-- ============================================================
-         ONGLET CANDIDATURES
-         ============================================================ -->
+    <!-- onglet candidatures -->
     <div class="tab-panel {{ activeTab == 'applications' ? 'active' : '' }}" id="tab-applications">
 
       <div class="section-header">
@@ -375,24 +375,45 @@
               <th>Email</th>
               <th>Offre</th>
               <th>Entreprise</th>
+              <th>CV</th>
+              <th>Lettre de motivation</th>
               <th>Date</th>
             </tr>
           </thead>
           <tbody>
             {% for application in applications %}
               <tr>
-                <td style="font-weight:600">{{ application.firstName }} {{ application.surname }}</td>
-                <td style="color:var(--color-text-muted)">{{ application.email }}</td>
+                <td style="font-weight: 600">{{ application.firstName }} {{ application.surname }}</td>
+                <td style="color: var(--color-text-muted)">{{ application.email }}</td>
                 <td>
-                  <a href="/offer/{{ application.idOffer }}" style="color:var(--color-primary-dark)">
+                  <a href="/offer/{{ application.idOffer }}" style="color: var(--color-primary-dark)">
                     {{ application.title }}
                   </a>
                 </td>
-                <td style="color:var(--color-text-muted)">{{ application.companyName }}</td>
-                <td style="color:var(--color-text-muted)">{{ application.applicationDate }}</td>
+                <td style="color: var(--color-text-muted)">{{ application.companyName }}</td>
+                <td>
+                  {% if application.resume %}
+                    <a href="{{ static_url }}/{{ application.resume }}" target="_blank" class="btn btn-ghost" style="padding: 4px 10px; font-size: 12px">
+                      Voir CV
+                    </a>
+                  {% else %}
+                    <span style="color: var(--color-text-muted)">—</span>
+                  {% endif %}
+                </td>
+                <td style="max-width: 280px">
+                  {% if application.motivationLetter %}
+                    <details>
+                      <summary style="cursor: pointer; color: var(--color-primary-dark); font-size: 13px">Lire la lettre</summary>
+                      <p style="white-space: pre-wrap; font-size: 13px; color: var(--color-text); margin-top: 8px; padding: 8px; background: var(--color-bg-alt, #f4f4f8); border-radius: 6px">{{ application.motivationLetter }}</p>
+                    </details>
+                  {% else %}
+                    <span style="color: var(--color-text-muted)">—</span>
+                  {% endif %}
+                </td>
+                <td style="color: var(--color-text-muted)">{{ application.applicationDate }}</td>
               </tr>
             {% else %}
-              <tr><td colspan="5" style="text-align:center;padding:40px;color:var(--color-text-muted)">Aucune candidature.</td></tr>
+              <tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--color-text-muted)">Aucune candidature.</td></tr>
             {% endfor %}
           </tbody>
         </table>
@@ -404,8 +425,8 @@
 
 {% block scripts %}
 <script>
-  // Tab switching
-  const tabs  = document.querySelectorAll('.profile-tab[data-tab]');
+  // tab switching
+  const tabs = document.querySelectorAll('.profile-tab[data-tab]');
   const panels = document.querySelectorAll('.tab-panel');
 
   tabs.forEach(tab => {
@@ -421,7 +442,6 @@
     });
   });
 
-  // Toggle create forms
   function toggleForm(id) {
     const el = document.getElementById(id);
     if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';

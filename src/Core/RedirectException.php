@@ -5,12 +5,15 @@ namespace Equipe4\Gigastage\Core;
 
 /**
  * Exception levée lors d'une redirection.
- * Permet de tester les contrôleurs sans que exit() ne tue le processus PHPUnit.
+ * Permet aux tests PHPUnit d'attraper la redirection sans que exit() ne tue le processus.
  */
 class RedirectException extends \RuntimeException
 {
-    public function __construct(public readonly string $url)
+    public string $url;
+
+    public function __construct(string $url)
     {
+        $this->url = $url;
         parent::__construct('Redirect to: ' . $url);
     }
 }

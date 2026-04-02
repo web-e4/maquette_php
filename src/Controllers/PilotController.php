@@ -26,12 +26,12 @@ class PilotController extends AbstractDashboardController
 
     protected function loadPilots(): bool
     {
-        return false; // Le pilote n'a pas accès à la gestion des pilotes
+        return false; // le pilote n'a pas accès à la gestion des pilotes
     }
 
     public function dashboard(): void
     {
-        // Si un Admin accède à /pilot, le rediriger vers /admin
+        // si un Admin accède à /pilot, le rediriger vers /admin
         if ($this->isLoggedIn() && $this->getUserRole() === Role::ADMIN) {
             $this->redirect('/admin');
         }
@@ -49,10 +49,10 @@ class PilotController extends AbstractDashboardController
 
         $this->validateCsrfToken();
 
-        $email     = trim($_POST['email']     ?? '');
-        $password  = trim($_POST['password']  ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $password = trim($_POST['password'] ?? '');
         $firstName = trim($_POST['firstName'] ?? '');
-        $surname   = trim($_POST['surname']   ?? '');
+        $surname = trim($_POST['surname'] ?? '');
 
         if (empty($email) || empty($password) || empty($firstName) || empty($surname)) {
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Tous les champs sont obligatoires.'];
@@ -60,11 +60,11 @@ class PilotController extends AbstractDashboardController
         }
 
         $this->userModel->create([
-            'email'     => $email,
-            'password'  => $password,
+            'email' => $email,
+            'password' => $password,
             'firstName' => $firstName,
-            'surname'   => $surname,
-            'role'      => Role::PILOT,
+            'surname' => $surname,
+            'role' => Role::PILOT,
         ]);
 
         $_SESSION['flash'] = ['type' => 'success', 'message' => 'Compte pilote créé avec succès.'];
@@ -82,9 +82,9 @@ class PilotController extends AbstractDashboardController
 
         $this->validateCsrfToken();
 
-        $email     = trim($_POST['email']     ?? '');
+        $email = trim($_POST['email'] ?? '');
         $firstName = trim($_POST['firstName'] ?? '');
-        $surname   = trim($_POST['surname']   ?? '');
+        $surname = trim($_POST['surname'] ?? '');
 
         if (empty($email) || empty($firstName) || empty($surname)) {
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Tous les champs sont obligatoires.'];
@@ -94,9 +94,9 @@ class PilotController extends AbstractDashboardController
         $statusUser = isset($_POST['statusUser']) ? (int) $_POST['statusUser'] : 1;
 
         $this->userModel->update($id, [
-            'email'      => $email,
-            'firstName'  => $firstName,
-            'surname'    => $surname,
+            'email' => $email,
+            'firstName' => $firstName,
+            'surname' => $surname,
             'statusUser' => $statusUser,
         ]);
 

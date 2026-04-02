@@ -17,8 +17,8 @@ class HomeController extends AbstractController
     public function __construct($twig)
     {
         parent::__construct($twig);
-        $this->offerModel    = new OfferModel();
-        $this->userModel     = new UserModel();
+        $this->offerModel = new OfferModel();
+        $this->userModel = new UserModel();
         $this->wishlistModel = new WishlistModel();
     }
 
@@ -28,9 +28,9 @@ class HomeController extends AbstractController
         $offers = $this->offerModel->findXLast(6);
 
         $stats = [
-            'offers'    => $this->offerModel->countRows('Offer'),
+            'offers' => $this->offerModel->countRows('Offer'),
             'companies' => $this->offerModel->countRows('Company'),
-            'students'  => $this->userModel->countByRole(Role::STUDENT),
+            'students' => $this->userModel->countByRole(Role::STUDENT),
         ];
 
         $wishlistIds = [];
@@ -39,8 +39,8 @@ class HomeController extends AbstractController
         }
 
         $this->render('pages/home.html.twig', [
-            'offers'      => $offers,
-            'stats'       => $stats,
+            'offers' => $offers,
+            'stats' => $stats,
             'wishlistIds' => $wishlistIds,
         ]);
     }

@@ -17,8 +17,8 @@ class WishlistModel extends AbstractModel
                 c.name AS companyName,
                 w.startDate AS dateAdded
             FROM Wishlist w
-            JOIN Offer   o ON w.idOffer    = o.idOffer
-            JOIN Company c ON o.idCompany  = c.idCompany
+            JOIN Offer o ON w.idOffer = o.idOffer
+            JOIN Company c ON o.idCompany = c.idCompany
             WHERE w.idUser = :idUser
             ORDER BY w.startDate DESC
         ");

@@ -16,7 +16,7 @@ class ApplicationController extends AbstractController
     {
         parent::__construct($twig);
         $this->applicationModel = new ApplicationModel();
-        $this->profileModel     = new ProfileModel();
+        $this->profileModel = new ProfileModel();
     }
 
     // GET /apply?id=x
@@ -35,25 +35,22 @@ class ApplicationController extends AbstractController
         $flash = $_SESSION['flash'] ?? null;
         unset($_SESSION['flash']);
 
-        $idUser         = $_SESSION['user']['id'];
+        $idUser = $_SESSION['user']['id'];
         $alreadyApplied = $this->applicationModel->hasAlreadyApplied($idUser, $id);
-        $application    = $alreadyApplied ? $this->applicationModel->findApplication($idUser, $id) : null;
-        $profile        = $this->profileModel->findById($idUser);
+        $application = $alreadyApplied ? $this->applicationModel->findApplication($idUser, $id) : null;
+        $profile = $this->profileModel->findById($idUser);
 
-        $storageBase  = __DIR__ . '/../../';
+        $publicBase = __DIR__ . '/../../public/';
         $resumeExists = $application && $application['resume']
-            && file_exists($storageBase . $application['resume']);
-        $letterExists = $application && $application['motivationLetter']
-            && file_exists($storageBase . $application['motivationLetter']);
+            && file_exists($publicBase . $application['resume']);
 
         $this->render('pages/apply.html.twig', [
-            'offer'          => $offer,
-            'flash'          => $flash,
+            'offer' => $offer,
+            'flash' => $flash,
             'alreadyApplied' => $alreadyApplied,
-            'application'    => $application,
-            'profile'        => $profile,
-            'resumeExists'   => $resumeExists,
-            'letterExists'   => $letterExists,
+            'application' => $application,
+            'profile' => $profile,
+            'resumeExists' => $resumeExists,
         ]);
     }
 
@@ -71,39 +68,32 @@ class ApplicationController extends AbstractController
         $idUser = $_SESSION['user']['id'];
 
         if ($this->applicationModel->hasAlreadyApplied($idUser, $id)) {
-            $_SESSION['flash'] = ['type' => 'error', 'message' => 'You have already applied for this offer.'];
+            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Vous avez déjà postulé à cette offre.'];
             $this->redirect('/apply/' . $id);
         }
 
-        $uploadDir = __DIR__ . '/../../storage/applications/';
+        $uploadDir = __DIR__ . '/../../public/uploads/applications/';
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0755, true);
         }
 
         $cvPath = $this->uploadFile($_FILES['cv'], $uploadDir);
         if (!$cvPath) {
-            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Invalid CV or too large (5MB max, PDF only).'];
+            $_SESSION['flash'] = ['type' => 'error', 'message' => 'CV invalide ou trop volumineux (PDF, 5 Mo max).'];
             $this->redirect('/apply/' . $id);
         }
 
-        $letterPath = null;
-        if (!empty($_FILES['letter']['name'])) {
-            $letterPath = $this->uploadFile($_FILES['letter'], $uploadDir);
-            if (!$letterPath) {
-                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Invalid cover letter or too large (5MB max, PDF only).'];
-                $this->redirect('/apply/' . $id);
-            }
-        }
+        $letter = trim($_POST['letter'] ?? '');
 
         $this->applicationModel->createApplication([
-            'idUser'           => $idUser,
-            'idOffer'          => $id,
-            'resume'           => $cvPath,
-            'motivationLetter' => $letterPath,
-            'applicationDate'  => date('Y-m-d'),
+            'idUser' => $idUser,
+            'idOffer' => $id,
+            'resume' => $cvPath,
+            'motivationLetter' => $letter !== '' ? $letter : null,
+            'applicationDate' => date('Y-m-d'),
         ]);
 
-        $_SESSION['flash'] = ['type' => 'success', 'message' => 'Your application has been sent successfully!'];
+        $_SESSION['flash'] = ['type' => 'success', 'message' => 'Votre candidature a été envoyée avec succès !'];
         $this->redirect('/apply/' . $id);
     }
 
@@ -116,53 +106,50 @@ class ApplicationController extends AbstractController
 
         header('Content-Type: application/json');
 
-        $idUser      = $_SESSION['user']['id'];
-        $field       = $_POST['_field'] ?? '';
-        $storageBase = __DIR__ . '/../../';
+        $idUser = $_SESSION['user']['id'];
+        $field = $_POST['_field'] ?? '';
 
-        // Suppression de la lettre de motivation
-        if ($field === 'delete_letter') {
+        // mise à jour de la lettre de motivation (texte)
+        if ($field === 'letter') {
+            $text = trim($_POST['letter_text'] ?? '');
+            $this->applicationModel->updateApplication($idUser, $id, 'motivationLetter', $text !== '' ? $text : null);
+            echo json_encode(['success' => true, 'newValue' => $text]);
+            return;
+        }
+
+        // remplacement du CV (fichier PDF)
+        if ($field === 'cv') {
+            if (empty($_FILES['cv']['name'])) {
+                echo json_encode(['success' => false, 'message' => 'Aucun fichier reçu.']);
+                return;
+            }
+
+            $uploadDir = __DIR__ . '/../../public/uploads/applications/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            // sauvegarde du nouveau fichier en premier
+            $path = $this->uploadFile($_FILES['cv'], $uploadDir);
+            if (!$path) {
+                echo json_encode(['success' => false, 'message' => 'Fichier invalide (PDF, 5 Mo max).']);
+                return;
+            }
+
+            // suppression de l'ancien fichier seulement après succès
             $app = $this->applicationModel->findApplication($idUser, $id);
-            if ($app && $app['motivationLetter']) {
-                $full = $storageBase . $app['motivationLetter'];
+            $old = $app['resume'] ?? null;
+            if ($old) {
+                $full = __DIR__ . '/../../public/' . $old;
                 if (file_exists($full)) unlink($full);
             }
-            $this->applicationModel->updateApplication($idUser, $id, 'motivationLetter', null);
-            echo json_encode(['success' => true]);
+
+            $this->applicationModel->updateApplication($idUser, $id, 'resume', $path);
+            echo json_encode(['success' => true, 'newValue' => basename($path)]);
             return;
         }
 
-        $allowed = ['cv', 'letter'];
-        if (!in_array($field, $allowed)) {
-            echo json_encode(['success' => false, 'message' => 'Champ invalide.']);
-            return;
-        }
-
-        if (empty($_FILES[$field]['name'])) {
-            echo json_encode(['success' => false, 'message' => 'Aucun fichier reçu.']);
-            return;
-        }
-
-        $uploadDir = $storageBase . 'storage/applications/';
-        $column    = $field === 'cv' ? 'resume' : 'motivationLetter';
-
-        // Sauvegarde du nouveau fichier en premier
-        $path = $this->uploadFile($_FILES[$field], $uploadDir);
-        if (!$path) {
-            echo json_encode(['success' => false, 'message' => 'Fichier invalide (PDF, 5 Mo max).']);
-            return;
-        }
-
-        // Suppression de l'ancien fichier seulement après succès
-        $app = $this->applicationModel->findApplication($idUser, $id);
-        $old = $app[$column] ?? null;
-        if ($old) {
-            $full = $storageBase . $old;
-            if (file_exists($full)) unlink($full);
-        }
-
-        $this->applicationModel->updateApplication($idUser, $id, $column, $path);
-        echo json_encode(['success' => true, 'newValue' => basename($path)]);
+        echo json_encode(['success' => false, 'message' => 'Champ invalide.']);
     }
 
     private function uploadFile(array $file, string $dir): ?string
@@ -175,13 +162,13 @@ class ApplicationController extends AbstractController
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         if ($ext !== 'pdf') return null;
 
-        // Vérification du MIME type réel (pas seulement l'extension)
+        // vérification du MIME type réel (pas seulement l'extension)
         $mime = mime_content_type($file['tmp_name']);
         if ($mime !== 'application/pdf') return null;
 
         $filename = uniqid('doc_', true) . '.pdf';
         if (!move_uploaded_file($file['tmp_name'], $dir . $filename)) return null;
 
-        return 'storage/applications/' . $filename;
+        return 'uploads/applications/' . $filename;
     }
 }

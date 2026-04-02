@@ -27,7 +27,7 @@ class WishlistController extends AbstractController
 
         $this->validateCsrfToken();
 
-        $idUser   = $_SESSION['user']['id'];
+        $idUser = $_SESSION['user']['id'];
         $redirect = trim($_POST['redirect'] ?? '');
         $this->wishlistModel->add($idUser, $idOffer);
 
@@ -45,7 +45,7 @@ class WishlistController extends AbstractController
 
         $this->validateCsrfToken();
 
-        $idUser   = $_SESSION['user']['id'];
+        $idUser = $_SESSION['user']['id'];
         $redirect = trim($_POST['redirect'] ?? '');
         $this->wishlistModel->remove($idUser, $idOffer);
 
