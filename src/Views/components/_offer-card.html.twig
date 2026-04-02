@@ -10,7 +10,7 @@
     {% if app_user is defined and app_user is not null and app_user.role == 'Etudiant' %}
       <form method="post"
             action="{{ isInWishlist ? '/wishlist/remove' : '/wishlist/add' }}?id={{ offer.idOffer }}"
-            style="margin-left:auto;flex-shrink:0">
+            style="margin-left: auto; flex-shrink: 0">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <input type="hidden" name="redirect" value="{{ current_url }}">
         <button type="submit"

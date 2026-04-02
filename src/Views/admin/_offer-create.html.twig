@@ -34,6 +34,17 @@
         <input class="form-input" type="date" id="oc-start" name="startDate" required>
       </div>
 
+      <div class="form-field">
+        <label class="form-label" for="oc-remuneration">Rémunération (€/mois)</label>
+        <input class="form-input" type="number" id="oc-remuneration" name="remuneration" min="0" step="0.01" placeholder="Ex : 580">
+      </div>
+
+      <div class="form-field field-full">
+        <label class="form-label" for="oc-skills">Compétences</label>
+        <input class="form-input" type="text" id="oc-skills" name="skills" placeholder="Ex : PHP, JavaScript, MySQL">
+        <span class="field-hint">Séparez chaque compétence par une virgule.</span>
+      </div>
+
       <div class="form-field field-full">
         <label class="form-label" for="oc-desc">Description <span class="required">*</span></label>
         <textarea class="form-textarea" id="oc-desc" name="description" placeholder="Contexte, équipe, objectifs..." required></textarea>

@@ -44,8 +44,8 @@ class UserModel extends AbstractModel
                 CONCAT(pp.firstName, ' ', pp.surname) AS pilotName
             FROM User_ u
             JOIN Role r ON u.idRole = r.idRole
-            LEFT JOIN Profile p  ON u.idUser    = p.idUser
-            LEFT JOIN User_ pilot ON u.idPilot   = pilot.idUser
+            LEFT JOIN Profile p ON u.idUser = p.idUser
+            LEFT JOIN User_ pilot ON u.idPilot = pilot.idUser
             LEFT JOIN Profile pp  ON pilot.idUser = pp.idUser
             WHERE r.role = :role
             ORDER BY p.surname ASC, p.firstName ASC
@@ -63,10 +63,11 @@ class UserModel extends AbstractModel
             JOIN Role r ON u.idRole = r.idRole
             LEFT JOIN Profile p ON u.idUser = p.idUser
             WHERE r.role = :role
-              AND (p.firstName LIKE :q OR p.surname LIKE :q OR u.email LIKE :q)
+              AND (p.firstName LIKE :q1 OR p.surname LIKE :q2 OR u.email LIKE :q3)
             ORDER BY p.surname ASC, p.firstName ASC
         ");
-        $stmt->execute(['role' => $role, 'q' => '%' . $q . '%']);
+        $like = '%' . $q . '%';
+        $stmt->execute(['role' => $role, 'q1' => $like, 'q2' => $like, 'q3' => $like]);
         return $stmt->fetchAll();
     }
 

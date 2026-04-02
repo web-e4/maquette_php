@@ -11,7 +11,7 @@
 
     <main>
 
-        <!-- HEADER OFFRE -->
+        <!-- header offre -->
         <header class="job-header">
             <div class="container job-header-inner">
 
@@ -29,7 +29,7 @@
                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <input type="hidden" name="redirect" value="{{ current_url }}">
                     <button class="btn {{ inWishlist ? 'btn-solid' : 'btn-ghost' }}" type="submit">
-                      <img src="{{ static_url }}/assets/icons/heart.svg" alt="" style="width:16px;height:16px;filter:{{ inWishlist ? 'brightness(0) invert(1)' : 'invert(33%) sepia(60%) saturate(500%) hue-rotate(175deg) brightness(85%)' }};margin-right:6px">
+                      <img src="{{ static_url }}/assets/icons/heart.svg" alt="" style="width: 16px; height: 16px; filter: {{ inWishlist ? 'brightness(0) invert(1)' : 'invert(33%) sepia(60%) saturate(500%) hue-rotate(175deg) brightness(85%)' }}; margin-right: 6px">
                       {{ inWishlist ? 'Dans ma wish-list' : 'Wish-list' }}
                     </button>
                   </form>
@@ -41,7 +41,7 @@
         <div class="container">
             <div class="job-grid">
 
-                <!-- CONTENU -->
+                <!-- contenu -->
                 <div class="job-content">
 
                     <section>
@@ -58,9 +58,22 @@
                         </ul>
                     </section>
 
+                    {% if offer.skills %}
+                    <section>
+                        <h2>Compétences attendues</h2>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px">
+                            {% for skill in offer.skills|split(',') %}
+                                <span style="background: var(--color-bg-alt, #f4f4f8); border: 1px solid var(--color-border); border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: 500">
+                                    {{ skill|trim }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </section>
+                    {% endif %}
+
                 </div>
 
-                <!-- SIDEBAR -->
+                <!-- sidebar -->
                 <aside>
                     <div class="sidebar-card">
 
@@ -88,6 +101,16 @@
                             </span>
                         </div>
 
+                        {% if offer.remuneration %}
+                        <div class="info-item">
+                            <img src="{{ static_url }}/assets/icons/database.svg" alt="">
+                            <span>
+                                <strong>Rémunération :</strong>
+                                {{ offer.remuneration }} €/mois
+                            </span>
+                        </div>
+                        {% endif %}
+
                         <div class="info-item">
                             <img src="{{ static_url }}/assets/icons/pencil.svg" alt="">
                             <span>
@@ -112,8 +135,8 @@
                             Postuler maintenant
                           </a>
                         {% else %}
-                          <button class="btn btn-solid w-full" disabled style="opacity:0.5;cursor:not-allowed">
-                            <img src="{{ static_url }}/assets/icons/lock.svg" alt="" style="width:15px;height:15px;filter:brightness(0) invert(1);margin-right:6px">
+                          <button class="btn btn-solid w-full" disabled style="opacity: 0.5; cursor: not-allowed">
+                            <img src="{{ static_url }}/assets/icons/lock.svg" alt="" style="width: 15px; height: 15px; filter: brightness(0) invert(1); margin-right: 6px">
                             Postuler maintenant
                           </button>
                         {% endif %}

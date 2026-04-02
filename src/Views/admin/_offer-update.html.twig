@@ -21,11 +21,20 @@
         <input class="form-input" type="date" id="oe-startDate" name="startDate" value="{{ offer.startDate }}" required>
       </div>
       <div class="form-field">
+        <label class="form-label" for="oe-remuneration">Rémunération (€/mois)</label>
+        <input class="form-input" type="number" id="oe-remuneration" name="remuneration" value="{{ offer.remuneration ?? '' }}" min="0" step="0.01">
+      </div>
+      <div class="form-field">
         <label class="form-label" for="oe-status">État</label>
         <select class="form-input" id="oe-status" name="statusOffer">
           <option value="1" {{ offer.statusOffer == 1 ? 'selected' : '' }}>Activé</option>
           <option value="0" {{ offer.statusOffer == 0 ? 'selected' : '' }}>Désactivé</option>
         </select>
+      </div>
+      <div class="form-field field-full">
+        <label class="form-label" for="oe-skills">Compétences</label>
+        <input class="form-input" type="text" id="oe-skills" name="skills" value="{{ offer.skills ?? '' }}" placeholder="Ex : PHP, JavaScript, MySQL">
+        <span class="field-hint">Séparez chaque compétence par une virgule.</span>
       </div>
       <div class="form-field field-full">
         <label class="form-label" for="oe-description">Description <span class="required">*</span></label>

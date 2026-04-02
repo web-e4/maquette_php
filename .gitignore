@@ -3,4 +3,3 @@ vendor/
 .env
 storage/twig-cache/
 storage/applications/
-.Identifier

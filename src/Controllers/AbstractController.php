@@ -22,7 +22,7 @@ abstract class AbstractController
         $data['app_user']    = $_SESSION['user'] ?? null;
         // + mets en surbrillance le lien URL utilisé pour le confort utilisateur (ex: si on est sur /admin, le lien "Admin" dans le menu sera surligné)
         $data['current_url'] = $_SERVER['REQUEST_URI'] ?? '/';
-        $data['csrf_token']  = $this->getCsrfToken();
+        $data['csrf_token'] = $this->getCsrfToken();
         echo $this->twig->render($template, $data);
     }
 

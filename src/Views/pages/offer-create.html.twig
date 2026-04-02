@@ -35,15 +35,9 @@
         <label class="form-label" for="title">
           Intitulé de l'offre <span class="required">*</span>
         </label>
-        <input
-          class="form-input"
-          type="text"
-          id="title"
-          name="title"
+        <input class="form-input" type="text" id="title" name="title"
           value="{{ formData.title|default('') }}"
-          placeholder="Ex : Stage Développeur Web"
-          required
-        >
+          placeholder="Ex : Stage Développeur Web" required>
       </div>
 
       <!-- Localisation -->
@@ -51,31 +45,19 @@
         <label class="form-label" for="location">
           Localisation <span class="required">*</span>
         </label>
-        <input
-          class="form-input"
-          type="text"
-          id="location"
-          name="location"
+        <input class="form-input" type="text" id="location" name="location"
           value="{{ formData.location|default('') }}"
-          placeholder="Ex : Rouen (76)"
-          required
-        >
+          placeholder="Ex : Rouen (76)" required>
       </div>
 
       <!-- Durée -->
       <div class="form-field">
         <label class="form-label" for="duration">
-          Durée <span class="required">*</span>
+          Durée (semaines) <span class="required">*</span>
         </label>
-        <input
-          class="form-input"
-          type="text"
-          id="duration"
-          name="duration"
+        <input class="form-input" type="number" id="duration" name="duration"
           value="{{ formData.duration|default('') }}"
-          placeholder="Ex : 6 mois"
-          required
-        >
+          min="1" placeholder="Ex : 12" required>
       </div>
 
       <!-- Date de début -->
@@ -83,43 +65,18 @@
         <label class="form-label" for="startDate">
           Date de début <span class="required">*</span>
         </label>
-        <input
-          class="form-input"
-          type="date"
-          id="startDate"
-          name="startDate"
-          value="{{ formData.startDate|default('') }}"
-          required
-        >
+        <input class="form-input" type="date" id="startDate" name="startDate"
+          value="{{ formData.startDate|default('') }}" required>
       </div>
 
-      <!-- Description -->
-      <div class="form-field field-full">
-        <label class="form-label" for="description">
-          Description du poste <span class="required">*</span>
+      <!-- Rémunération -->
+      <div class="form-field">
+        <label class="form-label" for="remuneration">
+          Rémunération (€/mois)
         </label>
-        <textarea
-          class="form-textarea"
-          id="description"
-          name="description"
-          placeholder="Décrivez le contexte, l'équipe, les objectifs du stage..."
-          required
-        >{{ formData.description|default('') }}</textarea>
-      </div>
-
-      <!-- Missions -->
-      <div class="form-field field-full">
-        <label class="form-label" for="missions">
-          Missions confiées <span class="required">*</span>
-        </label>
-        <textarea
-          class="form-textarea"
-          id="missions"
-          name="missions"
-          placeholder="Ex : Développer des fonctionnalités, Corriger les bugs, Rédiger la documentation"
-          required
-        >{{ formData.missions|default('') }}</textarea>
-        <span class="field-hint">Séparez chaque mission par une virgule.</span>
+        <input class="form-input" type="number" id="remuneration" name="remuneration"
+          value="{{ formData.remuneration|default('') }}"
+          min="0" step="0.01" placeholder="Ex : 580">
       </div>
 
       <!-- Entreprise -->
@@ -136,6 +93,38 @@
             </option>
           {% endfor %}
         </select>
+      </div>
+
+      <!-- Compétences -->
+      <div class="form-field field-full">
+        <label class="form-label" for="skills">
+          Compétences
+        </label>
+        <input class="form-input" type="text" id="skills" name="skills"
+          value="{{ formData.skills|default('') }}"
+          placeholder="Ex : PHP, JavaScript, MySQL">
+        <span class="field-hint">Séparez chaque compétence par une virgule.</span>
+      </div>
+
+      <!-- Description -->
+      <div class="form-field field-full">
+        <label class="form-label" for="description">
+          Description du poste <span class="required">*</span>
+        </label>
+        <textarea class="form-textarea" id="description" name="description"
+          placeholder="Décrivez le contexte, l'équipe, les objectifs du stage..."
+          required>{{ formData.description|default('') }}</textarea>
+      </div>
+
+      <!-- Missions -->
+      <div class="form-field field-full">
+        <label class="form-label" for="missions">
+          Missions confiées <span class="required">*</span>
+        </label>
+        <textarea class="form-textarea" id="missions" name="missions"
+          placeholder="Ex : Développer des fonctionnalités, Corriger les bugs, Rédiger la documentation"
+          required>{{ formData.missions|default('') }}</textarea>
+        <span class="field-hint">Séparez chaque mission par une virgule.</span>
       </div>
 
       <input type="hidden" name="redirectTo" value="{{ redirectTo|default('/offers') }}">

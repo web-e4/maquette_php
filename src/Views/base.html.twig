@@ -8,6 +8,7 @@
   <meta name="description" content="{% block meta_description %}GigaStage — Trouvez votre stage idéal parmi des centaines d'offres en France. Plateforme de mise en relation entre étudiants et entreprises.{% endblock %}">
   <meta name="keywords" content="{% block meta_keywords %}stage, offre de stage, alternance, étudiant, entreprise, recrutement, GigaStage{% endblock %}">
   <meta name="robots" content="index, follow">
+  <meta name="csrf_token" content="{{ csrf_token }}">
   <link rel="stylesheet" href="{{ static_url }}/assets/css/base.css">
   <link rel="stylesheet" href="{{ static_url }}/assets/css/layout.css">
   <link rel="stylesheet" href="{{ static_url }}/assets/css/components.css">
@@ -16,7 +17,7 @@
 
 <body>
 
-  <!-- ========== HEADER ========== -->
+  <!-- header -->
   <header class="site-header">
     <div class="container header-inner">
 
@@ -48,7 +49,7 @@
 
       <div class="header-auth">
         {% if app_user is not null %}
-          <a href="/profile" title="{{ app_user.email }}" style="text-decoration:none">
+          <a href="/profile" title="{{ app_user.email }}" style="text-decoration: none">
             {% include "components/_avatar.html.twig" with { firstName: app_user.firstName, surname: app_user.surname, size: 'sm' } %}
           </a>
         {% else %}
@@ -64,10 +65,10 @@
     </div>
   </header>
 
-  <!-- ========== CONTENU ========== -->
+  <!-- contenu -->
   {% block content %}{% endblock %}
 
-  <!-- ========== FOOTER ========== -->
+  <!-- footer -->
   <footer class="site-footer">
     <div class="container footer-inner">
       <a href="/contact">Contact</a>

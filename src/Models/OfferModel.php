@@ -48,13 +48,13 @@ class OfferModel extends AbstractModel
         return $result ?: null;
     }
 
-    // Récupère les offres paginées avec recherche par titre et ville
-    public function findPaginated(int $page, int $perPage, string $q = '', string $city = ''): array
+    // Récupère les offres paginées avec recherche par titre, ville et compétence
+    public function findPaginated(int $page, int $perPage, string $q = '', string $city = '', string $skill = ''): array
     {
-        $pdo    = $this->getConnection();
+        $pdo = $this->getConnection();
         $offset = ($page - 1) * $perPage;
 
-        $where  = 'WHERE statusOffer = 1';
+        $where = 'WHERE statusOffer = 1';
         $params = [];
 
         if ($q !== '') {
@@ -67,15 +67,20 @@ class OfferModel extends AbstractModel
             $params['city'] = '%' . $city . '%';
         }
 
+        if ($skill !== '') {
+            $where .= ' AND skills LIKE :skill';
+            $params['skill'] = '%' . $skill . '%';
+        }
+
         $stmtCount = $pdo->prepare("SELECT COUNT(*) FROM Offer $where");
         $stmtCount->execute($params);
         $total = (int) $stmtCount->fetchColumn();
 
-        $params['limit']  = $perPage;
+        $params['limit'] = $perPage;
         $params['offset'] = $offset;
 
         $stmt = $pdo->prepare("
-            SELECT idOffer, title, location, durationInWeeks
+            SELECT idOffer, title, location, durationInWeeks, skills, remuneration
             FROM Offer
             $where
             ORDER BY idOffer DESC
@@ -114,13 +119,15 @@ class OfferModel extends AbstractModel
     public function createOffer(array $data): void
     {
         $stmt = $this->getConnection()->prepare("
-            INSERT INTO Offer (title, description, missions, location, durationInWeeks, startDate, statusOffer, idCompany, createdAt)
-            VALUES (:title, :description, :missions, :location, :durationInWeeks, :startDate, 1, :idCompany, CURRENT_DATE)
+            INSERT INTO Offer (title, description, missions, skills, remuneration, location, durationInWeeks, startDate, statusOffer, idCompany, createdAt)
+            VALUES (:title, :description, :missions, :skills, :remuneration, :location, :durationInWeeks, :startDate, 1, :idCompany, CURRENT_DATE)
         ");
         $stmt->execute([
             'title'           => $data['title'],
             'description'     => $data['description'],
             'missions'        => $data['missions'],
+            'skills'          => $data['skills'] ?: null,
+            'remuneration'    => $data['remuneration'] !== '' ? (float) $data['remuneration'] : null,
             'location'        => $data['location'],
             'durationInWeeks' => $data['durationInWeeks'],
             'startDate'       => $data['startDate'],
@@ -136,6 +143,8 @@ class OfferModel extends AbstractModel
             SET title = :title,
                 description = :description,
                 missions = :missions,
+                skills = :skills,
+                remuneration = :remuneration,
                 location = :location,
                 durationInWeeks = :durationInWeeks,
                 startDate = :startDate,
@@ -146,6 +155,8 @@ class OfferModel extends AbstractModel
             'title'           => $data['title'],
             'description'     => $data['description'],
             'missions'        => $data['missions'],
+            'skills'          => $data['skills'] ?: null,
+            'remuneration'    => isset($data['remuneration']) && $data['remuneration'] !== '' ? (float) $data['remuneration'] : null,
             'location'        => $data['location'],
             'durationInWeeks' => $data['durationInWeeks'],
             'startDate'       => $data['startDate'],
@@ -168,6 +179,7 @@ class OfferModel extends AbstractModel
     {
         $stmt = $this->getConnection()->prepare("
             SELECT o.idOffer, o.title, o.location, o.durationInWeeks, o.startDate, o.statusOffer,
+                   o.skills, o.remuneration,
                    c.name AS companyName, c.idCompany
             FROM Offer o
             JOIN Company c ON o.idCompany = c.idCompany
@@ -189,5 +201,62 @@ class OfferModel extends AbstractModel
         $stmt = $this->getConnection()->prepare("SELECT COUNT(*) FROM $table");
         $stmt->execute();
         return (int) $stmt->fetchColumn();
+    }
+
+    // SFx11 - Statistiques des offres
+
+    // Répartition des offres par durée (en semaines)
+    public function statsByDuration(): array
+    {
+        $stmt = $this->getConnection()->prepare("
+            SELECT durationInWeeks, COUNT(*) AS total
+            FROM Offer
+            WHERE statusOffer = 1
+            GROUP BY durationInWeeks
+            ORDER BY durationInWeeks ASC
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    // Top offres les plus ajoutées en wish-list
+    public function topWishlisted(int $limit = 5): array
+    {
+        $stmt = $this->getConnection()->prepare("
+            SELECT o.idOffer, o.title, c.name AS companyName, COUNT(w.idUser) AS wishlistCount
+            FROM Offer o
+            JOIN Company c ON o.idCompany = c.idCompany
+            LEFT JOIN Wishlist w ON o.idOffer = w.idOffer
+            WHERE o.statusOffer = 1
+            GROUP BY o.idOffer, o.title, c.name
+            ORDER BY wishlistCount DESC
+            LIMIT :limit
+        ");
+        $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    // Nombre total d'offres actives
+    public function countActive(): int
+    {
+        $stmt = $this->getConnection()->prepare("
+            SELECT COUNT(*) FROM Offer WHERE statusOffer = 1
+        ");
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    }
+
+    // Nombre moyen de candidatures par offre
+    public function avgApplicationsPerOffer(): float
+    {
+        $stmt = $this->getConnection()->prepare("
+            SELECT AVG(cnt) FROM (
+                SELECT COUNT(*) AS cnt FROM Application GROUP BY idOffer
+            ) AS sub
+        ");
+        $stmt->execute();
+        $result = $stmt->fetchColumn();
+        return $result !== false ? round((float) $result, 1) : 0.0;
     }
 }

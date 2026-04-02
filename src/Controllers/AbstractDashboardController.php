@@ -20,9 +20,9 @@ abstract class AbstractDashboardController extends AbstractController
     public function __construct($twig)
     {
         parent::__construct($twig);
-        $this->userModel        = new UserModel();
-        $this->companyModel     = new CompanyModel();
-        $this->offerModel       = new OfferModel();
+        $this->userModel = new UserModel();
+        $this->companyModel = new CompanyModel();
+        $this->offerModel = new OfferModel();
         $this->applicationModel = new ApplicationModel();
     }
 
@@ -47,26 +47,52 @@ abstract class AbstractDashboardController extends AbstractController
         $this->requirePermission($this->getDashboardPermission());
 
         $userRole = $this->getUserRole();
-        $idUser   = $_SESSION['user']['id'];
+        $idUser = $_SESSION['user']['id'];
 
-        // Données communes
+        // recherche dans les onglets
+        $qStudent = trim($_GET['qStudent'] ?? '');
+        $qPilot   = trim($_GET['qPilot'] ?? '');
+
+        // données communes
         $companies = $this->companyModel->findAllForAdmin();
         // chargement des données depuis la BDD, equivalent à faire des requetes SQL pour récupérer les entreprises, offres, étudiants, etc
         $companies = $this->companyModel->findAll();
         $offers    = $this->offerModel->findAll();
-        $students  = $this->userModel->findByRoleWithPilot(Role::STUDENT);
 
-        // Pilotes : uniquement si le dashboard Admin l'active (surcharge)
-        $pilots = $this->loadPilots()
-            ? $this->userModel->findByRole(Role::PILOT)
-            : [];
+        // Pour un pilote : seulement ses propres étudiants ; pour un admin : tous les étudiants
+        if ($userRole === Role::ADMIN) {
+            $students = $qStudent !== ''
+                ? $this->userModel->search(Role::STUDENT, $qStudent)
+                : $this->userModel->findByRoleWithPilot(Role::STUDENT);
+        } else {
+            $allStudents = $this->userModel->findStudentsByPilot($idUser);
+            if ($qStudent !== '') {
+                $qLower = mb_strtolower($qStudent);
+                $students = array_filter($allStudents, function ($s) use ($qLower) {
+                    return str_contains(mb_strtolower($s['firstName'] ?? ''), $qLower)
+                        || str_contains(mb_strtolower($s['surname'] ?? ''), $qLower)
+                        || str_contains(mb_strtolower($s['email'] ?? ''), $qLower);
+                });
+                $students = array_values($students);
+            } else {
+                $students = $allStudents;
+            }
+        }
 
-        // Candidatures : toutes pour Admin, groupe pour Pilote
+        // pilotes : uniquement si le dashboard Admin l'active
+        $pilots = [];
+        if ($this->loadPilots()) {
+            $pilots = $qPilot !== ''
+                ? $this->userModel->search(Role::PILOT, $qPilot)
+                : $this->userModel->findByRole(Role::PILOT);
+        }
+
+        // candidatures : toutes pour Admin, groupe pour Pilote
         $applications = ($userRole === Role::ADMIN)
             ? $this->applicationModel->findAllWithDetails() // admin voit tout
             : $this->applicationModel->findByPilot($idUser); // pilote voit que les candidatures de son groupe
 
-        // Onglet actif
+        // onglet actif
         $activeTab = $_GET['tab'] ?? 'companies';
 
         // Recupere le get via l'url si l'user veut modifier une données de la bdd
@@ -78,19 +104,19 @@ abstract class AbstractDashboardController extends AbstractController
             // en fonction du type de donnée a modifier, on recupere les données correspondantes dans la bdd pour les afficher dans le formulaire de modification (ex: si on veut modifier une entreprise, on recupere les données de cette entreprise pour les afficher dans le formulaire)
             switch ($editType) {
                 case 'company':
-                    $editData  = $this->companyModel->findById($editId);
+                    $editData = $this->companyModel->findById($editId);
                     $activeTab = 'companies';
                     break;
                 case 'offer':
-                    $editData  = $this->offerModel->findByIdAdmin($editId);
+                    $editData = $this->offerModel->findByIdAdmin($editId);
                     $activeTab = 'offers';
                     break;
                 case 'student':
-                    $editData  = $this->userModel->findById($editId);
+                    $editData = $this->userModel->findById($editId);
                     $activeTab = 'students';
                     break;//break pour éviter d'executer le code des autres cases
                 case 'pilot':
-                    $editData  = $this->userModel->findById($editId);
+                    $editData = $this->userModel->findById($editId);
                     $activeTab = 'pilots';
                     break;
             }
@@ -112,6 +138,8 @@ abstract class AbstractDashboardController extends AbstractController
             'flash'         => $flash,
             'pageTitle'     => $this->getPageTitle(),
             'dashboardBase' => $this->getDashboardBase(),
+            'qStudent'      => $qStudent,
+            'qPilot'        => $qPilot,
         ]);
     }
 }

@@ -16,9 +16,9 @@ class AuthController extends AbstractController
     public function __construct($twig, ?ProfileModel $profileModel = null, ?ApplicationModel $applicationModel = null, ?WishlistModel $wishlistModel = null)
     {
         parent::__construct($twig);
-        $this->profileModel     = $profileModel     ?? new ProfileModel();
+        $this->profileModel = $profileModel ?? new ProfileModel();
         $this->applicationModel = $applicationModel ?? new ApplicationModel();
-        $this->wishlistModel    = $wishlistModel    ?? new WishlistModel();
+        $this->wishlistModel = $wishlistModel ?? new WishlistModel();
     }
 
     // GET /login
@@ -62,11 +62,11 @@ class AuthController extends AbstractController
         }
         // stocke les infos de l'utilisateur dans la session pour les utiliser dans toute l'application (ex: afficher son nom dans le header, vérifier ses permissions, etc)
         $_SESSION['user'] = [
-            'id'        => $user['idUser'],
-            'email'     => $user['email'],
-            'role'      => $user['role'],
+            'id' => $user['idUser'],
+            'email' => $user['email'],
+            'role' => $user['role'],
             'firstName' => $user['firstName'] ?? '',
-            'surname'   => $user['surname']   ?? '',
+            'surname' => $user['surname'] ?? '',
         ];
 
         $this->redirect('/profile');
@@ -96,10 +96,10 @@ class AuthController extends AbstractController
 
         $this->validateCsrfToken();
 
-        $email     = trim($_POST['email']     ?? '');
-        $password  = trim($_POST['password']  ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $password = trim($_POST['password'] ?? '');
         $firstName = trim($_POST['firstName'] ?? '');
-        $surname   = trim($_POST['surname']   ?? '');
+        $surname = trim($_POST['surname'] ?? '');
 
         if (empty($email) || empty($password) || empty($firstName) || empty($surname)) {
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Please fill in all fields.'];
@@ -114,10 +114,10 @@ class AuthController extends AbstractController
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT); // hash le mot de passe pour le stocker de manière sécurisée dans la base de données
 
         $this->profileModel->createUser([
-            'email'     => $email,
-            'password'  => $hashedPassword,
+            'email' => $email,
+            'password' => $hashedPassword,
             'firstName' => $firstName,
-            'surname'   => $surname,
+            'surname' => $surname,
         ]);
 
         $_SESSION['flash'] = ['type' => 'success', 'message' => 'Account created successfully! You can now log in.'];
@@ -129,32 +129,51 @@ class AuthController extends AbstractController
     {
         $this->requireAuth();// vérifie que l'utilisateur est connecté, sinon redirige vers la page de connexion
 
+<<<<<<< HEAD
         $idUser = $_SESSION['user']['id']; // recupere l'id de l'utilisateur connecté 
         $role   = $_SESSION['user']['role'];
         $user   = $this->profileModel->findById($idUser); // recupere les infos de l'utilisateur
+=======
+        $idUser = $_SESSION['user']['id'];
+        $role = $_SESSION['user']['role'];
+        $user = $this->profileModel->findById($idUser);
+>>>>>>> origin/main
 
         $flash = $_SESSION['flash'] ?? null;
         unset($_SESSION['flash']);
 
         if ($role === \Equipe4\Gigastage\Core\Role::STUDENT) {
+<<<<<<< HEAD
             $applications = $this->applicationModel->findByUser($idUser); // recup candidatures
             $wishlist     = $this->wishlistModel->findByUser($idUser); // recup favoris
 
             $this->render('pages/profile-student.html.twig', [ // affiche page etudiant
                 'student'      => $user,
+=======
+            $applications = $this->applicationModel->findByUser($idUser);
+            $wishlist = $this->wishlistModel->findByUser($idUser);
+
+            $this->render('pages/profile-student.html.twig', [
+                'student' => $user,
+>>>>>>> origin/main
                 'applications' => $applications,
-                'favorites'    => $wishlist,
-                'flash'        => $flash,
+                'favorites' => $wishlist,
+                'flash' => $flash,
             ]);
         } elseif ($role === \Equipe4\Gigastage\Core\Role::PILOT) {
             $this->render('pages/profile-pilot.html.twig', [
+<<<<<<< HEAD
                 'user'  => $user, 
                 'flash' => $flash, 
+=======
+                'user' => $user,
+                'flash' => $flash,
+>>>>>>> origin/main
             ]);
         } else {
-            // Admin (et tout autre rôle non étudiant/pilote)
+            // admin (et tout autre rôle non étudiant/pilote)
             $this->render('pages/profile-admin.html.twig', [
-                'user'  => $user,
+                'user' => $user,
                 'flash' => $flash,
             ]);
         }

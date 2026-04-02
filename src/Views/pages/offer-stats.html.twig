@@ -1,0 +1,164 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Statistiques des offres{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ static_url }}/assets/css/pages.css">
+{% endblock %}
+
+{% block content %}
+
+{% include 'components/_page-header.html.twig' with {
+    pageHeaderTitle:    'Statistiques des offres',
+    pageHeaderSubtitle: 'Indicateurs clés sur les offres de stage'
+} %}
+
+<main class="main">
+  <div class="container">
+
+    <!-- CAROUSEL DE CARTES STATISTIQUES -->
+    <div class="stats-carousel" id="stats-carousel">
+
+      <!-- Carte 1 : Répartition par durée -->
+      <div class="stat-card active" id="stat-0">
+        <div class="stat-card-icon">
+          <img src="{{ static_url }}/assets/icons/clock.svg" alt="">
+        </div>
+        <div class="stat-card-body">
+          <p class="stat-card-label">Répartition par durée</p>
+          {% if statsByDuration is empty %}
+            <p class="stat-card-desc">Aucune donnée disponible.</p>
+          {% else %}
+            <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px">
+              {% for row in statsByDuration %}
+                <div style="display: flex; align-items: center; gap: 10px">
+                  <span style="font-size: 13px; color: var(--color-text-muted); min-width: 80px">{{ row.durationInWeeks }} semaines</span>
+                  <div style="flex: 1; background: var(--color-border); border-radius: 4px; height: 10px; overflow: hidden">
+                    <div style="height: 100%; background: var(--color-primary); border-radius: 4px; width: {{ (row.total / totalActive * 100)|round }}%"></div>
+                  </div>
+                  <span style="font-size: 13px; font-weight: 700; color: var(--color-primary-dark)">{{ row.total }}</span>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Carte 2 : Top wish-list -->
+      <div class="stat-card" id="stat-1">
+        <div class="stat-card-icon">
+          <img src="{{ static_url }}/assets/icons/heart.svg" alt="">
+        </div>
+        <div class="stat-card-body">
+          <p class="stat-card-label">Top offres en wish-list</p>
+          {% if topWishlisted is empty %}
+            <p class="stat-card-desc">Aucune offre en wish-list pour le moment.</p>
+          {% else %}
+            <ol style="margin: 12px 0 0; padding-left: 18px; font-size: 14px; display: flex; flex-direction: column; gap: 6px">
+              {% for item in topWishlisted %}
+                <li>
+                  <a href="/offer/{{ item.idOffer }}" style="color: var(--color-primary-dark); font-weight: 600">{{ item.title }}</a>
+                  <span style="color: var(--color-text-muted)"> — {{ item.companyName }}</span>
+                  <span style="color: var(--color-secondary); font-weight: 700"> ({{ item.wishlistCount }})</span>
+                </li>
+              {% endfor %}
+            </ol>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Carte 3 : Total offres actives -->
+      <div class="stat-card" id="stat-2">
+        <div class="stat-card-icon">
+          <img src="{{ static_url }}/assets/icons/panels-top-left.svg" alt="">
+        </div>
+        <div class="stat-card-body">
+          <p class="stat-card-label">Offres disponibles</p>
+          <p class="stat-card-value">{{ totalActive }}</p>
+          <p class="stat-card-desc">offres de stage actives en base</p>
+        </div>
+      </div>
+
+      <!-- Carte 4 : Moyenne candidatures par offre -->
+      <div class="stat-card" id="stat-3">
+        <div class="stat-card-icon">
+          <img src="{{ static_url }}/assets/icons/send.svg" alt="">
+        </div>
+        <div class="stat-card-body">
+          <p class="stat-card-label">Candidatures par offre</p>
+          <p class="stat-card-value">{{ avgApplications }}</p>
+          <p class="stat-card-desc">candidatures en moyenne par offre</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Contrôles du carousel -->
+    <div class="stats-carousel-controls">
+      <button class="carousel-btn" id="btn-prev" aria-label="Précédent" disabled>‹</button>
+      <div class="carousel-dots" id="carousel-dots">
+        <span class="carousel-dot active" data-index="0"></span>
+        <span class="carousel-dot" data-index="1"></span>
+        <span class="carousel-dot" data-index="2"></span>
+        <span class="carousel-dot" data-index="3"></span>
+      </div>
+      <button class="carousel-btn" id="btn-next" aria-label="Suivant">›</button>
+    </div>
+
+  </div>
+</main>
+
+{% block scripts %}
+<style>
+  .stats-carousel {
+    position: relative;
+    overflow: hidden;
+    min-height: 320px;
+  }
+  .stat-card {
+    display: none;
+    background: var(--color-card, #fff);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 680px;
+    margin: 0 auto;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .stat-card.active { display: block; }
+  .stat-card-icon img { width: 40px; height: 40px; opacity: 0.7; margin-bottom: 16px; }
+  .stat-card-label { font-size: 13px; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 8px }
+  .stat-card-value { font-size: 56px; font-weight: 800; color: var(--color-primary-dark); margin: 0 0 4px; line-height: 1 }
+  .stat-card-desc { font-size: 14px; color: var(--color-text-muted); margin: 0 }
+  .stats-carousel-controls { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 24px }
+  .carousel-btn { background: none; border: 1px solid var(--color-border); border-radius: 8px; width: 40px; height: 40px; font-size: 20px; cursor: pointer; color: var(--color-text-muted); transition: background 0.15s }
+  .carousel-btn:hover:not(:disabled) { background: var(--color-bg-alt, #f4f4f8) }
+  .carousel-btn:disabled { opacity: 0.3; cursor: not-allowed }
+  .carousel-dots { display: flex; gap: 8px }
+  .carousel-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-border); cursor: pointer; transition: background 0.15s }
+  .carousel-dot.active { background: var(--color-primary) }
+</style>
+<script>
+  const cards = document.querySelectorAll('.stat-card');
+  const dots = document.querySelectorAll('.carousel-dot');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+  let current = 0;
+
+  function goTo(index) {
+    cards[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = index;
+    cards[current].classList.add('active');
+    dots[current].classList.add('active');
+    btnPrev.disabled = current === 0;
+    btnNext.disabled = current === cards.length - 1;
+  }
+
+  btnPrev.addEventListener('click', () => { if (current > 0) goTo(current - 1); });
+  btnNext.addEventListener('click', () => { if (current < cards.length - 1) goTo(current + 1); });
+  dots.forEach(dot => dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index))));
+</script>
+{% endblock %}
+
+{% endblock %}

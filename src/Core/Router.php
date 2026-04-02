@@ -25,6 +25,7 @@ class Router
         '/offer/create/submit' => [OfferController::class,       'createSubmit'],
         '/offer/edit'          => [OfferController::class,       'edit'],
         '/offer/delete'        => [OfferController::class,       'delete'],
+        '/offers/stats'        => [OfferController::class,       'stats'],
         '/offer'               => [OfferController::class,       'show'],
         '/apply/submit'        => [ApplicationController::class, 'submit'],
         '/apply/update'        => [ApplicationController::class, 'update'],

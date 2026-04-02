@@ -12,12 +12,16 @@
         pageHeaderSubtitle: pagination.total ~ ' offre' ~ (pagination.total > 1 ? 's' : '') ~ ' trouvée' ~ (pagination.total > 1 ? 's' : '')
     } %}
 
-    <!-- BARRE DE RECHERCHE -->
-    <div class="search-section" style="margin-bottom:40px">
+    <!-- barre de recherche -->
+    <div class="search-section" style="margin-bottom: 40px">
         {% include 'components/_search.html.twig' %}
     </div>
 
-    <!-- LISTE -->
+    <div class="container" style="margin-bottom: 24px; text-align: right">
+        <a class="btn btn-ghost" href="/offers/stats">Voir les statistiques</a>
+    </div>
+
+    <!-- liste -->
     <main class="main">
         <div class="container">
 
@@ -31,7 +35,7 @@
                 {% endfor %}
             </div>
 
-            <!-- PAGINATION -->
+            <!-- pagination -->
             {% if pagination.totalPages > 1 %}
                 <nav class="pagination">
 

@@ -28,10 +28,10 @@ class StudentController extends AbstractController
 
         $this->validateCsrfToken();
 
-        $email     = trim($_POST['email']     ?? '');
-        $password  = trim($_POST['password']  ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $password = trim($_POST['password'] ?? '');
         $firstName = trim($_POST['firstName'] ?? '');
-        $surname   = trim($_POST['surname']   ?? '');
+        $surname = trim($_POST['surname'] ?? '');
 
         if (empty($email) || empty($password) || empty($firstName) || empty($surname)) {
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Tous les champs sont obligatoires.'];
@@ -39,11 +39,11 @@ class StudentController extends AbstractController
         }
 
         $this->userModel->create([
-            'email'     => $email,
-            'password'  => $password,
+            'email' => $email,
+            'password' => $password,
             'firstName' => $firstName,
-            'surname'   => $surname,
-            'role'      => Role::STUDENT,
+            'surname' => $surname,
+            'role' => Role::STUDENT,
         ]);
 
         $_SESSION['flash'] = ['type' => 'success', 'message' => 'Compte étudiant créé avec succès.'];
@@ -61,9 +61,9 @@ class StudentController extends AbstractController
 
         $this->validateCsrfToken();
 
-        $email     = trim($_POST['email']     ?? '');
+        $email = trim($_POST['email'] ?? '');
         $firstName = trim($_POST['firstName'] ?? '');
-        $surname   = trim($_POST['surname']   ?? '');
+        $surname = trim($_POST['surname'] ?? '');
 
         if (empty($email) || empty($firstName) || empty($surname)) {
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Tous les champs sont obligatoires.'];
@@ -73,13 +73,13 @@ class StudentController extends AbstractController
         $statusUser = isset($_POST['statusUser']) ? (int) $_POST['statusUser'] : 1;
 
         $this->userModel->update($id, [
-            'email'      => $email,
-            'firstName'  => $firstName,
-            'surname'    => $surname,
+            'email' => $email,
+            'firstName' => $firstName,
+            'surname' => $surname,
             'statusUser' => $statusUser,
         ]);
 
-        // Assign pilot if the field was submitted
+        // assigne un pilote si le champ a été soumis
         if (array_key_exists('idPilot', $_POST)) {
             $idPilot = $_POST['idPilot'] !== '' ? (int) $_POST['idPilot'] : null;
             $this->userModel->assignPilot($id, $idPilot);

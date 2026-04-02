@@ -14,7 +14,7 @@
     </div>
   {% endif %}
 
-  <!-- HERO -->
+  <!-- hero -->
   <div class="profile-hero">
     <div class="container">
       <div class="profile-hero-inner">
@@ -33,24 +33,24 @@
     </div>
   </div>
 
-  <!-- ONGLETS -->
+  <!-- onglets -->
   <div class="container">
 
     <div class="profile-tabs">
       <button class="profile-tab active" data-tab="favorites">
         Offres favorites
-        <span class="count-badge" style="margin-left:6px">{{ favorites|length }}</span>
+        <span class="count-badge" style="margin-left: 6px">{{ favorites|length }}</span>
       </button>
       <button class="profile-tab" data-tab="applications">
         Mes candidatures
-        <span class="count-badge" style="margin-left:6px">{{ applications|length }}</span>
+        <span class="count-badge" style="margin-left: 6px">{{ applications|length }}</span>
       </button>
       <button class="profile-tab" data-tab="info">
         Mes informations
       </button>
     </div>
 
-    <!-- Onglet Favoris (SFx23) -->
+    <!-- onglet favoris (SFx23) -->
     <div class="tab-panel active" id="tab-favorites">
       {% if favorites is empty %}
         <div class="empty-state">
@@ -84,8 +84,9 @@
               </div>
               <div class="profile-offer-actions">
                 <a class="btn btn-solid" href="/offer/{{ offer.idOffer }}">Voir</a>
-                <!-- SFx25 - Retirer de la wish-list -->
+                <!-- SFx25 - retirer de la wish-list -->
                 <form method="post" action="/wishlist/remove?id={{ offer.idOffer }}">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                   <button class="btn btn-ghost" type="submit">Retirer</button>
                 </form>
               </div>
@@ -95,7 +96,7 @@
       {% endif %}
     </div>
 
-    <!-- Onglet Candidatures (SFx21) -->
+    <!-- onglet candidatures (SFx21) -->
     <div class="tab-panel" id="tab-applications">
       {% if applications is empty %}
         <div class="empty-state">
@@ -136,20 +137,20 @@
       {% endif %}
     </div>
 
-    <!-- Onglet Informations -->
+    <!-- onglet informations -->
     <div class="tab-panel" id="tab-info">
       <div class="profile-info-grid">
         <div>
-          <p style="font-size:12px;color:var(--color-text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Prénom</p>
-          <p style="font-weight:600">{{ student.firstName }}</p>
+          <p style="font-size: 12px; color: var(--color-text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .05em">Prénom</p>
+          <p style="font-weight: 600">{{ student.firstName }}</p>
         </div>
         <div>
-          <p style="font-size:12px;color:var(--color-text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Nom</p>
-          <p style="font-weight:600">{{ student.surname }}</p>
+          <p style="font-size: 12px; color: var(--color-text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .05em">Nom</p>
+          <p style="font-weight: 600">{{ student.surname }}</p>
         </div>
         <div class="field-full">
-          <p style="font-size:12px;color:var(--color-text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Email</p>
-          <p style="font-weight:600">{{ student.email }}</p>
+          <p style="font-size: 12px; color: var(--color-text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .05em">Email</p>
+          <p style="font-weight: 600">{{ student.email }}</p>
         </div>
       </div>
     </div>

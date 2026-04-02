@@ -27,12 +27,12 @@ class PilotController extends AbstractDashboardController
     //on surchage la fonction loadPilots pour retourner false et que les pilotes n'aient pas accès à la gestion des pilotes
     protected function loadPilots(): bool
     {
-        return false; // Le pilote n'a pas accès à la gestion des pilotes
+        return false; // le pilote n'a pas accès à la gestion des pilotes
     }
 
     public function dashboard(): void
     {
-        // Si un Admin accède à /pilot, le rediriger vers /admin
+        // si un Admin accède à /pilot, le rediriger vers /admin
         if ($this->isLoggedIn() && $this->getUserRole() === Role::ADMIN) {
             $this->redirect('/admin');
         }
@@ -63,11 +63,11 @@ class PilotController extends AbstractDashboardController
         }
         // crée un compte piloe dans la bdd role et mdp hashé
         $this->userModel->create([
-            'email'     => $email,
-            'password'  => $password,
+            'email' => $email,
+            'password' => $password,
             'firstName' => $firstName,
-            'surname'   => $surname,
-            'role'      => Role::PILOT,
+            'surname' => $surname,
+            'role' => Role::PILOT,
         ]);
         //message flashsuccès puis redirection vers la liste des pilotes
         $_SESSION['flash'] = ['type' => 'success', 'message' => 'Compte pilote créé avec succès.'];
@@ -99,9 +99,9 @@ class PilotController extends AbstractDashboardController
 
         // update dans la bdd (equivalent a une requete SQL UPDATE) avec les nouvelles données
         $this->userModel->update($id, [
-            'email'      => $email,
-            'firstName'  => $firstName,
-            'surname'    => $surname,
+            'email' => $email,
+            'firstName' => $firstName,
+            'surname' => $surname,
             'statusUser' => $statusUser,
         ]);
         //signale de reussite puis redirection vers la liste des pilotes

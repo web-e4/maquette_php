@@ -9,7 +9,7 @@
 <main class="publish-page">
   <div class="container">
 
-    <!-- EN-TÊTE -->
+    <!-- en-tête -->
     <div class="publish-header">
       <h1>Postuler à l'offre</h1>
       <p>
@@ -17,7 +17,7 @@
       </p>
     </div>
 
-    <!-- MESSAGE FLASH -->
+    <!-- message flash -->
     {% if flash %}
       <div class="flash flash--{{ flash.type }}">
         {{ flash.message }}
@@ -26,7 +26,7 @@
 
     {% if alreadyApplied %}
 
-      <!-- MODE LECTURE : candidature déjà envoyée -->
+      <!-- mode lecture : candidature déjà envoyée -->
       <div class="application-summary">
 
         <div class="form-field">
@@ -54,9 +54,11 @@
           <span class="form-label">CV déposé</span>
           <div class="summary-row">
             {% if resumeExists %}
-              <span class="form-input summary-value">{{ application.resume|split('/')|last }}</span>
+              <a class="form-input summary-value" href="{{ static_url }}/{{ application.resume }}" target="_blank" style="color: var(--color-primary-dark)">
+                {{ application.resume|split('/')|last }}
+              </a>
             {% else %}
-              <span class="form-input summary-value" style="color:var(--color-error,#b91c1c)">Fichier manquant</span>
+              <span class="form-input summary-value" style="color: var(--color-error, #b91c1c)">Fichier manquant</span>
             {% endif %}
             <button class="btn-edit" type="button" data-field="cv" title="Remplacer">
               <img src="{{ static_url }}/assets/icons/pencil.svg" alt="Remplacer">
@@ -68,19 +70,12 @@
           <span class="form-label">Lettre de motivation</span>
           <div class="summary-row" data-section="letter">
             {% if application.motivationLetter %}
-              {% if letterExists %}
-                <span class="form-input summary-value">{{ application.motivationLetter|split('/')|last }}</span>
-              {% else %}
-                <span class="form-input summary-value" style="color:var(--color-error,#b91c1c)">Fichier manquant</span>
-              {% endif %}
-              <button class="btn-edit" type="button" data-field="letter" title="Remplacer">
-                <img src="{{ static_url }}/assets/icons/pencil.svg" alt="Remplacer">
-              </button>
-              <button class="btn-icon btn-icon--danger btn-delete-letter" type="button" title="Supprimer">
-                <img src="{{ static_url }}/assets/icons/trash.svg" alt="Supprimer">
+              <p class="form-input summary-value letter-text" style="white-space: pre-wrap; min-height: 80px">{{ application.motivationLetter }}</p>
+              <button class="btn-edit" type="button" data-field="letter" title="Modifier">
+                <img src="{{ static_url }}/assets/icons/pencil.svg" alt="Modifier">
               </button>
             {% else %}
-              <span class="form-input summary-value" style="color:var(--color-text-muted)">Non fournie</span>
+              <span class="form-input summary-value" style="color: var(--color-text-muted)">Non fournie</span>
               <button class="btn-edit" type="button" data-field="letter" title="Ajouter">
                 <img src="{{ static_url }}/assets/icons/pencil.svg" alt="Ajouter">
               </button>
@@ -96,7 +91,7 @@
 
     {% else %}
 
-      <!-- MODE FORMULAIRE : pas encore postulé -->
+      <!-- mode formulaire : pas encore postulé -->
       <form class="publish-form" action="/apply/submit?id={{ offer.idOffer }}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
@@ -128,14 +123,10 @@
           <span class="field-hint">Fichier PDF uniquement, 5 Mo maximum.</span>
         </div>
 
-        <div class="form-field">
-          <label class="form-label" for="letter">Lettre de motivation (PDF)</label>
-          <label class="file-upload-btn" for="letter">
-            <img src="{{ static_url }}/assets/icons/upload.svg" alt="">
-            <span class="file-upload-label" id="letter-label">Choisir un fichier PDF</span>
-          </label>
-          <input class="file-input-hidden" type="file" id="letter" name="letter" accept=".pdf">
-          <span class="field-hint">Fichier PDF uniquement, 5 Mo maximum.</span>
+        <div class="form-field field-full">
+          <label class="form-label" for="letter">Lettre de motivation</label>
+          <textarea class="form-input" id="letter" name="letter" rows="6" placeholder="Rédigez votre lettre de motivation ici..."></textarea>
+          <span class="field-hint">Facultatif. Expliquez vos motivations en quelques lignes.</span>
         </div>
 
         <div class="publish-actions">
@@ -149,15 +140,13 @@
       </form>
 
       <script>
-        ['cv', 'letter'].forEach(function(id) {
-          var input = document.getElementById(id);
-          if (input) {
-            input.addEventListener('change', function() {
-              var label = document.getElementById(id + '-label');
-              label.textContent = this.files[0] ? this.files[0].name : 'Choisir un fichier PDF';
-            });
-          }
-        });
+        var cvInput = document.getElementById('cv');
+        if (cvInput) {
+          cvInput.addEventListener('change', function() {
+            var label = document.getElementById('cv-label');
+            label.textContent = this.files[0] ? this.files[0].name : 'Choisir un fichier PDF';
+          });
+        }
       </script>
 
     {% endif %}
