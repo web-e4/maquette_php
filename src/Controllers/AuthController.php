@@ -59,7 +59,7 @@ class AuthController extends AbstractController
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Invalid email or password.'];
             $this->redirect('/login');
         }
-
+        // stock les infos
         $_SESSION['user'] = [
             'id' => $user['idUser'],
             'email' => $user['email'],

@@ -79,7 +79,7 @@ class StudentController extends AbstractController
             'statusUser' => $statusUser,
         ]);
 
-        // assigne un pilote si le champ a été soumis
+        // gère l'assignation d'un pilote depuis un formulaire
         if (array_key_exists('idPilot', $_POST)) {
             $idPilot = $_POST['idPilot'] !== '' ? (int) $_POST['idPilot'] : null;
             $this->userModel->assignPilot($id, $idPilot);

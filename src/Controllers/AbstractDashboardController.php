@@ -9,17 +9,14 @@ use Equipe4\Gigastage\Models\CompanyModel;
 use Equipe4\Gigastage\Models\OfferModel;
 use Equipe4\Gigastage\Models\ApplicationModel;
 
-/**
- * Contrôleur abstrait partagé entre AdminController (/admin) et PilotController (/pilot).
- * Chaque sous-classe définit sa route de base, son titre et sa permission d'accès.
- */
+//on instancie des objets pour communiquer avec la BDD et on créé une classe abstraite pour les tableaux de bord Admin et Pilote qui partagent beaucoup de fonctionnalités communes (ex: afficher les entreprises, offres, étudiants, etc) et qui héritent de AbstractController pour bénéficier des fonctions d'affichage, redirection, auth, etc
 abstract class AbstractDashboardController extends AbstractController
 {
     protected UserModel $userModel;
     protected CompanyModel $companyModel;
     protected OfferModel $offerModel;
     protected ApplicationModel $applicationModel;
-
+    //on attribue une valeur a ces objets instanciés plus haut pour eviter la repetition de code 
     public function __construct($twig)
     {
         parent::__construct($twig);
@@ -46,6 +43,7 @@ abstract class AbstractDashboardController extends AbstractController
 
     public function dashboard(): void
     {
+        // verifie les droits
         $this->requirePermission($this->getDashboardPermission());
 
         $userRole = $this->getUserRole();
@@ -57,6 +55,7 @@ abstract class AbstractDashboardController extends AbstractController
 
         // données communes
         $companies = $this->companyModel->findAllForAdmin();
+        // chargement des données depuis la BDD, equivalent à faire des requetes SQL pour récupérer les entreprises, offres, étudiants, etc
         $offers    = $this->offerModel->findAll();
 
         // Pour un pilote : seulement ses propres étudiants ; pour un admin : tous les étudiants
@@ -95,35 +94,36 @@ abstract class AbstractDashboardController extends AbstractController
         // onglet actif
         $activeTab = $_GET['tab'] ?? 'companies';
 
-        // formulaire d'édition inline via ?editType=X&edit=Y
-        $editType = $_GET['editType'] ?? null;
-        $editId = isset($_GET['edit']) ? (int) $_GET['edit'] : null;
+        // Recupere le get via l'url si l'user veut modifier une données de la bdd
+        $editType = $_GET['editType'] ?? null;// recupere le type de donnée a modifier
+        $editId = isset($_GET['edit']) ? (int) $_GET['edit'] : null; // converti en int pour eviter les injections SQL
         $editData = null;
 
-        if ($editType && $editId) {
+        if ($editType && $editId) {  // on entre seulement si le type et l'id sont présent pour trouver les données dans la bdd
+            // en fonction du type de donnée a modifier, on recupere les données correspondantes dans la bdd pour les afficher dans le formulaire de modification (ex: si on veut modifier une entreprise, on recupere les données de cette entreprise pour les afficher dans le formulaire)
             switch ($editType) {
-                case 'company':
-                    $editData = $this->companyModel->findById($editId);
-                    $activeTab = 'companies';
-                    break;
-                case 'offer':
-                    $editData = $this->offerModel->findByIdAdmin($editId);
-                    $activeTab = 'offers';
-                    break;
-                case 'student':
-                    $editData = $this->userModel->findById($editId);
-                    $activeTab = 'students';
-                    break;
-                case 'pilot':
-                    $editData = $this->userModel->findById($editId);
-                    $activeTab = 'pilots';
-                    break;
+                    case 'company':
+                        $editData = $this->companyModel->findById($editId);
+                        $activeTab = 'companies';
+                        break; //break pour éviter d'executer le code des autres cases
+                    case 'offer':
+                        $editData = $this->offerModel->findByIdAdmin($editId);
+                        $activeTab = 'offers';
+                        break;
+                    case 'student':
+                        $editData = $this->userModel->findById($editId);
+                        $activeTab = 'students';
+                        break;
+                    case 'pilot':
+                        $editData = $this->userModel->findById($editId);
+                        $activeTab = 'pilots';
+                        break;
+                }
             }
-        }
 
         $flash = $_SESSION['flash'] ?? null;
         unset($_SESSION['flash']);
-
+         //renvoie les données modifier
         $this->render('admin/dashboard.html.twig', [
             'companies'     => $companies,
             'offers'        => $offers,

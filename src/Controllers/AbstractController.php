@@ -15,10 +15,10 @@ abstract class AbstractController
     {
         $this->twig = $twig;
     }
-
+    // affiche une page via un template twig
     protected function render(string $template, array $data = []): void
     {
-        // injecte l'utilisateur connecté dans tous les templates
+        // permet de gerer l'affichage dynamique pour afficher les infos de l'utilisateurs
         $data['app_user'] = $_SESSION['user'] ?? null;
         $data['current_url'] = $_SERVER['REQUEST_URI'] ?? '/';
         $data['csrf_token'] = $this->getCsrfToken();
@@ -42,23 +42,23 @@ abstract class AbstractController
             exit;
         }
     }
-
+     //permet de rediriger vers une URL donnée
     protected function redirect(string $url): void
     {
         header('Location: ' . $url);
         throw new RedirectException($url);
     }
-
+    // permet de verif si l'utilisateur est connecté
     protected function isLoggedIn(): bool
     {
         return isset($_SESSION['user']);
     }
-
+    // return les données de l'utilisateur si elles sont présentes dans la session, sinon null
     protected function getUser(): ?array
     {
         return $_SESSION['user'] ?? null;
     }
-
+    // vérifie si l'utilisateur est connecté, sinon redirige vers la page de connexion
     protected function requireAuth(): void
     {
         if (!$this->isLoggedIn()) {
@@ -66,26 +66,20 @@ abstract class AbstractController
         }
     }
 
-    /**
-     * Retourne le rôle de l'utilisateur connecté, ou Anonyme si non connecté.
-     */
+   // renvoie le role de l'utilisateur
     protected function getUserRole(): string
     {
         return $_SESSION['user']['role'] ?? Role::ANONYMOUS;
     }
 
-    /**
-     * Vérifie si l'utilisateur courant a une permission donnée.
-     */
+     //Vérifie si l'utilisateur courant a une permission donnée. grace a la classe AccessControl 
+    //qui gère les permissions et la fonction getuserrole qui verifie le role de l'user
     protected function userCan(string $permission): bool
     {
         return AccessControl::can($this->getUserRole(), $permission);
     }
 
-    /**
-     * Redirige vers le tableau de bord correspondant au rôle (/admin ou /pilot).
-     * Accepte un nom d'onglet optionnel : redirectToDashboard('companies') → /admin?tab=companies
-     */
+    // on créé l'url en fonction du role et tab redirige vers le bon dashboard (page qui permet de naviguer) en fonction du role 
     protected function redirectToDashboard(string $tab = ''): void
     {
         $role = $_SESSION['user']['role'] ?? '';
@@ -93,10 +87,7 @@ abstract class AbstractController
         $this->redirect($tab ? $base . '?tab=' . $tab : $base);
     }
 
-    /**
-     * Bloque l'accès si l'utilisateur n'a pas la permission.
-     * Redirige vers /login si non connecté, renvoie 403 sinon.
-     */
+    // verifie si l'user est connecté et s'il a les perm via les fonctions
     protected function requirePermission(string $permission): void
     {
         if (!$this->isLoggedIn()) {
