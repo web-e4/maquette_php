@@ -28,13 +28,17 @@ class OfferController extends AbstractController
     {
         $q     = $_GET['q'] ?? '';
         $city  = $_GET['city'] ?? '';
-        $skill = $_GET['skill'] ?? '';
-        $page  = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+		$skill = $_GET['skill'] ?? '';
+		// si ?page=0, ?page=1
+		$page  = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+		// nb offre / page
         $perPage = 15;
 
+		// retourne tableau avec offres + totalPages, currentPage, total
         $result = $this->offerModel->findPaginated($page, $perPage, $q, $city, $skill);
 
-        $wishlistIds = [];
+		$wishlistIds = [];
+		// retourne tableau avec id offres wishlistés
         if ($this->isLoggedIn() && $_SESSION['user']['role'] === Role::STUDENT) {
             $wishlistIds = $this->wishlistModel->findIdsByUser($_SESSION['user']['id']);
         }
